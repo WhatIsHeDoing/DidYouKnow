@@ -1,6 +1,38 @@
 """ demonstrating some great Python features via unit tests """
 import unittest
 
+class testListComprehension(unittest.TestCase):
+    """ why loop when you can comprehend?! """
+
+    def testProjection(self):
+        """ tests projecting the items from one list to another """
+        expected = [2, 4, 6]
+        actual = [n * 2 for n in [1, 2, 3]]
+        self.assertEqual(expected, actual)
+
+    def testNested(self):
+        """ tests nested projection to transpose nested lists """
+        matrix = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]
+
+        expected = [
+            [1, 4, 7],
+            [2, 5, 8],
+            [3, 6, 9]
+        ]
+
+        actual = [[row[i] for row in matrix] for i in range(len(matrix))]
+        self.assertEqual(expected, actual)
+
+    def testRestriction(self):
+        """ tests restricting a list and finding the odd numbers """
+        expected = [1, 3]
+        actual = [n for n in [1, 2, 3] if n % 2 == 1]
+        self.assertEqual(expected, actual)
+
 class testUnpacking(unittest.TestCase):
     """ tests the neat feature of variable unpacking """
 
