@@ -17,9 +17,26 @@ use Test::More;
 
 sub setUp : Test(setup)
 {
-	members->{tempFileName} = "test.txt";
-	members->{tempFileBackupName} = "test.txt.bak";
+	members->{tempFileName} = "test.js";
+	members->{tempFileBackupName} = "test.js.bak";
 };
+
+sub testOneLinerInlineReplace : Test(no_plan)
+{
+	open my $file, ">", members->{tempFileName} or fail $!;
+
+	print $file "if (a == b) alert('equality fail');
+if (c === d) alert('equality fail');\n";
+
+	close $file or fail($!);
+
+	`perl -pi.bak -e "s/alert/console\.info/g" test.js`;
+
+	my $expected = "if (a == b) console.info('equality fail');
+if (c === d) console.info('equality fail');\n";
+
+	is read_file(members->{tempFileName}), $expected;
+}
 
 sub testOneLinerFiltering : Test(no_plan)
 {
@@ -30,9 +47,9 @@ sub testOneLinerFiltering : Test(no_plan)
 	print $file $ignoredLine;
 	close $file or fail($!);
 
-	`perl -ni.bak -e "print unless /^Ignore/" test.txt`;
+	`perl -ni.bak -e "print unless /^Ignore/" test.js`;
 
-	is $keptLine, read_file(members->{tempFileName});
+	is read_file(members->{tempFileName}), $keptLine;
 };
 
 sub tearDown : Test(teardown)
