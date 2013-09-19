@@ -197,14 +197,14 @@ void testPrePostInDecrementOverloading ()
     assert((--test).getValue() == 0);
 }
 
-template <class T>
+template<template<class, class> class V, class T>
 class VectorBuilder
 {
 private:
-    std::vector<T> _container;
+    V< T, std::allocator<T> > _container;
 
 public:
-    VectorBuilder & addValue (T value)
+    VectorBuilder & addValue (const T & value)
     {
         _container.push_back(value);
         return * this;
@@ -212,7 +212,7 @@ public:
 
     VectorBuilder () { }
 
-    VectorBuilder (T value)
+    VectorBuilder (const T & value)
     {
         addValue(value);
     }
@@ -227,7 +227,7 @@ public:
         return addValue(value);
     }
 
-    std::vector<T> get () const
+    V< T, std::allocator<T> > get () const
     {
         return _container;
     }
@@ -238,12 +238,12 @@ void testCommaAndBracketOverloads ()
     std::vector<int> integers;
     integers.push_back(0);
     integers.push_back(1);
-    assert((VectorBuilder<int>(0), 1).get() == integers);
+    assert((VectorBuilder<std::vector, int>(0), 1).get() == integers);
 
     std::vector<std::string> strings;
     strings.push_back("hello");
     strings.push_back("world");
-    assert(VectorBuilder<std::string>("hello")("world").get() == strings);
+    assert((VectorBuilder<std::vector, std::string>("hello")("world").get()) == strings);
 }
 
 struct ReturnOverload
@@ -293,7 +293,7 @@ int main ()
     typedef void (*testFunc)();
 
     const std::vector<testFunc> tests(
-        VectorBuilder<testFunc>
+        VectorBuilder<std::vector, testFunc>
             (& testBranchOnVariableDeclaration)
             (& testArrayIndexAccess)
             (& testKeywordOperatorTokens)
