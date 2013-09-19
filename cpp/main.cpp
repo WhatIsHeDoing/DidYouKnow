@@ -2,9 +2,10 @@
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string>
 
-void testMapAssignLookupToValue ()
+void testBranchOnVariableDeclaration ()
 {
 	std::map<std::string, std::string> data;
 	data["key"] = "value";
@@ -18,8 +19,6 @@ void testMapAssignLookupToValue ()
 	assert(0);
 }
 
-// START OBSCURE
-// http://madebyevan.com/obscure-cpp-features/
 void testArrayIndexAccess ()
 {
 	int array[3];
@@ -50,7 +49,6 @@ void testKeywordOperatorTokens ()
 
 	assert(0);
 }
-// END OBSCURE
 
 class ContainsProtectedValue
 {
@@ -73,11 +71,70 @@ void testChangingScope ()
 	assert(PromotesProtectedValue(5).foo == 5);
 }
 
+#define private public
+class NotPrivateHere
+{
+private:
+	bool success ()
+	{
+		return true;
+	}
+};
+#undef private
+
+void testRedefiningKeywords ()
+{
+	assert(NotPrivateHere().success());
+}
+
+struct HasStaticMethod {
+  static bool isCalled ()
+  {
+  	return true;
+  }
+};
+
+void testStaticInstanceMethodCalls ()
+{
+	assert(HasStaticMethod::isCalled() == HasStaticMethod().isCalled());
+}
+
+struct PointToUs {
+  int value;
+
+  bool method ()
+  {
+  	return true;
+  }
+};
+
+int PointToUs::*valuePointer = &PointToUs::value;
+bool (PointToUs::*methodPointer)() = &PointToUs::method;
+
+void testPointerToMemberOperators ()
+{
+  PointToUs stack;
+  PointToUs * heap = new PointToUs;
+
+  assert((stack.*methodPointer)());
+  assert((heap->*methodPointer)());
+
+  stack.*valuePointer = 1;
+  assert(stack.*valuePointer == 1);
+  heap->*valuePointer = 2;
+  assert(heap->*valuePointer == 2);
+
+  delete heap;
+}
+
 int main ()
 {
-  testMapAssignLookupToValue();
+  testBranchOnVariableDeclaration();
   testArrayIndexAccess();
-  testKeywordOperators();
+  testKeywordOperatorTokens();
   testChangingScope();
+  testRedefiningKeywords();
+  testStaticInstanceMethodCalls();
+  testPointerToMemberOperators();
   return EXIT_SUCCESS;
 }
