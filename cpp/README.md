@@ -1,9 +1,12 @@
-Just run:
+Compile the test program using:
 
-make main
+    make main
 
-And run it using:
+... and run it with:
 
-./main
+    ./main
 
-It's that simple!
+This assumes a Linux console (try [Cygwin] [1] on Windows) with *make* and *g++* installed.
+
+ [1]: http://cygwin.com/ "Cygwin"
+ 
