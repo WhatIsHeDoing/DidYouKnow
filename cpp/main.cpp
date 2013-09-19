@@ -241,6 +241,8 @@ void testCommaAndBracketOverloads ()
 
 struct ReturnOverload
 {
+    ReturnOverload () { }
+
     int get ()
     {
         return 5;
@@ -254,10 +256,13 @@ struct ReturnOverload
 
 void testReturnOverload ()
 {
-    assert(ReturnOverload().get() == 5);
+    ReturnOverload returnOverload;
+    const int & i(returnOverload.get());
+    assert(i == 5);
 
     const ReturnOverload constReturnOverload;
-    assert(constReturnOverload.get() == "hello");
+    const std::string & s(constReturnOverload.get());
+    assert(s == "hello");
 }
 
 int main ()
