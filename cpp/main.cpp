@@ -4,6 +4,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 void testBranchOnVariableDeclaration ()
 {
@@ -127,14 +128,137 @@ void testPointerToMemberOperators ()
     delete heap;
 }
 
+std::string letMeKeepMyReturnValue ()
+{
+    return "value";
+}
+
+void testScopeGuardTrick ()
+{
+    const std::string & value(letMeKeepMyReturnValue());
+    assert(value == "value");
+}
+
+class PrePostInDecrementOverloading {
+private:
+    int _value;
+
+    void incrementValue ()
+    {
+        _value = _value + 1;
+    }
+
+    void decrementValue ()
+    {
+        _value = _value - 1;
+    }
+
+public:
+    PrePostInDecrementOverloading () : _value(0) { }
+
+    int getValue ()
+    {
+        return _value;
+    }
+
+    // pre
+    PrePostInDecrementOverloading & operator++ (int value)
+    {
+        incrementValue();
+        return * this;
+    }
+
+    PrePostInDecrementOverloading & operator-- (int value)
+    {
+        decrementValue();
+        return * this;
+    }
+
+    // post
+    PrePostInDecrementOverloading & operator++ ()
+    {
+        incrementValue();
+        return * this;
+    }
+
+    PrePostInDecrementOverloading & operator-- ()
+    {
+        decrementValue();
+        return * this;
+    }
+};
+
+void testPrePostInDecrementOverloading ()
+{
+    PrePostInDecrementOverloading test;
+    assert(test++.getValue() == 1);
+    assert(test--.getValue() == 0);
+    assert((++test).getValue() == 1);
+    assert((--test).getValue() == 0);
+}
+
+template <class T>
+class VectorBuilder
+{
+private:
+    std::vector<T> _container;
+
+public:
+    VectorBuilder & addValue (T value)
+    {
+        _container.push_back(value);
+        return * this;
+    }
+
+    VectorBuilder & operator, (const T value)
+    {
+        return addValue(value);
+    }
+
+    VectorBuilder & operator() (const T value)
+    {
+        return addValue(value);
+    }
+
+    std::vector<T> get ()
+    {
+        return _container;
+    }
+};
+
+void testCommaAndBracketOverloads ()
+{
+    std::vector<int> integers;
+    integers.push_back(0);
+    integers.push_back(1);
+    assert((VectorBuilder<int>(), 0, 1).get() == integers);
+
+    std::vector<std::string> strings;
+    strings.push_back("hello");
+    strings.push_back("world");
+    assert(VectorBuilder<std::string>()("hello")("world").get() == strings);
+}
+
 int main ()
 {
-    testBranchOnVariableDeclaration();
-    testArrayIndexAccess();
-    testKeywordOperatorTokens();
-    testChangingScope();
-    testRedefiningKeywords();
-    testStaticInstanceMethodCalls();
-    testPointerToMemberOperators();
+    std::vector<void(*)()> tests;
+    tests.push_back(& testBranchOnVariableDeclaration);
+    tests.push_back(& testArrayIndexAccess);
+    tests.push_back(& testKeywordOperatorTokens);
+    tests.push_back(& testChangingScope);
+    tests.push_back(& testRedefiningKeywords);
+    tests.push_back(& testStaticInstanceMethodCalls);
+    tests.push_back(& testPointerToMemberOperators);
+    tests.push_back(& testScopeGuardTrick);
+    tests.push_back(& testPrePostInDecrementOverloading);
+    tests.push_back(& testCommaAndBracketOverloads);
+    const int & numOfTests(tests.size());
+
+    for (int i = 0; i < numOfTests; ++i)
+    {
+        tests[i]();
+    }
+
+    std::cout << numOfTests << " tests passed successfully!" << std::endl;
     return EXIT_SUCCESS;
 }
