@@ -210,6 +210,13 @@ public:
         return * this;
     }
 
+    VectorBuilder () { }
+
+    VectorBuilder (T value)
+    {
+        addValue(value);
+    }
+
     VectorBuilder & operator, (const T & value)
     {
         return addValue(value);
@@ -231,12 +238,12 @@ void testCommaAndBracketOverloads ()
     std::vector<int> integers;
     integers.push_back(0);
     integers.push_back(1);
-    assert((VectorBuilder<int>(), 0, 1).get() == integers);
+    assert((VectorBuilder<int>(0), 1).get() == integers);
 
     std::vector<std::string> strings;
     strings.push_back("hello");
     strings.push_back("world");
-    assert(VectorBuilder<std::string>()("hello")("world").get() == strings);
+    assert(VectorBuilder<std::string>("hello")("world").get() == strings);
 }
 
 struct ReturnOverload
@@ -265,20 +272,43 @@ void testReturnOverload ()
     assert(s == "hello");
 }
 
+struct TypedefScopedToClass
+{
+    typedef std::vector<std::string> strings;
+};
+
+void testTypedefScopedToClass ()
+{
+    std::vector<std::string> v1;
+    v1.push_back("hello");
+
+    TypedefScopedToClass::strings v2;
+    v2.push_back("hello");
+
+    assert(v1 == v2);
+}
+
 int main ()
 {
-    std::vector<void(*)()> tests;
-    tests.push_back(& testBranchOnVariableDeclaration);
-    tests.push_back(& testArrayIndexAccess);
-    tests.push_back(& testKeywordOperatorTokens);
-    tests.push_back(& testChangingScope);
-    tests.push_back(& testRedefiningKeywords);
-    tests.push_back(& testStaticInstanceMethodCalls);
-    tests.push_back(& testPointerToMemberOperators);
-    tests.push_back(& testScopeGuardTrick);
-    tests.push_back(& testPrePostInDecrementOverloading);
-    tests.push_back(& testCommaAndBracketOverloads);
-    tests.push_back(& testReturnOverload);
+    typedef void (*testFunc)();
+
+    const std::vector<testFunc> tests(
+        VectorBuilder<testFunc>
+            (& testBranchOnVariableDeclaration)
+            (& testArrayIndexAccess)
+            (& testKeywordOperatorTokens)
+            (& testChangingScope)
+            (& testRedefiningKeywords)
+            (& testStaticInstanceMethodCalls)
+            (& testPointerToMemberOperators)
+            (& testScopeGuardTrick)
+            (& testPrePostInDecrementOverloading)
+            (& testCommaAndBracketOverloads)
+            (& testReturnOverload)
+            (& testTypedefScopedToClass)
+        .get()
+    );
+
     const int & numOfTests(tests.size());
 
     for (int i = 0; i < numOfTests; ++i)
