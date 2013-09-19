@@ -76,7 +76,7 @@ void testChangingScope ()
 class NotPrivateHere
 {
 private:
-    bool success ()
+    bool success () const
     {
         return true;
     }
@@ -103,14 +103,14 @@ void testStaticInstanceMethodCalls ()
 struct PointToUs {
     int value;
 
-    bool method ()
+    bool method () const
     {
         return true;
     }
 };
 
 int PointToUs::*valuePointer = &PointToUs::value;
-bool (PointToUs::*methodPointer)() = &PointToUs::method;
+bool (PointToUs::*methodPointer)() const = &PointToUs::method;
 
 void testPointerToMemberOperators ()
 {
@@ -156,7 +156,7 @@ private:
 public:
     PrePostInDecrementOverloading () : _value(0) { }
 
-    int getValue ()
+    int getValue () const
     {
         return _value;
     }
@@ -210,17 +210,17 @@ public:
         return * this;
     }
 
-    VectorBuilder & operator, (const T value)
+    VectorBuilder & operator, (const T & value)
     {
         return addValue(value);
     }
 
-    VectorBuilder & operator() (const T value)
+    VectorBuilder & operator() (const T & value)
     {
         return addValue(value);
     }
 
-    std::vector<T> get ()
+    std::vector<T> get () const
     {
         return _container;
     }
@@ -239,6 +239,27 @@ void testCommaAndBracketOverloads ()
     assert(VectorBuilder<std::string>()("hello")("world").get() == strings);
 }
 
+struct ReturnOverload
+{
+    int get ()
+    {
+        return 5;
+    }
+
+    std::string get () const
+    {
+        return "hello";
+    }
+};
+
+void testReturnOverload ()
+{
+    assert(ReturnOverload().get() == 5);
+
+    const ReturnOverload constReturnOverload;
+    assert(constReturnOverload.get() == "hello");
+}
+
 int main ()
 {
     std::vector<void(*)()> tests;
@@ -252,6 +273,7 @@ int main ()
     tests.push_back(& testScopeGuardTrick);
     tests.push_back(& testPrePostInDecrementOverloading);
     tests.push_back(& testCommaAndBracketOverloads);
+    tests.push_back(& testReturnOverload);
     const int & numOfTests(tests.size());
 
     for (int i = 0; i < numOfTests; ++i)
