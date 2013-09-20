@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
@@ -288,9 +289,117 @@ void testTypedefScopedToClass ()
     assert(v1 == v2);
 }
 
+void testTernaryAsValue ()
+{
+    int postiveCount(0);
+    int negativeCount(0);
+    (5 < 0 ? negativeCount : postiveCount)++;
+    assert(postiveCount == 1);
+    assert(negativeCount == 0);
+
+    const std::vector<int> values((VectorBuilder<std::vector, int>(1)(2)(3)).get());
+    typedef std::vector<int>::const_iterator intVectorIt;
+
+    assert(3 == *
+        (1 ? std::max_element<intVectorIt> : std::min_element<intVectorIt>)
+            (values.begin(), values.end()));
+}
+
+void testBareURIUsingGoto ()
+{
+    goto http;
+    assert(0);
+    return;
+
+    http://test.com
+    assert(1);
+}
+
+namespace HeadNamespace {
+    namespace SubNamespace {
+        bool exists ()
+        {
+            return true;
+        }
+    }
+}
+
+void testNamespaceAlias ()
+{
+    namespace alias = HeadNamespace::SubNamespace;
+    assert(alias::exists);
+}
+
+void testCatchAnyException ()
+{
+    try
+    {
+        throw new std::string("badness");
+    }
+    catch (...)
+    {
+       assert(1);
+       return;
+    }
+
+    assert(0);
+}
+
+struct ClassWithFunction
+{
+    int function ()
+    {
+        return 0;
+    }
+};
+
+struct ClassWithoutFunction { };
+
+template <typename T>
+class HasFunction
+{
+    typedef char yes;
+    typedef long no;
+
+    template <typename C>
+    static yes test (typeof(&C::function));
+
+    template <typename C>
+    static no test (...);
+
+public:
+    enum
+    {
+        exists = (sizeof(test<T>(0)) == sizeof(char))
+    };
+};
+
+void testTemplateChecksFunctionExists ()
+{
+    assert(HasFunction<ClassWithFunction>::exists);
+    assert(!HasFunction<ClassWithoutFunction>::exists);
+}
+
+template<typename T> 
+struct ID
+{
+    typedef T type;
+};
+
+bool calledViaIdentityDefinition ()
+{
+    return true;
+}
+
+void testIdentityMetaFunction ()
+{
+    ID<bool()>::type * IDFunc = & calledViaIdentityDefinition;
+    assert(IDFunc());
+}
+
 int main ()
 {
-    typedef void (*testFunc)();
+    typedef void (* testFunc)();
 
     const std::vector<testFunc> tests(
         VectorBuilder<std::vector, testFunc>
@@ -306,6 +415,12 @@ int main ()
             (& testCommaAndBracketOverloads)
             (& testReturnOverload)
             (& testTypedefScopedToClass)
+            (& testTernaryAsValue)
+            (& testBareURIUsingGoto)
+            (& testNamespaceAlias)
+            (& testCatchAnyException)
+            (& testTemplateChecksFunctionExists)
+            (& testIdentityMetaFunction)
         .get()
     );
 
