@@ -289,6 +289,16 @@ void testTypedefScopedToClass ()
     assert(v1 == v2);
 }
 
+bool ternaryTrue ()
+{
+    return true;
+}
+
+bool ternaryFalse ()
+{
+  return false;
+}
+
 void testTernaryAsValue ()
 {
     int postiveCount(0);
@@ -297,12 +307,7 @@ void testTernaryAsValue ()
     assert(postiveCount == 1);
     assert(negativeCount == 0);
 
-    const std::vector<int> values((VectorBuilder<std::vector, int>(1)(2)(3)).get());
-    typedef std::vector<int>::const_iterator intVectorIt;
-
-    assert(3 == *
-        (1 ? std::max_element<intVectorIt> : std::min_element<intVectorIt>)
-            (values.begin(), values.end()));
+    assert((1 ? ternaryTrue : ternaryFalse)());
 }
 
 void testBareURIUsingGoto ()
