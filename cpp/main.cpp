@@ -308,6 +308,18 @@ void testTernaryAsValue ()
     assert(negativeCount == 0);
 
     assert((1 ? ternaryTrue : ternaryFalse)());
+    assert(!(0 ? ternaryTrue : ternaryFalse)());
+
+    try {
+        const int i(false ? 5 : throw std::string("oops"));
+    }
+    catch (const std::string & e)
+    {
+        assert(e == "oops");
+        return;
+    }
+
+    assert(false);
 }
 
 void testBareURIUsingGoto ()
@@ -402,6 +414,68 @@ void testIdentityMetaFunction ()
     assert(IDFunc());
 }
 
+template<typename T>
+bool needUnaryOperatorForArraysHere (T const & a, T const & b)
+{
+    return true;
+}
+
+void testDecayArrayToPointerViaUnaryOperator ()
+{
+    int smallerArray[2];
+    int largerArray[3];
+    assert(needUnaryOperatorForArraysHere(+smallerArray, +largerArray));
+}
+
+template<typename Func1, typename Func2>
+class CallsSurrogates {
+    Func1 * _func1;
+    Func2 * _func2;
+
+public:
+    CallsSurrogates(Func1 * func1, Func2 * func2)
+        : _func1(func1), _func2(func2) { }
+
+    operator Func1 * ()
+    {
+        return _func1;
+    }
+
+    operator Func2 * ()
+    {
+        return _func2;
+    }
+};
+
+std::string intFunc (int i)
+{
+    return "integer passed";
+}
+
+std::string longFunc (long i)
+{
+    return "long passed";
+}
+
+void testCallSurrogateFunctions ()
+{
+    CallsSurrogates<std::string(int), std::string(long)>
+        callsSurrogates(intFunc, longFunc);
+
+    assert(callsSurrogates(5) == "integer passed");
+    assert(callsSurrogates(5L) == "long passed");
+}
+
+void voidReturn ()
+{
+    return (void)"say what?!";
+}
+
+void testVoidReturn ()
+{
+    voidReturn();
+}
+
 int main ()
 {
     typedef void (* testFunc)();
@@ -426,6 +500,9 @@ int main ()
             (& testCatchAnyException)
             (& testTemplateChecksFunctionExists)
             (& testIdentityMetaFunction)
+            (& testDecayArrayToPointerViaUnaryOperator)
+            (& testCallSurrogateFunctions)
+            (& testVoidReturn)
         .get()
     );
 
