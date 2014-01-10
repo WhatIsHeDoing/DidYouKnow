@@ -7,6 +7,10 @@
 #include <string>
 #include <vector>
 
+/**
+ * Demonstrates that the body of an if statement will run
+ * if the variable declared in the check is not falsy
+ */
 void testBranchOnVariableDeclaration ()
 {
     std::map<std::string, std::string> data;
@@ -21,6 +25,10 @@ void testBranchOnVariableDeclaration ()
     assert(0);
 }
 
+/**
+ * Shows the many methods that can be used to access an index of an array.
+ * Yes, array[index] is syntactic sugar!
+ */
 void testArrayIndexAccess ()
 {
     int array[3];
@@ -34,6 +42,10 @@ void testArrayIndexAccess ()
     assert(1[array] == 1);
 }
 
+/**
+ * Originally implemented for limited keyboards and terminals, why not
+ * clarify or obfuscate your codebase with these plain-text alternatives?
+ */
 void testKeywordOperatorTokens ()
 {
     assert(1 and 1);
@@ -68,6 +80,9 @@ public:
     using ContainsProtectedValue::foo;
 };
 
+/**
+ * Demonstrates how to alter the scope of class members in their derived classes
+ */
 void testChangingScope ()
 {
     assert(PromotesProtectedValue(5).foo == 5);
@@ -84,6 +99,10 @@ private:
 };
 #undef private
 
+/**
+ * Shows the highly-questionable practice of redeclaring language keywords
+ * with macros, which can - very occasionally - be useful when testing
+ */
 void testRedefiningKeywords ()
 {
     assert(NotPrivateHere().success());
@@ -96,6 +115,9 @@ struct HasStaticMethod {
     }
 };
 
+/*
+ * Simply shows the syntax required to call the static method of a class
+ */
 void testStaticInstanceMethodCalls ()
 {
     assert(HasStaticMethod::isCalled() == HasStaticMethod().isCalled());
@@ -113,6 +135,10 @@ struct PointToUs {
 int PointToUs::*valuePointer = &PointToUs::value;
 bool (PointToUs::*methodPointer)() const = &PointToUs::method;
 
+/**
+ * Demonstrates the syntax required for pointers to function members,
+ * which - when required - may be a pain to remember quickly
+ */
 void testPointerToMemberOperators ()
 {
     PointToUs stack;
@@ -134,6 +160,10 @@ std::string letMeKeepMyReturnValue ()
     return "value";
 }
 
+/**
+ * Why use pass-by-reference to return huge data, when consumers can store
+ * constant references to the returned values instead?
+ */
 void testScopeGuardTrick ()
 {
     const std::string & value(letMeKeepMyReturnValue());
@@ -189,6 +219,10 @@ public:
     }
 };
 
+/**
+ * Highlights the subtle differences required for defining
+ * pre and post-in/decrement operator overloading
+ */
 void testPrePostInDecrementOverloading ()
 {
     PrePostInDecrementOverloading test;
@@ -234,7 +268,13 @@ public:
     }
 };
 
-void testCommaAndBracketOverloads ()
+/**
+ * Demonstrates how overloading the brackets and comma operators
+ * can ensure your interfaces are consumed more effectively.
+ * These operate as fluent methods, returning a reference to the object
+ * so that calls to it may be chained.
+ */
+void testFluentCommaAndBracketOverloads ()
 {
     std::vector<int> integers;
     integers.push_back(0);
@@ -262,6 +302,10 @@ struct ReturnOverload
     }
 };
 
+/**
+ * Wait, a function signature can be overridden via only the returned type?
+ * Yes, only if it is marked as const, and therefore only invoked on constants.
+ */
 void testReturnOverload ()
 {
     ReturnOverload returnOverload;
@@ -299,6 +343,10 @@ bool ternaryFalse ()
   return false;
 }
 
+/**
+ * Ternary statements are mainly used for initialising constants
+ * based on conditions, but they can also be used as lvalues!
+ */
 void testTernaryAsValue ()
 {
     int postiveCount(0);
@@ -322,6 +370,9 @@ void testTernaryAsValue ()
     assert(false);
 }
 
+/**
+ * Gotos are dead, but long live URI labels?
+ */
 void testBareURIUsingGoto ()
 {
     goto http;
@@ -347,6 +398,10 @@ void testNamespaceAlias ()
     assert(alias::exists);
 }
 
+/**
+ * A hack that uses an ellipsis - which represents a variable
+ * number of parameters to a function - to catch any exception
+ */
 void testCatchAnyException ()
 {
     try
@@ -391,6 +446,10 @@ public:
     };
 };
 
+/**
+ * An interesting templated approach to determining
+ * whether a function exists within a class
+ */
 void testTemplateChecksFunctionExists ()
 {
     assert(HasFunction<ClassWithFunction>::exists);
@@ -408,6 +467,11 @@ bool calledViaIdentityDefinition ()
     return true;
 }
 
+/**
+ * Uses a class that lets you declare use a function as a variable
+ * or parameter in a way that may be easier to read than the standard syntax.
+ * See also boost::identity.
+ */
 void testIdentityMetaFunction ()
 {
     ID<bool()>::type * IDFunc = & calledViaIdentityDefinition;
@@ -420,6 +484,11 @@ bool needUnaryOperatorForArraysHere (T const & a, T const & b)
     return true;
 }
 
+/**
+ * The unary operator is useful for cases such as this test, where the template
+ * type reference would be different for two arrays of differing lengths passed
+ * to a function, so it decays them to their data type, which will work instead!
+ */
 void testDecayArrayToPointerViaUnaryOperator ()
 {
     int smallerArray[2];
@@ -457,6 +526,11 @@ std::string longFunc (long i)
     return "long passed";
 }
 
+/**
+ * Shows how the function templates used in the signature of a class
+ * are called as surrogates to effectively operate as overloads.
+ * This is achieved thanks to SFINAE (Substitution Failure is Not an Error).
+ */
 void testCallSurrogateFunctions ()
 {
     CallsSurrogates<std::string(int), std::string(long)>
@@ -471,6 +545,10 @@ void voidReturn ()
     return (void)"say what?!";
 }
 
+/**
+ * A demonstration of how void casting lets you place
+ * pretty much anything you like after the cast
+ */
 void testVoidReturn ()
 {
     voidReturn();
@@ -491,7 +569,7 @@ int main ()
             (& testPointerToMemberOperators)
             (& testScopeGuardTrick)
             (& testPrePostInDecrementOverloading)
-            (& testCommaAndBracketOverloads)
+            (& testFluentCommaAndBracketOverloads)
             (& testReturnOverload)
             (& testTypedefScopedToClass)
             (& testTernaryAsValue)
