@@ -7,6 +7,19 @@
 #include <string>
 #include <vector>
 
+#ifdef TEST_PLACEHOLDER_EXAMPLE
+/**
+ * Macros are generally ill-advised, but among their uses, are great
+ * for code snippets you would like to compile, but never run,
+ * for demonstration purposes, particularly if a huge comment
+ * block would likely be deleted by a well-meaning engineer
+ */
+void testPlaceholder ()
+{
+    assert(0);
+}
+#endif
+
 /**
  * Demonstrates that the body of an if statement will run
  * if the variable declared in the check is not falsy
@@ -157,14 +170,21 @@ std::string letMeKeepMyReturnValue ()
     return "value";
 }
 
+void passByRefAlternative (std::string & data)
+{
+    data = "value";
+}
+
 /**
  * Why use pass-by-reference to return huge data, when consumers can store
  * constant references to the returned values instead?
  */
 void testScopeGuardTrick ()
 {
-    const std::string & value = letMeKeepMyReturnValue();
-    assert(value == "value");
+    const std::string & keptReturnValue = letMeKeepMyReturnValue();
+    std::string fromRef;
+    passByRefAlternative(fromRef);
+    assert(keptReturnValue == fromRef);
 }
 
 class PrePostInDecrementOverloading {
@@ -314,20 +334,44 @@ void testReturnOverload ()
     assert(s == "hello");
 }
 
-struct TypedefScopedToClass
+namespace ThisNamespace
 {
-    typedef std::vector<std::string> strings;
+    bool HasThisFunction ()
+    {
+        return true;
+    }
+
+    namespace SubNamespace
+    {
+        bool HasThisFunction ()
+        {
+            return true;
+        }
+    }
+}
+
+struct ThisClass
+{
+    static bool HasThisFunction ()
+    {
+        return true;
+    }
+
+    typedef bool HasThisTypedef;
 };
 
-void testTypedefScopedToClass ()
+/**
+ * Shows how namespacing is effectively used to access static class methods
+ * and typedefs, and when aliasing a namespace can help simplify access
+ */
+void testNamespaces ()
 {
-    std::vector<std::string> v1;
-    v1.push_back("hello");
+    assert(ThisNamespace::HasThisFunction());
+    assert(ThisClass::HasThisFunction());
+    assert(ThisClass::HasThisTypedef(true));
 
-    TypedefScopedToClass::strings v2;
-    v2.push_back("hello");
-
-    assert(v1 == v2);
+    namespace alias = ThisNamespace::SubNamespace;
+    assert(alias::HasThisFunction());
 }
 
 bool ternaryTrue ()
@@ -378,21 +422,6 @@ void testBareURIUsingGoto ()
 
     http://test.com
     assert(1);
-}
-
-namespace HeadNamespace {
-    namespace SubNamespace {
-        bool exists ()
-        {
-            return true;
-        }
-    }
-}
-
-void testNamespaceAlias ()
-{
-    namespace alias = HeadNamespace::SubNamespace;
-    assert(alias::exists);
 }
 
 /**
@@ -568,10 +597,9 @@ int main ()
             (& testPrePostInDecrementOverloading)
             (& testFluentCommaAndBracketOverloads)
             (& testReturnOverload)
-            (& testTypedefScopedToClass)
+            (& testNamespaces)
             (& testTernaryAsValue)
             (& testBareURIUsingGoto)
-            (& testNamespaceAlias)
             (& testCatchAnyException)
             (& testTemplateChecksFunctionExists)
             (& testIdentityMetaFunction)
