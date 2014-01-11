@@ -36,10 +36,7 @@ void testArrayIndexAccess ()
     array[1] = 1;
     array[2] = 2;
 
-    assert(array[1] == 1);
-    assert(*(array + 1) == 1);
-    assert((*(1 + array)) == 1);
-    assert(1[array] == 1);
+    assert(array[2] == *(array + 2) == (*(1 + array)) == 1[array] == 1);
 }
 
 /**
@@ -166,7 +163,7 @@ std::string letMeKeepMyReturnValue ()
  */
 void testScopeGuardTrick ()
 {
-    const std::string & value(letMeKeepMyReturnValue());
+    const std::string & value = letMeKeepMyReturnValue();
     assert(value == "value");
 }
 
@@ -309,11 +306,11 @@ struct ReturnOverload
 void testReturnOverload ()
 {
     ReturnOverload returnOverload;
-    const int & i(returnOverload.get());
+    const int & i = returnOverload.get();
     assert(i == 5);
 
     const ReturnOverload constReturnOverload;
-    const std::string & s(constReturnOverload.get());
+    const std::string & s = constReturnOverload.get();
     assert(s == "hello");
 }
 
@@ -359,7 +356,7 @@ void testTernaryAsValue ()
     assert(!(0 ? ternaryTrue : ternaryFalse)());
 
     try {
-        const int i(false ? 5 : throw std::string("oops"));
+        const int i = (false) ? 5 : throw std::string("oops");
     }
     catch (const std::string & e)
     {
@@ -558,7 +555,7 @@ int main ()
 {
     typedef void (* testFunc)();
 
-    const std::vector<testFunc> tests(
+    const std::vector<testFunc> & tests =
         VectorBuilder<std::vector, testFunc>
             (& testBranchOnVariableDeclaration)
             (& testArrayIndexAccess)
@@ -581,12 +578,11 @@ int main ()
             (& testDecayArrayToPointerViaUnaryOperator)
             (& testCallSurrogateFunctions)
             (& testVoidReturn)
-        .get()
-    );
+        .get();
 
-    const int & numOfTests(tests.size());
+    const size_t & numOfTests = tests.size();
 
-    for (int i = 0; i < numOfTests; ++i)
+    for (unsigned int i = 0; i < numOfTests; ++i)
     {
         tests[i]();
     }
