@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <list>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -47,9 +48,12 @@ void testArrayIndexAccess ()
     int array[3];
     array[0] = 0;
     array[1] = 1;
-    array[2] = 2;
+    array[2] = 64;
 
-    assert(array[2] == *(array + 2) == (*(1 + array)) == 1[array] == 1);
+    assert(array[2] == 64);
+    assert(*(array + 2) == 64);
+    assert(*(2 + array) == 64);
+    assert(2[array] == 64);
 }
 
 /**
@@ -74,20 +78,20 @@ void testKeywordOperatorTokens ()
     assert(0);
 }
 
-class ContainsProtectedValue
+class ContainsHidden
 {
 public:
-    ContainsProtectedValue (const int foo) : foo(foo) { }
+    ContainsHidden (const int member) : _member(member) { }
 
 protected:
-    const int foo;
+    const int _member;
 };
 
-class PromotesProtectedValue : public ContainsProtectedValue
+class PromotesHidden : public ContainsHidden
 {
 public:
-    PromotesProtectedValue (int foo) : ContainsProtectedValue(foo) { }
-    using ContainsProtectedValue::foo;
+    PromotesHidden (int member) : ContainsHidden(member) { }
+    using ContainsHidden::_member;
 };
 
 /**
@@ -95,7 +99,7 @@ public:
  */
 void testChangingScope ()
 {
-    assert(PromotesProtectedValue(5).foo == 5);
+    assert(PromotesHidden(5)._member == 5);
 }
 
 #define private public
@@ -118,21 +122,6 @@ void testRedefiningKeywords ()
     assert(NotPrivateHere().success());
 }
 
-struct HasStaticMethod {
-    static bool isCalled ()
-    {
-        return true;
-    }
-};
-
-/*
- * Simply shows the syntax required to call the static method of a class
- */
-void testStaticInstanceMethodCalls ()
-{
-    assert(HasStaticMethod::isCalled() == HasStaticMethod().isCalled());
-}
-
 struct PointToUs {
     int value;
 
@@ -142,15 +131,15 @@ struct PointToUs {
     }
 };
 
-int PointToUs::*valuePointer = &PointToUs::value;
-bool (PointToUs::*methodPointer)() const = &PointToUs::method;
-
 /**
  * Demonstrates the syntax required for pointers to function members,
  * which - when required - may be a pain to remember quickly
  */
 void testPointerToMemberOperators ()
 {
+    int PointToUs::*valuePointer = &PointToUs::value;
+    bool (PointToUs::*methodPointer)() const = &PointToUs::method;
+
     PointToUs stack;
     PointToUs * heap = new PointToUs;
 
@@ -159,6 +148,7 @@ void testPointerToMemberOperators ()
 
     stack.*valuePointer = 1;
     assert(stack.*valuePointer == 1);
+
     heap->*valuePointer = 2;
     assert(heap->*valuePointer == 2);
 
@@ -250,31 +240,31 @@ void testPrePostInDecrementOverloading ()
 }
 
 template<template<class, class> class V, class T>
-class VectorBuilder
+class CreateContainer
 {
-private:
+protected:
     V< T, std::allocator<T> > _container;
 
 public:
-    VectorBuilder & addValue (const T & value)
+    CreateContainer & addValue (const T & value)
     {
         _container.push_back(value);
         return * this;
     }
 
-    VectorBuilder () { }
+    CreateContainer () { }
 
-    VectorBuilder (const T & value)
+    CreateContainer (const T & value)
     {
         addValue(value);
     }
 
-    VectorBuilder & operator, (const T & value)
+    CreateContainer & operator, (const T & value)
     {
         return addValue(value);
     }
 
-    VectorBuilder & operator() (const T & value)
+    CreateContainer & operator() (const T & value)
     {
         return addValue(value);
     }
@@ -296,12 +286,19 @@ void testFluentCommaAndBracketOverloads ()
     std::vector<int> integers;
     integers.push_back(0);
     integers.push_back(1);
-    assert((VectorBuilder<std::vector, int>(0), 1).get() == integers);
+    integers.push_back(2);
 
-    std::vector<std::string> strings;
+    const std::vector<int> & constIntegers
+        = (CreateContainer<std::vector, int>(0), 1, 2).get();
+
+    assert(constIntegers == integers);
+
+    std::list<std::string> strings;
     strings.push_back("hello");
     strings.push_back("world");
-    assert((VectorBuilder<std::vector, std::string>("hello")("world").get()) == strings);
+
+    assert((CreateContainer<std::list, std::string>
+        ("hello")("world").get()) == strings);
 }
 
 struct ReturnOverload
@@ -322,6 +319,8 @@ struct ReturnOverload
 /**
  * Wait, a function signature can be overridden via only the returned type?
  * Yes, only if it is marked as const, and therefore only invoked on constants.
+ * Probably most commonly used to return a const_iterator instead of a
+ * mutable iterator on constants.
  */
 void testReturnOverload ()
 {
@@ -343,18 +342,18 @@ namespace ThisNamespace
 
     namespace SubNamespace
     {
-        bool HasThisFunction ()
+        std::string HasThisFunction ()
         {
-            return true;
+            return "Yes, it does!";
         }
     }
 }
 
 struct ThisClass
 {
-    static bool HasThisFunction ()
+    static int HasThisFunction ()
     {
-        return true;
+        return 4;
     }
 
     typedef bool HasThisTypedef;
@@ -367,11 +366,13 @@ struct ThisClass
 void testNamespaces ()
 {
     assert(ThisNamespace::HasThisFunction());
-    assert(ThisClass::HasThisFunction());
+    assert(ThisClass().HasThisFunction() == ThisClass::HasThisFunction());
     assert(ThisClass::HasThisTypedef(true));
 
     namespace alias = ThisNamespace::SubNamespace;
-    assert(alias::HasThisFunction());
+
+    assert(ThisNamespace::SubNamespace::HasThisFunction()
+        == alias::HasThisFunction());
 }
 
 bool ternaryTrue ()
@@ -414,7 +415,7 @@ void testTernaryAsValue ()
 /**
  * Gotos are dead, but long live URI labels?
  */
-void testBareURIUsingGoto ()
+void testBareURIViaGoto ()
 {
     goto http;
     assert(0);
@@ -522,32 +523,32 @@ void testDecayArrayToPointerViaUnaryOperator ()
     assert(needUnaryOperatorForArraysHere(+smallerArray, +largerArray));
 }
 
-template<typename Func1, typename Func2>
+template<typename FunctionOne, typename FunctionTwo>
 class CallsSurrogates {
-    Func1 * _func1;
-    Func2 * _func2;
+    FunctionOne * _functionOne;
+    FunctionTwo * _functionTwo;
 
 public:
-    CallsSurrogates(Func1 * func1, Func2 * func2)
-        : _func1(func1), _func2(func2) { }
+    CallsSurrogates(FunctionOne * functionOne, FunctionTwo * functionTwo)
+        : _functionOne(functionOne), _functionTwo(functionTwo) { }
 
-    operator Func1 * ()
+    operator FunctionOne * ()
     {
-        return _func1;
+        return _functionOne;
     }
 
-    operator Func2 * ()
+    operator FunctionTwo * ()
     {
-        return _func2;
+        return _functionTwo;
     }
 };
 
-std::string intFunc (int i)
+std::string integerFunction (int i)
 {
     return "integer passed";
 }
 
-std::string longFunc (long i)
+std::string longFunction (long i)
 {
     return "long passed";
 }
@@ -560,38 +561,41 @@ std::string longFunc (long i)
 void testCallSurrogateFunctions ()
 {
     CallsSurrogates<std::string(int), std::string(long)>
-        callsSurrogates(intFunc, longFunc);
+        callsSurrogates(integerFunction, longFunction);
 
     assert(callsSurrogates(5) == "integer passed");
     assert(callsSurrogates(5L) == "long passed");
 }
 
-void voidReturn ()
-{
-    return (void)"say what?!";
-}
+void voidReturn () { }
 
 /**
- * A demonstration of how void casting lets you place
- * pretty much anything you like after the cast
+ * A demonstration of how a function that returns void
+ * can be called and returned in one statement
  */
 void testVoidReturn ()
 {
-    voidReturn();
+#ifdef ALTERNATIVE
+    if (1)
+    {
+        voidReturn();
+        return;
+    }
+#endif
+
+    return voidReturn();
 }
 
 int main ()
 {
-    typedef void (* testFunc)();
+    typedef void (* testFunction)();
 
-    const std::vector<testFunc> & tests =
-        VectorBuilder<std::vector, testFunc>
+    const std::vector<testFunction> & tests =
+        CreateContainer<std::vector, testFunction>
             (& testBranchOnVariableDeclaration)
             (& testArrayIndexAccess)
             (& testKeywordOperatorTokens)
             (& testChangingScope)
-            (& testRedefiningKeywords)
-            (& testStaticInstanceMethodCalls)
             (& testPointerToMemberOperators)
             (& testScopeGuardTrick)
             (& testPrePostInDecrementOverloading)
@@ -599,7 +603,7 @@ int main ()
             (& testReturnOverload)
             (& testNamespaces)
             (& testTernaryAsValue)
-            (& testBareURIUsingGoto)
+            (& testBareURIViaGoto)
             (& testCatchAnyException)
             (& testTemplateChecksFunctionExists)
             (& testIdentityMetaFunction)
@@ -608,13 +612,13 @@ int main ()
             (& testVoidReturn)
         .get();
 
-    const size_t & numOfTests = tests.size();
+    const size_t & numberOfTests = tests.size();
 
-    for (unsigned int i = 0; i < numOfTests; ++i)
+    for (size_t i = 0; i < numberOfTests; ++i)
     {
         tests[i]();
     }
 
-    std::cout << numOfTests << " tests passed successfully!" << std::endl;
+    std::cout << numberOfTests << " tests passed successfully!" << std::endl;
     return EXIT_SUCCESS;
 }
