@@ -6,6 +6,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <typeinfo>
 #include <vector>
 
 #ifdef TEST_PLACEHOLDER_EXAMPLE
@@ -548,7 +549,7 @@ std::string integerFunction (int i)
     return "integer passed";
 }
 
-std::string longFunction (long i)
+std::string longFunction (long l)
 {
     return "long passed";
 }
@@ -586,6 +587,106 @@ void testVoidReturn ()
     return voidReturn();
 }
 
+#define COMPILE_TIME_TYPE(type) #type
+
+template <typename T>
+struct FindMyType { };
+
+/**
+ * Shows the difference between finding the type name of a variable
+ * via a compile-time macro that uses the stringification operator,
+ * versus the runtime version, which may return platform-dependent results
+ */
+void testFindingTypeName ()
+{
+    assert(COMPILE_TIME_TYPE(FindMyType<int>()) == "FindMyType<int>()");
+
+    assert(COMPILE_TIME_TYPE(FindMyType<int>())
+        != typeid(FindMyType<int>()).name());
+}
+
+bool functionTryBlockEntered = false;
+
+int throwingFunction ()
+{
+    throw true;
+}
+
+struct ClassWithFunctionTryBlock {
+    int value;
+
+    ClassWithFunctionTryBlock ()
+    try : value(throwingFunction()) { }
+    catch (bool thrown)
+    {
+        functionTryBlockEntered = true;
+    }
+};
+
+/**
+ * Uses a function try block to catch errors thrown in an initialiser list
+ */
+void testFunctionTryBlocks ()
+{
+    try
+    {
+        ClassWithFunctionTryBlock();
+    }
+    catch (...)
+    {
+        assert(functionTryBlockEntered);
+        return;
+    }
+
+    assert(0);
+}
+
+// Recursive template for general case
+template <unsigned int N>
+struct factorial
+{
+    enum
+    {
+        value = N * factorial<N - 1>::value
+    };
+};
+
+// Template specialisation for base case
+template <>
+struct factorial<0>
+{
+    enum
+    {
+        value = 1
+    };
+};
+
+/**
+ * Provides computation from compile-time template specialisation
+ */
+void testTuringCompleteTemplateMetaProgramming ()
+{
+    assert(factorial<5>::value == 120);
+}
+
+int mostVexingParse(int(i));
+
+int mostVexingParse (int i)
+{
+    return 5;
+}
+
+/**
+ * Demonstrates that most vexing parse interprets the declaration above
+ * as a function, rather than a variable initialised by another
+ */
+void testMostVexingParse ()
+{
+    const int i = 5;
+    const int variableInitialisedByAnother = i;
+    assert(mostVexingParse(5) == variableInitialisedByAnother);
+}
+
 int main ()
 {
     typedef void (* testFunction)();
@@ -610,6 +711,10 @@ int main ()
             (& testDecayArrayToPointerViaUnaryOperator)
             (& testCallSurrogateFunctions)
             (& testVoidReturn)
+            (& testFindingTypeName)
+            (& testFunctionTryBlocks)
+            (& testTuringCompleteTemplateMetaProgramming)
+            (& testMostVexingParse)
         .get();
 
     const size_t & numberOfTests = tests.size();
