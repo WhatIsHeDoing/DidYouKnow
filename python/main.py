@@ -1,5 +1,101 @@
 """ demonstrating some great Python features via unit tests """
+import os
+import tempfile
 import unittest
+
+class testRandomFeatures(unittest.TestCase):
+    """ testing random language features """
+
+    def testMultipleAssignent(self):
+        """ tests the shorthand syntax of assigning values to multiple variables """
+        x, y = 1, 2
+        self.assertEqual(1, x)
+        self.assertEqual(2, y)
+
+        x, y = [1, 2]
+        self.assertEqual(1, x)
+        self.assertEqual(2, y)
+
+        def returns_multiple_values():
+            return (1, 2)
+
+        x, y = returns_multiple_values()
+        self.assertEqual(1, x)
+        self.assertEqual(2, y)
+
+    def testForElse(self):
+        """ tests that an "else" statement is entered if a for loop is not exited """
+        for i in range(0, 5):
+            if i > 5:
+                break
+        else:
+            return
+
+        self.fail()
+
+    def testWith(self):
+        """ tests unmanaged resources are closed via the "with" keyword """
+        filename = ""
+
+        with tempfile.NamedTemporaryFile() as file_handle:
+            filename = file_handle.name
+            self.assertTrue(os.path.exists(filename))
+
+        self.assertFalse(os.path.exists(filename))
+
+    def testChainedConditions(self):
+        """ tests the much-loved feature of chaining conditions """
+        self.assertTrue(1 < 2 < 3)
+        self.assertTrue(1 < 3 > 2)
+
+    def testTryExceptElseFinally(self):
+        """ tests the flow of an exception-handling block """
+        try:
+            1 / 0
+        except ZeroDivisionError:
+            pass
+        else:
+            self.fail()
+        finally:
+            return
+
+        self.fail()
+
+class testSets(unittest.TestCase):
+    """ shows the support for sets and comparisons of them """
+    
+    def setUp(self):
+        """ initialise the sets used throughout the tests """
+        self.one = set(' abcde ')
+        self.two = set('  b d f')
+
+    def testDifference(self):
+        """ shows the members missing from the second set that are in the first """
+        self.assertEqual(self.one - self.two, self.one.difference(self.two))
+        difference = list((self.one - self.two))
+        difference.sort()
+        self.assertEqual(difference, ["a", "c", "e"])
+
+    def testUnion(self):
+        """ tests the union of two sets """
+        self.assertEqual(self.one | self.two, self.one.union(self.two))
+        union = list((self.one | self.two))
+        union.sort()
+        self.assertEqual(union, [" ", "a", "b", "c", "d", "e", "f"])
+
+    def testIntersection(self):
+        """ finds the common members of two sets """
+        self.assertEqual(self.one & self.two, self.one.intersection(self.two))
+        intersection = list((self.one & self.two))
+        intersection.sort()
+        self.assertEqual(intersection, [" ", "b", "d"])
+
+    def testSymmetricDifference(self):
+        """ shows all the values that are members of one set and not the other """
+        self.assertEqual(self.one ^ self.two, self.one.symmetric_difference(self.two))
+        symmetric_difference = list((self.one ^ self.two))
+        symmetric_difference.sort()
+        self.assertEqual(symmetric_difference, ["a", "c", "e", "f"])
 
 class testListComprehension(unittest.TestCase):
     """ why loop when you can comprehend?! """
@@ -78,4 +174,3 @@ class testUnpacking(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    
