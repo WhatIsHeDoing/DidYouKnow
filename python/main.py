@@ -1,4 +1,5 @@
 """ demonstrating some great Python features via unit tests """
+import operator
 import os
 import tempfile
 import unittest
@@ -60,6 +61,53 @@ class testRandomFeatures(unittest.TestCase):
             return
 
         self.fail()
+
+    def testStringTemplating(self):
+        """ shows the simple yet powerful ability to template strings """
+        from string import Template
+        xml_template = Template('<${tag}>${content}</${tag}>')
+        actual = xml_template.substitute(tag='h1', content='Hello, world!')
+        expected = "<h1>Hello, world!</h1>"
+        self.assertEqual(expected, actual)
+
+    def testDecorators(self):
+        """
+        tests the very useful ability to decorate functions with other functions
+        classes can also be used
+        """
+        def paragraph_me(func):
+            def _paragraph_me(args):
+                return "<p>" + func(args) + "</p>"
+            return _paragraph_me
+
+        @paragraph_me
+        def to_paragraph(value):
+            return value
+
+        self.assertEqual(to_paragraph("Hello, world!"), "<p>Hello, world!</p>")
+
+class testIterating(unittest.TestCase):
+    """ demonstrates the support for different uses of iterators """
+
+    def testOperatorSorting(self):
+        """ demonstrates sorting objects on any of their keys without custom functions """
+        class Custom:
+            def __init__(self, value):
+                self.id = value
+
+        customs = [Custom(5), Custom(3)]
+        customs.sort(key=operator.attrgetter('id')) 
+        self.assertEqual(3, customs[0].id)
+
+    def testGenerators(self):
+        """ shows the awesome ability to yield values as they are needed """
+        def generate_to(max_value):
+            for i in range(0, max_value):
+                yield i
+
+        for i in generate_to(3):
+            self.assertEqual(i, 0)
+            return
 
 class testSets(unittest.TestCase):
     """ shows the support for sets and comparisons of them """
