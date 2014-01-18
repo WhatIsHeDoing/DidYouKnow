@@ -2,8 +2,10 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <map>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <typeinfo>
@@ -154,6 +156,31 @@ void testPointerToMemberOperators ()
     assert(heap->*valuePointer == 2);
 
     delete heap;
+}
+
+struct BaseWithHiddenData {
+    BaseWithHiddenData (const int data) : _data(data) { }
+
+protected:
+    const int _data;
+};
+
+struct DerivedExposesHiddenData : BaseWithHiddenData
+{
+    static int get (BaseWithHiddenData & baseWithHiddenMember)
+    {
+        return baseWithHiddenMember.*(& DerivedExposesHiddenData::_data);
+    }
+};
+
+/**
+ * Shows how those member pointers can be used for the more questionable
+ * practice of exposing hidden class members
+ */
+void testMemberPointersCircumventScope ()
+{
+    BaseWithHiddenData baseWithHiddenData(31313);
+    assert(DerivedExposesHiddenData::get(baseWithHiddenData) == 31313);
 }
 
 std::string letMeKeepMyReturnValue ()
@@ -687,6 +714,182 @@ void testMostVexingParse ()
     assert(mostVexingParse(5) == variableInitialisedByAnother);
 }
 
+namespace ADL
+{
+    struct UniqueClassName { };
+
+    bool noNeedToNamespaceMe (const UniqueClassName & uniqueClassName)
+    {
+        return true;
+    }
+}
+
+/**
+ * Shows how argument-dependent lookup (ADL) can determine which function to
+ * lookup based on the types of the arguments provided to it
+ */
+void testArgumentDependentLookup ()
+{
+    ADL::UniqueClassName asThisTypeIsUnique;
+    assert(noNeedToNamespaceMe(asThisTypeIsUnique));
+}
+
+/**
+ * BitField example struct
+ * @example Layout:
+ * <    p4     ><   p3   >< p2 ><p1>
+ * |?|?|?|?|?|?|?|?|?|?|?|?|?|?|?|?|
+ * Assigning the integer 0x4c to this structure gives the following bit pattern:
+ * |0|0|0|0|0|0|0|0|0|1|0|0|1|1|0|0|
+ */
+struct BitField
+{
+    unsigned p1 : 2;
+    unsigned p2 : 3;
+    unsigned p3 : 5;
+    unsigned p4 : 5;
+};
+
+union BitFieldUnion
+{
+    struct BitField bitField;
+    unsigned bitInteger;
+};
+
+template <size_t A, size_t B, size_t C, size_t D>
+struct TemplatedBitfield
+{
+    unsigned p1 : A;
+    unsigned p2 : B;
+    unsigned p3 : C;
+    unsigned p4 : D;
+};
+
+/**
+ * An example of the black art of bitfields, which can occupy less storage
+ * than an integral type.  These are syntactically much easier to use as part
+ * of a union.  You can even template them, too!
+ */
+void testBitfieldUnion ()
+{
+    struct BitField bitField;
+    unsigned * bitFieldPointer = reinterpret_cast<unsigned *>(& bitField);
+    * bitFieldPointer = 0x4c;
+    const int bitFieldValue = * reinterpret_cast<unsigned *>(& bitField);
+
+    BitFieldUnion bitFieldUnion;
+    bitFieldUnion.bitInteger = 76;
+    const int bitFieldUnionValue = bitFieldUnion.bitInteger;
+
+    assert(bitFieldValue == bitFieldUnionValue);
+
+    assert(bitField.p1 == bitFieldUnion.bitField.p1);
+    assert(bitField.p2 == bitFieldUnion.bitField.p2);
+    assert(bitField.p3 == bitFieldUnion.bitField.p3);
+    assert(bitField.p4 == bitFieldUnion.bitField.p4);
+
+    assert(bitField.p1 == 0);
+    assert(bitField.p2 == 3);
+    assert(bitField.p3 == 2);
+    assert(bitField.p4 == 0);
+
+    struct TemplatedBitfield<2, 3, 5, 5> templatedBitfield;
+
+    unsigned * templatedBitFieldPointer =
+        reinterpret_cast<unsigned *>(& templatedBitfield);
+
+    * templatedBitFieldPointer = 0x4c;
+
+    const int templatedBitFieldValue =
+        * reinterpret_cast<unsigned *>(& templatedBitfield);
+
+    assert(bitFieldValue == templatedBitFieldValue);
+}
+
+/**
+ * Not so much a language feature, but an example of how the standard library 
+ * provides some handy libraries that simplify mundane tasks.
+ * Here, a stream representing an input file is read into a collection of 
+ * strings in a single line, so that collection can be initialised as constant.
+ * Note the use of the std namespace, as there is so much of it used!
+ */
+void testStreamIterators ()
+{
+    using namespace std;
+    stringstream mockFileInput;
+
+    mockFileInput
+        << "From" << endl
+        << "a" << endl
+        << "file!" << endl;
+
+     const vector<string> strings((istream_iterator<string>(mockFileInput)),
+         istream_iterator<string>());
+
+     assert(strings.size() == 3);
+     assert(strings[0] == "From" && strings[1] == "a" && strings[2] == "file!");
+}
+
+/**
+ * Proving that classes can be declared in a for loop, err, declaration
+ */
+void testUnexpectedDeclarationsInForLoop ()
+{
+    int count = 0;
+
+    for (struct { int count; } loop = { 0 }; loop.count <= 5; ++loop.count)
+    {
+        count = loop.count;
+    }
+
+    assert(count == 5);
+}
+
+/**
+ * Not a feature, more of an annoying design of map that creates a key and value
+ * if that non-existent key is accessed via the brackets operator
+ */
+void testBewareMapBracketsOperator ()
+{
+    std::map<std::string, std::string> stringsToStrings;
+    assert(stringsToStrings.find("didNotExist") == stringsToStrings.end());
+    std::string& whyHasThisBeenFound = stringsToStrings["didNotExist"];
+    assert(whyHasThisBeenFound.empty());
+    assert(stringsToStrings.find("didNotExist") != stringsToStrings.end());
+}
+
+template <typename T> 
+class TemplatedClassWithFriendFunction
+{
+    T _value;
+
+public:
+    TemplatedClassWithFriendFunction (const T value) : _value(value) { }
+
+#ifdef THIS_WILL_FAIL
+    friend void wouldCreateIdenticalDefinitions () { }
+#endif
+    friend T generatesDifferentTemplatedVersion
+        (TemplatedClassWithFriendFunction<T> & templatedClassWithFriendFunction)
+    {
+        return templatedClassWithFriendFunction._value;
+    } 
+};
+
+/**
+ * Demonstrates how a friend function of a templated class must be defined 
+ * to ensure it is generated differently for each template type used,
+ * thus not violating the One Definition Rule (ODR)
+ */
+void testTemplatedClassWithFriendFunctionAvoidsViolatingODR ()
+{
+    TemplatedClassWithFriendFunction<int> integerVersion(123);
+    TemplatedClassWithFriendFunction<long> longVersion(123);
+    
+    assert(generatesDifferentTemplatedVersion(integerVersion)
+        == generatesDifferentTemplatedVersion(longVersion));
+}
+
 int main ()
 {
     typedef void (* testFunction)();
@@ -698,6 +901,7 @@ int main ()
             (& testKeywordOperatorTokens)
             (& testChangingScope)
             (& testPointerToMemberOperators)
+            (& testMemberPointersCircumventScope)
             (& testScopeGuardTrick)
             (& testPrePostInDecrementOverloading)
             (& testFluentCommaAndBracketOverloads)
@@ -715,6 +919,12 @@ int main ()
             (& testFunctionTryBlocks)
             (& testTuringCompleteTemplateMetaProgramming)
             (& testMostVexingParse)
+            (& testArgumentDependentLookup)
+            (& testBitfieldUnion)
+            (& testStreamIterators)
+            (& testUnexpectedDeclarationsInForLoop)
+            (& testBewareMapBracketsOperator)
+            (& testTemplatedClassWithFriendFunctionAvoidsViolatingODR)
         .get();
 
     const size_t & numberOfTests = tests.size();
