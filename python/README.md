@@ -6,7 +6,7 @@ To run the tests in the source code, simply invoke the script using following co
 
     python main.py
 
-This assumes that *python* has been defined as an environment variable.  For more information, please visit the official [website] [1].  If you don't have access to that now, try an online interpreter, such as [Try Python] [5] or [Python Anywhere] [4].
+This assumes that *python* has been defined as an environment variable.  These examples are written for Python version 3 only.  For more information, please visit the official [website] [1].  If you don't have access to that now, try an online interpreter, such as [Try Python] [5] or [Python Anywhere] [4].
 
 ## Inspiration
 

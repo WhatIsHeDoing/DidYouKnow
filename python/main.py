@@ -1,4 +1,5 @@
 """ demonstrating some great Python features via unit tests """
+from functools import partial
 import operator
 import os
 import tempfile
@@ -13,9 +14,16 @@ class testRandomFeatures(unittest.TestCase):
         self.assertEqual(1, x)
         self.assertEqual(2, y)
 
-        x, y = [1, 2]
+        # from lists indices
+        x, y, *z = [1, 2, 3, 4]
         self.assertEqual(1, x)
         self.assertEqual(2, y)
+        self.assertEqual([3, 4], z, "all other values!")
+
+        # in-place value swapping"
+        y, x = x, y
+        self.assertEqual(2, x)
+        self.assertEqual(1, y)
 
         def returns_multiple_values():
             return (1, 2)
@@ -49,19 +57,6 @@ class testRandomFeatures(unittest.TestCase):
         self.assertTrue(1 < 2 < 3)
         self.assertTrue(1 < 3 > 2)
 
-    def testTryExceptElseFinally(self):
-        """ tests the flow of an exception-handling block """
-        try:
-            1 / 0
-        except ZeroDivisionError:
-            pass
-        else:
-            self.fail()
-        finally:
-            return
-
-        self.fail()
-
     def testStringTemplating(self):
         """ shows the simple yet powerful ability to template strings """
         from string import Template
@@ -86,6 +81,117 @@ class testRandomFeatures(unittest.TestCase):
 
         self.assertEqual(to_paragraph("Hello, world!"), "<p>Hello, world!</p>")
 
+    def testBewareMutableFunctionArguments(self):
+        """
+        default function argument values are stored in a tuple as part of the
+        function, so use a sentinel value to denote "not given" and replace with
+        the mutable as a default
+        """
+        def mutates_default_arg(arg=[]):
+            arg.append(1)
+            return arg
+
+        self.assertEqual(len(mutates_default_arg.__defaults__), 1)
+        self.assertEqual(mutates_default_arg(), [1])
+        self.assertEqual(mutates_default_arg.__defaults__[0], [1])
+        self.assertEqual(mutates_default_arg(), [1, 1])
+        self.assertEqual(mutates_default_arg.__defaults__[0], [1, 1])
+
+        def does_not_mutate_default_arg(arg=None):
+            arg = [] if arg is None else arg
+            arg.append(1)
+            return arg
+
+        self.assertEqual(len(does_not_mutate_default_arg.__defaults__), 1)
+        self.assertEqual(does_not_mutate_default_arg(), [1])
+        self.assertEqual(does_not_mutate_default_arg.__defaults__[0], None)
+        self.assertEqual(does_not_mutate_default_arg(), [1])
+        self.assertEqual(does_not_mutate_default_arg.__defaults__[0], None)
+
+    def testInterestingOperatorUsage(self):
+        """ why restrict yourself to the usual use of operators? """
+        self.assertEqual("nom" * 2, "nomnom")
+        self.assertEqual(2 * "nom", "nomnom")
+        self.assertEqual([1, 2] * 2, [1, 2, 1, 2])
+        self.assertEqual("Keep me!" * True, "Keep me!")
+        self.assertEqual("Keep me!" * False, "")
+        self.assertEqual([1, 2] + [3, 4], [1, 2, 3, 4])
+
+    def testMembership(self):
+        """ using the "in" keyword to test memberships """
+        self.assertTrue("b" in "abc")
+        self.assertFalse("b" in "efg")
+        self.assertTrue(2 in [1, 2, 3])
+        self.assertFalse(2 in [4, 5, 6])
+
+    def testZip(self):
+        """ showing how lists can be iterated together, and how to tranpose them """
+        for zipped in zip(["one"], [2]):
+            self.assertEqual(zipped, ("one", 2))
+
+        transpose_me = [(1, 2), (3, 4), (5, 6)]
+        self.assertEqual(list(zip(*transpose_me)), [(1, 3, 5), (2, 4, 6)])
+
+    def testEllipsisOperator(self):
+        """ demonstrates how the ellipsis operator can be used """
+        class TestEllipsis(object):
+            def __getitem__(self, item):
+                if item is Ellipsis:
+                    return "Returning all items"
+
+                return "return %r items" % item
+
+        test_ellipsis = TestEllipsis()
+        self.assertEqual(test_ellipsis[2], "return 2 items")
+        self.assertEqual(test_ellipsis[...], "Returning all items")
+
+    def testFunctools(self):
+        """ testing the binding of arguments to functions for late evaluation """
+        bound_func = partial(range, 0, 4)
+        self.assertEqual(list(bound_func()), [0, 1, 2, 3])
+        self.assertEqual(list(bound_func(2)), [0, 2])
+
+    def functionsAsFirstClassObjects(self):
+        """ passing functions around as they are first-class objects """
+        called_back = False
+
+        def callback():
+            called_back = True
+
+        def use_callback(func):
+            func()
+
+        use_callback(callback)
+        self.assertTrue(called_back)
+
+class testExceptions(unittest.TestCase):
+    """ showcasing the interesting additions to exception handling """
+
+    def testTryExceptElseFinally(self):
+        """ tests the flow of an exception-handling block """
+        try:
+            1 / 0
+        except ZeroDivisionError:
+            pass
+        else:
+            self.fail()
+        finally:
+            return
+
+        self.fail()
+
+    def testReRaiseException(self):
+        """ shows how an exception can be reraised to preserve its original traceback """
+        try:
+            try:
+                1 / 0
+            except ZeroDivisionError as e:
+                raise
+        except ZeroDivisionError as e:
+            return
+
+        self.fail()
+
 class testIterating(unittest.TestCase):
     """ demonstrates the support for different uses of iterators """
 
@@ -108,6 +214,34 @@ class testIterating(unittest.TestCase):
         for i in generate_to(3):
             self.assertEqual(i, 0)
             return
+
+    def testSendingValuesToGenerators(self):
+        """ demonstrates how values can be received by generators """
+        def generate_value(value):
+            while True:
+                received_value = (yield value)
+
+                if received_value is not None:
+                    value = received_value
+
+        generator = generate_value(5)
+        self.assertEqual(next(generator), 5)
+        self.assertEqual(next(generator), 5)
+        self.assertEqual(generator.send(7), 7)
+        self.assertEqual(next(generator), 7)
+
+    def arraySlicing(self):
+        """ slicing arrays in many different ways """
+        values = [1, 2, 3, 4, 5]
+        self.assertEqual(values[2:], [3, 4, 5], "from an index onwards")
+
+        self.assertEqual(values[-1], [5],
+            "using a negative index to access indices from end of the array")
+        
+        self.assertEqual(values[:2], [1, 2], "up to an index")
+        self.assertEqual(values[2:4], [3, 4], "between indices")
+        self.assertEqual(values[::2], [2, 4], "using a custom interval")
+        self.assertEqual(values[::-1], [5, 4, 3, 2, 1], "reversing")
 
 class testSets(unittest.TestCase):
     """ shows the support for sets and comparisons of them """
