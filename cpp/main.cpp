@@ -1024,6 +1024,23 @@ void testMutable ()
     assert(containsMutant.valueWasAccessed());
 }
 
+int changeMyArgumentDefault (const int i=10)
+{
+    return i;
+}
+
+/**
+ * Confuse the life out of your colleagues by redeclaring a function signature
+ * in a different scope, but only changing a default argument value, then
+ * comparing the calls to it and the original in global scope.  I'd hide...
+ */
+void testChangingDefaultArguments ()
+{
+    int changeMyArgumentDefault (const int i=5);
+    assert(changeMyArgumentDefault() == 5);
+    assert(::changeMyArgumentDefault() == 10);
+}
+
 int main ()
 {
     typedef void (* testFunction)();
@@ -1063,6 +1080,7 @@ int main ()
             (& testDirectInitialisation)
             (& testTemplateAsFriend)
             (& testMutable)
+            (& testChangingDefaultArguments)
         .get();
 
     const size_t & numberOfTests = tests.size();
