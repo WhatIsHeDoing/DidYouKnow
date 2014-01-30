@@ -890,6 +890,140 @@ void testTemplatedClassWithFriendFunctionAvoidsViolatingODR ()
         == generatesDifferentTemplatedVersion(longVersion));
 }
 
+
+class Member
+{
+protected:
+    bool _hidden;
+
+public:
+    Member () : _hidden(true) { }
+
+    bool getHidden () const
+    {
+        return _hidden;
+    }
+};
+
+class NormalComposition
+{
+    Member * _member;
+
+public:
+    NormalComposition () : _member(new Member) { }
+
+    bool getHiddenFromMember () const
+    {
+        return _member->getHidden();
+    }
+};
+
+struct HasAComposition : private Member
+{
+    HasAComposition () : Member() { }
+    using Member::getHidden;
+
+    bool accessMemberPrivates ()
+    {
+        return Member::getHidden();
+    }
+};
+
+/**
+ * Demonstrates some of the differences between normal composition and
+ * private inheritance.  Among others, although a class that privately inherits
+ * from another can access anything within it, only one instance can be used,
+ * and it can't be forward-declared.
+ */
+void testCompositionViaPrivateInheritance ()
+{
+    assert(NormalComposition().getHiddenFromMember());
+    assert(HasAComposition().getHidden());
+    assert(HasAComposition().accessMemberPrivates());
+}
+
+/**
+ * Simple but worthwhile comparison of the ways values can be assigned to
+ * primitive types, mainly that direct initialisation isn't quite construction,
+ * as it appears
+ */
+void testDirectInitialisation ()
+{
+    const int usualAssignment = 7;
+    const int directInitialisation(7);
+    assert(usualAssignment == directInitialisation);
+}
+
+template <typename T>
+class HasFriend
+{
+    friend T;
+    bool _hidden;
+
+public:
+    HasFriend () : _hidden(true) { }
+
+    bool getHidden () const
+    {
+        return _hidden;
+    }
+};
+
+class FriendClass
+{
+public:
+    void setHidden (HasFriend<FriendClass> & hasFriend, const bool value) const
+    {
+        hasFriend._hidden = value;
+    }
+};
+
+/**
+ * Friends: they're better templated?
+ */
+void testTemplateAsFriend ()
+{
+    HasFriend<FriendClass> hasFriend;
+    assert(hasFriend.getHidden());
+
+    FriendClass().setHidden(hasFriend, false);
+    assert(!hasFriend.getHidden());
+}
+
+class ContainsMutant 
+{
+    const int _value;  
+    mutable bool _valueWasAccessed;
+
+public:
+    ContainsMutant (const int value)
+        : _value(value), _valueWasAccessed(false) { }
+
+    int getValue () const
+    {
+        _valueWasAccessed = true;
+        return _value;
+    }
+
+    bool valueWasAccessed () const
+    {
+        return _valueWasAccessed;
+    }
+};
+
+/**
+ * Establishing that a mutable attribute may be modified by a method marked
+ * as const, which could be useful for caching an expensive operation yet
+ * not affecting the external, visible state of the object
+ */
+void testMutable ()
+{
+    const ContainsMutant containsMutant(28);
+    assert(!containsMutant.valueWasAccessed());
+    assert(containsMutant.getValue() == 28);
+    assert(containsMutant.valueWasAccessed());
+}
+
 int main ()
 {
     typedef void (* testFunction)();
@@ -925,6 +1059,10 @@ int main ()
             (& testUnexpectedDeclarationsInForLoop)
             (& testBewareMapBracketsOperator)
             (& testTemplatedClassWithFriendFunctionAvoidsViolatingODR)
+            (& testCompositionViaPrivateInheritance)
+            (& testDirectInitialisation)
+            (& testTemplateAsFriend)
+            (& testMutable)
         .get();
 
     const size_t & numberOfTests = tests.size();
