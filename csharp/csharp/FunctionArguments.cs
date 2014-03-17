@@ -4,13 +4,51 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace csharp
 {
     /// <summary>
-    /// A quick comparison of how the ref and out keywords affect function
-    /// parameter passing, and how they also make the distinction explicit
-    /// by requiring the caller to use the keywords!
+    /// A demonstration of default and named parameters, and a comparison of how
+    /// the ref and out keywords affect function parameter passing, and how they
+    /// also make the distinction explicit by requiring
+    /// the caller to use the keywords!
     /// </summary>
     [TestClass]
     public class FunctionArguments
     {
+        string defaultParameter(string name, int age=18)
+        {
+            return String.Format("{0} is {1} years old", name, age);
+        }
+
+        /// <summary>
+        /// Showing how a function with a default parameter can be called
+        /// value set
+        /// </summary>
+        [TestMethod]
+        public void TestDefaultParameters()
+        {
+            Assert.AreEqual(defaultParameter("Darren"),
+                "Darren is 18 years old");
+
+            Assert.AreEqual(defaultParameter("Darren", 31),
+                "Darren is 31 years old");
+        }
+
+        string boolArgument(bool test)
+        {
+            return (test) ? "foo" : "bar";
+        }
+
+        /// <summary>
+        /// Comparison of calling a function with and without the parameter
+        /// name being used. This is great when calling functions that
+        /// take multiple parameters, one being a boolean, which
+        /// often makes it unclear what that parameter is doing!
+        /// </summary>
+        [TestMethod]
+        public void TestNamedParameters()
+        {
+            Assert.AreEqual(boolArgument(true), "foo");
+            Assert.AreEqual(boolArgument(test: false), "bar");
+        }
+
         void modifyByRef(ref string name)
         {
             name = "Foo Bar";
