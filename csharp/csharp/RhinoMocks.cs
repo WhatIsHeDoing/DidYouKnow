@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rhino.Mocks;
+using Moq;
 
 namespace csharp
 {
     /// <summary>
     /// Pity thee!  Err, demonstrating mocking via a third-party library,
-    /// Rhino Mocks, installed via NuGet
+    /// Moq, installed via NuGet.
     /// </summary>
     [TestClass]
     public class RhinoMocks
@@ -24,7 +24,7 @@ namespace csharp
         public void TestStubImplementsType()
         {
             Assert.IsTrue
-                (MockRepository.GenerateStub<IFetchData>() is IFetchData);
+                (new Mock<IFetchData>().Object is IFetchData);
         }
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace csharp
         [TestMethod]
         public void TestStubReadonlyType()
         {
-            var fetchData = MockRepository.GenerateStub<IFetchData>();
-            fetchData.Stub(f => f.ID).Return(123);
-            Assert.AreEqual(fetchData.ID, 123);
+            var fetchData = new Mock<IFetchData>();
+            fetchData.SetupGet(f => f.ID).Returns(123);
+            Assert.AreEqual(fetchData.Object.ID, 123);
         }
 
         public class DataFetcher
@@ -47,7 +47,7 @@ namespace csharp
                 var data = fetchData.Fetch();
 
                 if (String.IsNullOrEmpty(data)) {
-                    throw new ApplicationException("no data returned!");
+                    throw new ArgumentException("No data returned!");
                 }
 
                 return data;
@@ -63,27 +63,31 @@ namespace csharp
         [TestMethod]
         public void TestStubFunction()
         {
-            var fetchData = MockRepository.GenerateStub<IFetchData>();
-            fetchData.Stub<IFetchData, string>(f => f.Fetch()).Return("Hi!");
+            var fetchData = new Mock<IFetchData>();
+            fetchData
+                .Setup(f => f.Fetch())
+                .Returns("Hi!");
 
             Assert.AreEqual(new DataFetcher
             {
-                fetchData = fetchData
+                fetchData = fetchData.Object
             }.GetData(), "Hi!");
 
-            var fetchDataFail = MockRepository.GenerateStub<IFetchData>();
-            fetchDataFail.Stub<IFetchData, string>(f => f.Fetch()).Return("");
+            var fetchDataFail = new Mock<IFetchData>();
+
+            fetchDataFail
+                .Setup(f => f.Fetch())
+                .Throws(new ArgumentNullException());
 
             try
             {
                 new DataFetcher
                 {
-                    fetchData = fetchDataFail
+                    fetchData = fetchDataFail.Object
                 }.GetData();
             }
-            catch (ApplicationException e)
+            catch (ArgumentNullException e)
             {
-                Assert.AreEqual(e.Message, "no data returned!");
                 return;
             }
 
