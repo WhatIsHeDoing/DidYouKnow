@@ -9,7 +9,7 @@ namespace csharp
     /// Moq, installed via NuGet.
     /// </summary>
     [TestClass]
-    public class RhinoMocks
+    public class Moq
     {
         public interface IFetchData
         {
