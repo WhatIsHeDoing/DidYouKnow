@@ -47,7 +47,7 @@ namespace csharp
                 var data = fetchData.Fetch();
 
                 if (String.IsNullOrEmpty(data)) {
-                    throw new ArgumentException("No data returned!");
+                    throw new InvalidOperationException("No data returned!");
                 }
 
                 return data;
@@ -77,7 +77,7 @@ namespace csharp
 
             fetchDataFail
                 .Setup(f => f.Fetch())
-                .Throws(new ArgumentNullException());
+                .Returns("");
 
             try
             {
@@ -86,8 +86,9 @@ namespace csharp
                     fetchData = fetchDataFail.Object
                 }.GetData();
             }
-            catch (ArgumentNullException e)
+            catch (InvalidOperationException e)
             {
+                Assert.AreEqual(e.Message, "No data returned!");
                 return;
             }
 

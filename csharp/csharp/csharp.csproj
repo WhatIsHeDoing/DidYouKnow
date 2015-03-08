@@ -63,7 +63,7 @@
     <Compile Include="Linq.cs" />
     <Compile Include="Generics.cs" />
     <Compile Include="FunctionArguments.cs" />
-    <Compile Include="RhinoMocks.cs" />
+    <Compile Include="Moq.cs" />
     <Compile Include="Using.cs" />
   </ItemGroup>
   <ItemGroup>
