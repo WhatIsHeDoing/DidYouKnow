@@ -143,21 +143,6 @@ namespace csharp
             Assert.IsFalse(new Empty() is EmptyToo);
         }
 
-        string argsToCSV(params object[] args)
-        {
-            return String.Join(",", args.Select(a => a.ToString()).ToList());
-        }
-
-        /// <summary>
-        /// Supply a variable number of arguments to a method using "params"
-        /// <see>System.Console.WriteLine</see>
-        /// </summary>
-        [TestMethod]
-        public void TestVariableArgumentList()
-        {
-            Assert.AreEqual(argsToCSV(new object[] { "foo", 6 }), "foo,6");
-        }
-
         class @class
         {
             public const string foo = "bar";
