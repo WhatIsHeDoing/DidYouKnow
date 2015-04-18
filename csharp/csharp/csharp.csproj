@@ -71,6 +71,7 @@
     <Compile Include="Generics.cs" />
     <Compile Include="FunctionArguments.cs" />
     <Compile Include="Moq.cs" />
+    <Compile Include="Enumerable.cs" />
     <Compile Include="Using.cs" />
   </ItemGroup>
   <ItemGroup>

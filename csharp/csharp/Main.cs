@@ -57,26 +57,6 @@ namespace csharp
             Assert.AreEqual(anonymousPerson.Name, person.Name);
         }
 
-        IEnumerable<String> helloWorld()
-        {
-            yield return "Hello";
-            yield return "World";
-            yield break;
-        }
-
-        /// <summary>
-        /// Generator methods via the yield keyword
-        /// </summary>
-        [TestMethod]
-        public void TestYield()
-        {
-            var enumerator = helloWorld().GetEnumerator();
-            enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, "Hello");
-            enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, "World");
-        }
-
         /// <summary>
         /// Ignoring escape patterns and respecting formatting
         /// thanks to verbatim strings
