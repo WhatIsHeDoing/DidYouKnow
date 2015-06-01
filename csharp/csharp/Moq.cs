@@ -13,7 +13,7 @@ namespace csharp
     {
         public interface IFetchData
         {
-            int ID { get; }
+            int Id { get; }
             string Fetch();
         }
 
@@ -34,17 +34,17 @@ namespace csharp
         public void TestStubReadonlyType()
         {
             var fetchData = new Mock<IFetchData>();
-            fetchData.SetupGet(f => f.ID).Returns(123);
-            Assert.AreEqual(fetchData.Object.ID, 123);
+            fetchData.SetupGet(f => f.Id).Returns(123);
+            Assert.AreEqual(fetchData.Object.Id, 123);
         }
 
         public class DataFetcher
         {
-            public IFetchData fetchData { get; set; }
+            public IFetchData FetchData { get; set; }
 
             public string GetData()
             {
-                var data = fetchData.Fetch();
+                var data = FetchData.Fetch();
 
                 if (String.IsNullOrEmpty(data)) {
                     throw new InvalidOperationException("No data returned!");
@@ -70,7 +70,7 @@ namespace csharp
 
             Assert.AreEqual(new DataFetcher
             {
-                fetchData = fetchData.Object
+                FetchData = fetchData.Object
             }.GetData(), "Hi!");
 
             var fetchDataFail = new Mock<IFetchData>();
@@ -83,7 +83,7 @@ namespace csharp
             {
                 new DataFetcher
                 {
-                    fetchData = fetchDataFail.Object
+                    FetchData = fetchDataFail.Object
                 }.GetData();
             }
             catch (InvalidOperationException e)

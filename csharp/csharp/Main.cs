@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
 {
+    // ReSharper disable ClassNeverInstantiated.Local
+    // ReSharper disable InconsistentNaming
+
     /// <summary>
     /// This main test class is used to house unit tests
     /// that haven't yet been grouped under test classes
@@ -37,6 +38,8 @@ namespace csharp
         {
             int? firstNull = null;
             int? secondNull = null;
+            
+            // ReSharper disable ConstantNullCoalescingCondition
             Assert.AreEqual(firstNull ?? secondNull ?? 123, 123);
         }
 
@@ -122,11 +125,14 @@ namespace csharp
 
             try
             {
+                // ReSharper disable once UnusedVariable
+                // ReSharper disable once PossibleInvalidCastException
                 var willThrow = (EmptyToo)empty;
                 Assert.Fail("Should throw!");
             }
             catch (InvalidCastException) { }
 
+            // ReSharper disable once ExpressionIsAlwaysNull
             var willBeNull = empty as EmptyToo;
             Assert.IsNull(willBeNull);
 
@@ -137,7 +143,7 @@ namespace csharp
 
         class @class
         {
-            public const string foo = "bar";
+            public const string Foo = "bar";
         }
 
         /// <summary>
@@ -149,20 +155,22 @@ namespace csharp
         [TestMethod]
         public void TestKeywordVariableNames()
         {
-            string @string = "foo bar";
+            const string @string = "foo bar";
             Assert.AreEqual(@string, "foo bar");
 
-            int nonKeyword = 6;
+            const int nonKeyword = 6;
             Assert.AreEqual(@nonKeyword, 6);
 
-            Assert.AreEqual(@class.foo, "bar");
+            Assert.AreEqual(@class.Foo, "bar");
         }
 
         [DebuggerDisplay("{Name} from {Town}")]
         class EasyDebugPerson
         {
-            public string Name { get; private set; }
-            public string Town { get; private set; }
+            // ReSharper disable MemberCanBePrivate.Local
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
+            public string Name { get; set; }
+            public string Town { get; set; }
 
             public EasyDebugPerson(string name, string town)
             {
@@ -178,6 +186,7 @@ namespace csharp
         [TestMethod]
         public void TestDebuggerDisplay()
         {
+            // ReSharper disable once UnusedVariable
             var debugMe = new EasyDebugPerson("Dave", "Essex");
             Debugger.Break();
         }

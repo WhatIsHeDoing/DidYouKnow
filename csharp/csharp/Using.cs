@@ -21,7 +21,7 @@ namespace csharp
 
         class DisposingClass : IDisposable
         {
-            protected Resource _resource;
+            private readonly Resource _resource;
 
             public DisposingClass(Resource resource)
             {
@@ -43,7 +43,7 @@ namespace csharp
         {
             var resouce = new Resource();
 
-            using (var disposingClass = new DisposingClass(resouce))
+            using (new DisposingClass(resouce))
             {
                 Assert.IsFalse(resouce.IsDisposed);
             }

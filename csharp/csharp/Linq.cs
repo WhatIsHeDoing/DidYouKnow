@@ -43,15 +43,15 @@ namespace csharp
 
             var posts = new List<Post>
             {
-                { new Post { PostedOn = new DateTime(1990, 12, 31) } },
-                { new Post { PostedOn = new DateTime(2000, 1, 1) } },
-                { new Post { PostedOn = latestDate } }
+                new Post { PostedOn = new DateTime(1990, 12, 31) },
+                new Post { PostedOn = new DateTime(2000, 1, 1) },
+                new Post { PostedOn = latestDate }
             };
 
             var cutoff = new DateTime(2000, 1, 1);
 
-            var standardQuery = posts.Where(p => p.PostedOn > cutoff);
-            var extensionMethod = posts.PostedAfter(cutoff);
+            var standardQuery = posts.Where(p => p.PostedOn > cutoff).ToList();
+            var extensionMethod = posts.PostedAfter(cutoff).ToList();
 
             var expressionTree =
                 posts.AsQueryable().Where(PostedAfter(cutoff));

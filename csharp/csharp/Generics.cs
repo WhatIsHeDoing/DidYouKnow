@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // Alias used in a test
@@ -20,12 +19,12 @@ namespace csharp
         [TestMethod]
         public void TestAliasedGeneric()
         {
-            StringToString aliasedMap = new StringToString()
+            var aliasedMap = new StringToString
             {
                 { "Darren", "Hickling" }
             };
 
-            Dictionary<string, string> map = new Dictionary<string, string>()
+            var map = new Dictionary<string, string>
             {
                 { "Darren", "Hickling" }
             };
@@ -45,6 +44,7 @@ namespace csharp
         [TestMethod]
         public void TestImplicitGenerics()
         {
+            // ReSharper disable once RedundantTypeArgumentsOfMethod
             Assert.AreEqual(returnValue<int>(23), returnValue(23));
         }
 
@@ -53,6 +53,7 @@ namespace csharp
             return default(T);
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         class Blank { }
 
         /// <summary>

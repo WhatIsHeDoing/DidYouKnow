@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
 {
@@ -13,18 +11,14 @@ namespace csharp
     {
         struct CoordinatesValueType
         {
-            public int x, y;
-
-            public CoordinatesValueType(int x, int y)
-            {
-                this.x = x;
-                this.y = y;
-            }
+            public int X;
+            public int Y;
         }
 
         class CoordinatesReferenceType
         {
-            public int x, y;
+            public int X;
+            public int Y;
         }
 
         /// <summary>
@@ -39,17 +33,17 @@ namespace csharp
             const int y = 5;
 
             CoordinatesValueType coordinatesStack;
-            coordinatesStack.x = x;
-            coordinatesStack.y = y;
+            coordinatesStack.X = x;
+            coordinatesStack.Y = y;
 
             var coordinatesHeap = new CoordinatesReferenceType
             {
-                x = x,
-                y = y
+                X = x,
+                Y = y
             };
 
-            Assert.AreEqual(coordinatesStack.x, coordinatesHeap.x);
-            Assert.AreEqual(coordinatesStack.y, coordinatesHeap.y);
+            Assert.AreEqual(coordinatesStack.X, coordinatesHeap.X);
+            Assert.AreEqual(coordinatesStack.Y, coordinatesHeap.Y);
         }
     }
 }

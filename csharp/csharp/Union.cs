@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
@@ -31,11 +30,11 @@ namespace csharp
 
             public RGB() { }
 
-            public RGB(byte R, byte G, byte B)
+            public RGB(byte r, byte g, byte b)
             {
-                this.R = R;
-                this.G = G;
-                this.B = B;
+                R = r;
+                G = g;
+                B = b;
             }
 
             public string AsHex()

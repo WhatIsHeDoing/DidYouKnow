@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
 {
+    // ReSharper disable RedundantAssignment
+
     /// <summary>
     /// A demonstration of default and named parameters, and a comparison of how
     /// the ref and out keywords affect function parameter passing, and how they
@@ -50,7 +52,7 @@ namespace csharp
             Assert.AreEqual(boolArgument(test: false), "bar");
         }
 
-        void modifyByRef(ref string name)
+        static void ModifyByRef(ref string name)
         {
             name = "Foo Bar";
         }
@@ -63,7 +65,7 @@ namespace csharp
         public void TestRefKeywordValueType()
         {
             string modifyMe = "Mister E";
-            modifyByRef(ref modifyMe);
+            ModifyByRef(ref modifyMe);
             Assert.AreEqual(modifyMe, "Foo Bar");
         }
 
@@ -86,15 +88,16 @@ namespace csharp
 
         class Test
         {
-            public bool modified;
+            public bool Modified;
         }
 
-        void modifyObject(Test test)
+        static void ModifyObject(Test test)
         {
-            test.modified = true;
+            test.Modified = true;
         }
 
-        void replaceObject(Test test)
+        // ReSharper disable once UnusedParameter.Local
+        static void ReplaceObject(Test test)
         {
             test = new Test();
         }
@@ -107,16 +110,16 @@ namespace csharp
         public void TestRefTypesCopyReferencePointer()
         {
             var test = new Test();
-            modifyObject(test);
-            Assert.IsTrue(test.modified);
+            ModifyObject(test);
+            Assert.IsTrue(test.Modified);
 
-            replaceObject(test);
-            Assert.IsTrue(test.modified);
+            ReplaceObject(test);
+            Assert.IsTrue(test.Modified);
         }
 
         void modifyObjectViaActualReference(ref Test test)
         {
-            test.modified = true;
+            test.Modified = true;
         }
 
         void reallyReplaceObject(ref Test test)
@@ -133,10 +136,10 @@ namespace csharp
         {
             var test = new Test();
             modifyObjectViaActualReference(ref test);
-            Assert.IsTrue(test.modified);
+            Assert.IsTrue(test.Modified);
 
             reallyReplaceObject(ref test);
-            Assert.IsFalse(test.modified);
+            Assert.IsFalse(test.Modified);
         }
 
         string argsToCSV(params object[] args)

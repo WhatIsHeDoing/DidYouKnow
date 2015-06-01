@@ -16,7 +16,6 @@ namespace csharp
         {
             yield return "Hello";
             yield return "World";
-            yield break;
         }
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace csharp
 
         class Triplets<T> : IEnumerable<IEnumerable<T>>
         {
-            protected List<List<T>> _collection = new List<List<T>>();
+            private readonly List<List<T>> _collection = new List<List<T>>();
 
             public void Add(T one, T two, T three)
             {
@@ -48,7 +47,7 @@ namespace csharp
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return this.GetEnumerator();
+                return GetEnumerator();
             }
         }
 
@@ -64,6 +63,7 @@ namespace csharp
                 { 1, 2, 3 }
             };
 
+            // ReSharper disable once AssignNullToNotNullAttribute
             CollectionAssert.AreEqual
                 (new List<int> { 1, 2, 3 },
                     triplets.FirstOrDefault().ToList());
