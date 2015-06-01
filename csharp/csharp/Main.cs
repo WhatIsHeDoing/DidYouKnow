@@ -69,26 +69,6 @@ namespace csharp
             Assert.AreEqual(anonymousPerson.Name, person.Name);
         }
 
-        IEnumerable<String> helloWorld()
-        {
-            yield return "Hello";
-            yield return "World";
-            yield break;
-        }
-
-        /// <summary>
-        /// Generator methods via the yield keyword
-        /// </summary>
-        [TestMethod]
-        public void TestYield()
-        {
-            var enumerator = helloWorld().GetEnumerator();
-            enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, "Hello");
-            enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, "World");
-        }
-
         /// <summary>
         /// Ignoring escape patterns and respecting formatting
         /// thanks to verbatim strings
@@ -153,21 +133,6 @@ namespace csharp
             // Visual Studio may warn you here!
             // "The given expression is never of the provided (<type>) type"
             Assert.IsFalse(new Empty() is EmptyToo);
-        }
-
-        string argsToCSV(params object[] args)
-        {
-            return String.Join(",", args.Select(a => a.ToString()).ToList());
-        }
-
-        /// <summary>
-        /// Supply a variable number of arguments to a method using "params"
-        /// <see>System.Console.WriteLine</see>
-        /// </summary>
-        [TestMethod]
-        public void TestVariableArgumentList()
-        {
-            Assert.AreEqual(argsToCSV(new object[] { "foo", 6 }), "foo,6");
         }
 
         class @class

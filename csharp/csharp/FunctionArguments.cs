@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
@@ -136,6 +137,21 @@ namespace csharp
 
             reallyReplaceObject(ref test);
             Assert.IsFalse(test.modified);
+        }
+
+        string argsToCSV(params object[] args)
+        {
+            return String.Join(",", args.Select(a => a.ToString()).ToList());
+        }
+
+        /// <summary>
+        /// Supply a variable number of arguments to a method using "params"
+        /// <see>System.Console.WriteLine</see>
+        /// </summary>
+        [TestMethod]
+        public void TestVariableArgumentList()
+        {
+            Assert.AreEqual(argsToCSV(new object[] { "foo", 6 }), "foo,6");
         }
     }
 }
