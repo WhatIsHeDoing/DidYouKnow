@@ -15,6 +15,18 @@ namespace csharp
     public class Main
     {
         /// <summary>
+        /// Shows that Unicode characters can be used in variables names.
+        /// Hover over to read the real name!
+        /// This is unreadable, but prevents the file needing Unicode encoding.
+        /// </summary>
+        [TestMethod]
+        public void TestCanUseUnicodeCharactersInVariableNames()
+        {
+            const string ὧὃḁḣ = "woah";
+            Assert.IsNotNull(\u1f67\u1f43\u1e01\u1e23);
+        }
+
+        /// <summary>
         /// Demonstrates chaining the null-coalescing operator
         /// </summary>
         /// <remarks>
