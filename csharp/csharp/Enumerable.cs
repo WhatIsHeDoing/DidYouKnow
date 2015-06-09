@@ -56,7 +56,7 @@ namespace csharp
         /// that implements IEnumerable is used in the object initialiser.
         /// </summary>
         [TestMethod]
-        public void TestObjectInitialiser()
+        public void TestObjectInitializer()
         {
             var triplets = new Triplets<int>
             {

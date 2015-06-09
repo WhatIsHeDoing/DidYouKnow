@@ -12,7 +12,7 @@ namespace csharp
     [TestClass]
     public class AutoMapperTest
     {
-        public class PersonTypeOne
+        class PersonTypeOne
         {
             public Guid Id { get; set; }
             public DateTime DateOfBirth { get; set; }
@@ -20,7 +20,7 @@ namespace csharp
             public string Surname { get; set; }
         }
 
-        public class PersonTypeTwo
+        class PersonTypeTwo
         {
             public Guid Id { get; set; }
             public DateTime DoB { get; set; }
@@ -47,7 +47,7 @@ namespace csharp
             {
                 Mapper.AssertConfigurationIsValid();
             }
-            catch (Exception e)
+            catch (AutoMapperConfigurationException e)
             {
                 Assert.Fail("Configuration invalid: " + e.Message);
             }

@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("csharp")]
 [assembly: AssemblyDescription("Unit testing great features of the C# language")]
 [assembly: AssemblyProduct("csharp")]
+
+[assembly: CLSCompliant(true)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

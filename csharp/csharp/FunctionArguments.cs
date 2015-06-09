@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,9 +17,10 @@ namespace csharp
     [TestClass]
     public class FunctionArguments
     {
-        string defaultParameter(string name, int age=18)
+        static string DefaultParameter(string name, int age=18)
         {
-            return String.Format("{0} is {1} years old", name, age);
+            return String.Format(CultureInfo.CurrentCulture,
+                "{0} is {1} years old", name, age);
         }
 
         /// <summary>
@@ -27,14 +30,14 @@ namespace csharp
         [TestMethod]
         public void TestDefaultParameters()
         {
-            Assert.AreEqual(defaultParameter("Darren"),
+            Assert.AreEqual(DefaultParameter("Darren"),
                 "Darren is 18 years old");
 
-            Assert.AreEqual(defaultParameter("Darren", 31),
+            Assert.AreEqual(DefaultParameter("Darren", 31),
                 "Darren is 31 years old");
         }
 
-        string boolArgument(bool test)
+        static string BoolArgument(bool test)
         {
             return (test) ? "foo" : "bar";
         }
@@ -48,8 +51,8 @@ namespace csharp
         [TestMethod]
         public void TestNamedParameters()
         {
-            Assert.AreEqual(boolArgument(true), "foo");
-            Assert.AreEqual(boolArgument(test: false), "bar");
+            Assert.AreEqual(BoolArgument(true), "foo");
+            Assert.AreEqual(BoolArgument(test: false), "bar");
         }
 
         static void ModifyByRef(ref string name)
@@ -64,12 +67,12 @@ namespace csharp
         [TestMethod]
         public void TestRefKeywordValueType()
         {
-            string modifyMe = "Mister E";
+            var modifyMe = "Mister E";
             ModifyByRef(ref modifyMe);
             Assert.AreEqual(modifyMe, "Foo Bar");
         }
 
-        void modifyByOut(out string name)
+        static void ModifyByOut(out string name)
         {
             name = "Foo Bar";
         }
@@ -82,7 +85,7 @@ namespace csharp
         public void TestOutKeywordValueType()
         {
             string modifyMe;
-            modifyByOut(out modifyMe);
+            ModifyByOut(out modifyMe);
             Assert.AreEqual(modifyMe, "Foo Bar");
         }
 
@@ -97,6 +100,8 @@ namespace csharp
         }
 
         // ReSharper disable once UnusedParameter.Local
+        [SuppressMessage("Microsoft.Usage",
+            "CA1801:ReviewUnusedParameters", MessageId = "test")]
         static void ReplaceObject(Test test)
         {
             test = new Test();
@@ -117,12 +122,12 @@ namespace csharp
             Assert.IsTrue(test.Modified);
         }
 
-        void modifyObjectViaActualReference(ref Test test)
+        static void ModifyObjectViaActualReference(ref Test test)
         {
             test.Modified = true;
         }
 
-        void reallyReplaceObject(ref Test test)
+        static void ReallyReplaceObject(ref Test test)
         {
             test = new Test();
         }
@@ -135,14 +140,14 @@ namespace csharp
         public void TestRefTypesUseActualPointer()
         {
             var test = new Test();
-            modifyObjectViaActualReference(ref test);
+            ModifyObjectViaActualReference(ref test);
             Assert.IsTrue(test.Modified);
 
-            reallyReplaceObject(ref test);
+            ReallyReplaceObject(ref test);
             Assert.IsFalse(test.Modified);
         }
 
-        string argsToCSV(params object[] args)
+        static string ArgsToCsv(params object[] args)
         {
             return String.Join(",", args.Select(a => a.ToString()).ToList());
         }
@@ -154,7 +159,7 @@ namespace csharp
         [TestMethod]
         public void TestVariableArgumentList()
         {
-            Assert.AreEqual(argsToCSV(new object[] { "foo", 6 }), "foo,6");
+            Assert.AreEqual(ArgsToCsv(new object[] { "foo", 6 }), "foo,6");
         }
     }
 }

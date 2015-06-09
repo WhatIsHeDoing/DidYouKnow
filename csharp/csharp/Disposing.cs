@@ -7,7 +7,7 @@ namespace csharp
     /// Shows how using ensures the correct use of IDisposable objects.
     /// </summary>
     [TestClass]
-    public class Using
+    public class Disposing
     {
         class Resource
         {

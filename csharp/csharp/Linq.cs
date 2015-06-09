@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,7 +11,7 @@ namespace csharp
     // Extension methods cannot be nested within a class.
     public class Post
     {
-        public DateTime PostedOn;
+        public DateTime PostedOn { get; set; }
     }
 
     public static class PostFilters
@@ -27,7 +29,10 @@ namespace csharp
     [TestClass]
     public class Linq
     {
-        public Expression<Func<Post, bool>> PostedAfter(DateTime cutoffDate)
+        [SuppressMessage("Microsoft.Design",
+            "CA1006:DoNotNestGenericTypesInMemberSignatures")]
+        public static Expression<Func<Post, bool>> PostedAfter
+            (DateTime cutoffDate)
         {
             return post => post.PostedOn > cutoffDate;
         }
@@ -75,7 +80,8 @@ namespace csharp
             var strings = new List<string> { "foo", "bar" };
 
             var numberedStrings = strings.Select
-                ((s, i) => String.Format("{0}: {1}", s, i)).ToArray();
+                ((s, i) => String.Format(CultureInfo.CurrentCulture,
+                    "{0}: {1}", s, i)).ToArray();
 
             Assert.AreEqual(numberedStrings.Length, 2);
             Assert.AreEqual(numberedStrings[0], "foo: 0");

@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
@@ -9,17 +10,18 @@ namespace csharp
     [TestClass]
     public class Union
     {
+        // ReSharper disable once InconsistentNaming
         [StructLayout(LayoutKind.Explicit)]
-        public class RGB
+        class RGB
         {
             [FieldOffset(2)]
-            public byte R;
+            public readonly byte R;
 
             [FieldOffset(1)]
-            public byte G;
+            public readonly byte G;
 
             [FieldOffset(0)]
-            public byte B;
+            public readonly byte B;
 
             /// <summary>
             /// This spans the other three fields,
@@ -39,13 +41,13 @@ namespace csharp
 
             public string AsHex()
             {
-                return _Int32.ToString("X6");
+                return _Int32.ToString("X6", CultureInfo.CurrentCulture);
             }
 
             public RGB FromHex(string hex)
             {
-                _Int32 = int.Parse
-                    (hex, System.Globalization.NumberStyles.HexNumber);
+                _Int32 = int.Parse(hex, NumberStyles.HexNumber,
+                    CultureInfo.CurrentCulture);
 
                 return this;
             }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // Alias used in a test
@@ -32,7 +33,7 @@ namespace csharp
             Assert.AreEqual(aliasedMap["Darren"], map["Darren"]);
         }
 
-        T returnValue<T>(T value)
+        static T ReturnValue<T>(T value)
         {
             return value;
         }
@@ -45,15 +46,17 @@ namespace csharp
         public void TestImplicitGenerics()
         {
             // ReSharper disable once RedundantTypeArgumentsOfMethod
-            Assert.AreEqual(returnValue<int>(23), returnValue(23));
+            Assert.AreEqual(ReturnValue(23), ReturnValue(23));
         }
 
-        T getDefaultValue<T>()
+        static T GetDefaultValue<T>()
         {
             return default(T);
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local
+        [SuppressMessage("Microsoft.Performance",
+            "CA1812:AvoidUninstantiatedInternalClasses")]
         class Blank { }
 
         /// <summary>
@@ -63,11 +66,11 @@ namespace csharp
         [TestMethod]
         public void TestDefaultValue()
         {
-            Assert.IsFalse(getDefaultValue<bool>());
-            Assert.AreEqual(getDefaultValue<int>(), 0);
-            Assert.IsNull(getDefaultValue<double?>());
-            Assert.IsNull(getDefaultValue<List<string>>());
-            Assert.IsNull(getDefaultValue<Blank>());
+            Assert.IsFalse(GetDefaultValue<bool>());
+            Assert.AreEqual(GetDefaultValue<int>(), 0);
+            Assert.IsNull(GetDefaultValue<double?>());
+            Assert.IsNull(GetDefaultValue<List<string>>());
+            Assert.IsNull(GetDefaultValue<Blank>());
         }
     }
 }

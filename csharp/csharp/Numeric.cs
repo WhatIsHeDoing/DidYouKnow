@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace csharp
@@ -19,8 +20,11 @@ namespace csharp
             // Brilliantly, Visual Studio will warn of:
             // "Overflow in constant value computation",
             // so cheat by converting that maximum to and from a string.
-            var maxIntAsString = Convert.ToString(int.MaxValue);
-            var maxInt = Convert.ToInt32(maxIntAsString);
+            var maxIntAsString = Convert.ToString(int.MaxValue,
+                CultureInfo.CurrentCulture);
+            
+            var maxInt = Convert.ToInt32(maxIntAsString,
+                CultureInfo.CurrentCulture);
 
             var result = maxInt + 10;
             Assert.IsTrue(result < 0, "We have overflow!");
@@ -37,8 +41,11 @@ namespace csharp
             // Brilliantly, Visual Studio will warn of:
             // "Overflow in constant value computation",
             // so cheat by converting that maximum to and from a string.
-            var maxIntAsString = Convert.ToString(int.MaxValue);
-            var maxInt = Convert.ToInt32(maxIntAsString);
+            var maxIntAsString = Convert.ToString(int.MaxValue,
+                CultureInfo.CurrentCulture);
+            
+            var maxInt = Convert.ToInt32(maxIntAsString,
+                CultureInfo.CurrentCulture);
 
             var result = checked(maxInt + 10);
             Assert.Fail("Should have thrown but instead got: {0}!", result);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -11,6 +12,9 @@ namespace csharp
     [TestClass]
     public class Moq
     {
+        [SuppressMessage("Microsoft.Design",
+            "CA1034:NestedTypesShouldNotBeVisible",
+            Justification = "Required by Moq")]
         public interface IFetchData
         {
             int Id { get; }
@@ -31,16 +35,16 @@ namespace csharp
         /// Mocking a readonly attribute
         /// </summary>
         [TestMethod]
-        public void TestStubReadonlyType()
+        public void TestStubReadOnlyType()
         {
             var fetchData = new Mock<IFetchData>();
             fetchData.SetupGet(f => f.Id).Returns(123);
             Assert.AreEqual(fetchData.Object.Id, 123);
         }
 
-        public class DataFetcher
+        class DataFetcher
         {
-            public IFetchData FetchData { get; set; }
+            public IFetchData FetchData { private get; set; }
 
             public string GetData()
             {

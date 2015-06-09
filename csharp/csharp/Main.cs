@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,7 +11,7 @@ namespace csharp
 
     /// <summary>
     /// This main test class is used to house unit tests
-    /// that haven't yet been grouped under test classes
+    /// that have not yet been grouped under test classes.
     /// </summary>
     [TestClass]
     public class Main
@@ -21,14 +22,14 @@ namespace csharp
         /// This is unreadable, but prevents the file needing Unicode encoding.
         /// </summary>
         [TestMethod]
-        public void TestCanUseUnicodeCharactersInVariableNames()
+        public void TestVariableNamesCanContainUnicodeCharacters()
         {
             const string ὧὃḁḣ = "woah";
             Assert.IsNotNull(\u1f67\u1f43\u1e01\u1e23);
         }
 
         /// <summary>
-        /// Demonstrates chaining the null-coalescing operator
+        /// Demonstrates chaining the null-coalescing operator.
         /// </summary>
         /// <remarks>
         /// http://msdn.microsoft.com/en-us/library/ms173224.aspx
@@ -51,10 +52,10 @@ namespace csharp
 
         /// <summary>
         /// Shows how an anonymous type is created
-        /// compared to a class instance instantiated with an initialiser
+        /// compared to a class instance instantiated with an initializer.
         /// </summary>
         [TestMethod]
-        public void TestAnonymousTypeVerusObjectInitialiser()
+        public void TestAnonymousTypeVersusObjectInitializer()
         {
             var anonymousPerson = new
             {
@@ -74,7 +75,7 @@ namespace csharp
 
         /// <summary>
         /// Ignoring escape patterns and respecting formatting
-        /// thanks to verbatim strings
+        /// thanks to verbatim strings.
         /// </summary>
         [TestMethod]
         public void TestVerbatimString()
@@ -86,39 +87,52 @@ namespace csharp
             Assert.AreEqual(verbatim, standard);
         }
 
-        string RegisterMethod<T>(T method, string name) where T : class
+        static string RegisterMethod<T>(T method, string name) where T : class
         {
             return (method != null) ? name : "";
         }
 
-        string RegisterMethod<T>(Expression<Action<T>> action) where T : class
+        static string RegisterMethod<T>(Expression<Action<T>> action) where T : class
         {
             var expression = (action.Body as MethodCallExpression);
             return (expression != null) ? expression.Method.Name : "";
         }
 
-        public class MyClass
+        class UseMe
         {
+            [SuppressMessage("Microsoft.Performance",
+                "CA1822:MarkMembersAsStatic")]
             public void SomeMethod() { }
         }
 
         /// <summary>
-        /// Using strongly-typed method registration, thanks to expression trees
+        /// Using strongly-typed method registration,
+        /// thanks to expression trees.
         /// </summary>
         [TestMethod]
         public void TestStronglyTypedMethodRegistration()
         {
-            Assert.AreEqual(RegisterMethod(typeof(MyClass), "SomeMethod"),
-                RegisterMethod<MyClass>(c => c.SomeMethod()));
+            Assert.AreEqual(RegisterMethod(typeof(UseMe), "SomeMethod"),
+                RegisterMethod<UseMe>(c => c.SomeMethod()));
         }
 
         class Empty { }
+        
+        [SuppressMessage("Microsoft.Performance",
+            "CA1812:AvoidUninstantiatedInternalClasses")]
         class EmptyToo { }
 
         /// <summary>
-        /// Differentiates standard casting, "as" casting and the "is" check
+        /// Differentiates standard casting, "as" casting and the "is" check.
         /// </summary>
-        [TestMethod]
+        [SuppressMessage("Microsoft.Performance",
+            "CA1800:DoNotCastUnnecessarily"), TestMethod]
+        [SuppressMessage("Microsoft.Performance",
+            "CA1804:RemoveUnusedLocals",
+            MessageId = "willThrow")]
+        [SuppressMessage("Microsoft.Usage",
+            "CA1806:DoNotIgnoreMethodResults",
+            MessageId = "csharp.Main+Empty")]
         public void TestCastVersusAsVersusIs()
         {
             Object empty = new Empty();
@@ -167,10 +181,8 @@ namespace csharp
         [DebuggerDisplay("{Name} from {Town}")]
         class EasyDebugPerson
         {
-            // ReSharper disable MemberCanBePrivate.Local
-            // ReSharper disable UnusedAutoPropertyAccessor.Local
-            public string Name { get; set; }
-            public string Town { get; set; }
+            public readonly string Name;
+            public readonly string Town;
 
             public EasyDebugPerson(string name, string town)
             {
@@ -186,8 +198,9 @@ namespace csharp
         [TestMethod]
         public void TestDebuggerDisplay()
         {
-            // ReSharper disable once UnusedVariable
             var debugMe = new EasyDebugPerson("Dave", "Essex");
+            Assert.AreEqual("Dave", debugMe.Name);
+            Assert.AreEqual("Essex", debugMe.Town);
             Debugger.Break();
         }
     }
