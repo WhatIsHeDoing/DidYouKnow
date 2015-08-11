@@ -12,7 +12,7 @@ namespace csharp
     [TestClass]
     public class Enumerable
     {
-        IEnumerable<String> helloWorld()
+        IEnumerable<string> helloWorld()
         {
             yield return "Hello";
             yield return "World";
@@ -22,7 +22,7 @@ namespace csharp
         /// Testing generator methods via the yield keyword.
         /// </summary>
         [TestMethod]
-        public void TestYield()
+        public void Yield()
         {
             var enumerator = helloWorld().GetEnumerator();
             enumerator.MoveNext();
@@ -56,7 +56,7 @@ namespace csharp
         /// that implements IEnumerable is used in the object initialiser.
         /// </summary>
         [TestMethod]
-        public void TestObjectInitializer()
+        public void ObjectInitializer()
         {
             var triplets = new Triplets<int>
             {

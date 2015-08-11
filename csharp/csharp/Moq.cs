@@ -25,7 +25,7 @@ namespace csharp
         /// A simple test to show that stubs are of the type that they mock
         /// </summary>
         [TestMethod]
-        public void TestStubImplementsType()
+        public void StubImplementsType()
         {
             Assert.IsTrue
                 (new Mock<IFetchData>().Object is IFetchData);
@@ -35,7 +35,7 @@ namespace csharp
         /// Mocking a readonly attribute
         /// </summary>
         [TestMethod]
-        public void TestStubReadOnlyType()
+        public void StubReadOnlyType()
         {
             var fetchData = new Mock<IFetchData>();
             fetchData.SetupGet(f => f.Id).Returns(123);
@@ -50,7 +50,7 @@ namespace csharp
             {
                 var data = FetchData.Fetch();
 
-                if (String.IsNullOrEmpty(data)) {
+                if (string.IsNullOrEmpty(data)) {
                     throw new InvalidOperationException("No data returned!");
                 }
 
@@ -65,7 +65,7 @@ namespace csharp
         /// test the logic around that function call.
         /// </summary>
         [TestMethod]
-        public void TestStubFunction()
+        public void StubFunction()
         {
             var fetchData = new Mock<IFetchData>();
             fetchData

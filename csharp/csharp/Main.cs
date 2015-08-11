@@ -22,7 +22,7 @@ namespace csharp
         /// This is unreadable, but prevents the file needing Unicode encoding.
         /// </summary>
         [TestMethod]
-        public void TestVariableNamesCanContainUnicodeCharacters()
+        public void VariableNamesCanContainUnicodeCharacters()
         {
             const string ὧὃḁḣ = "woah";
             Assert.IsNotNull(\u1f67\u1f43\u1e01\u1e23);
@@ -35,7 +35,7 @@ namespace csharp
         /// http://msdn.microsoft.com/en-us/library/ms173224.aspx
         /// </remarks>
         [TestMethod]
-        public void TestChainingNullCoalescingOperator()
+        public void ChainingNullCoalescingOperator()
         {
             int? firstNull = null;
             int? secondNull = null;
@@ -55,7 +55,7 @@ namespace csharp
         /// compared to a class instance instantiated with an initializer.
         /// </summary>
         [TestMethod]
-        public void TestAnonymousTypeVersusObjectInitializer()
+        public void AnonymousTypeVersusObjectInitializer()
         {
             var anonymousPerson = new
             {
@@ -78,7 +78,7 @@ namespace csharp
         /// thanks to verbatim strings.
         /// </summary>
         [TestMethod]
-        public void TestVerbatimString()
+        public void VerbatimString()
         {
             const string verbatim = @"Hello\n
     World";
@@ -110,7 +110,7 @@ namespace csharp
         /// thanks to expression trees.
         /// </summary>
         [TestMethod]
-        public void TestStronglyTypedMethodRegistration()
+        public void StronglyTypedMethodRegistration()
         {
             Assert.AreEqual(RegisterMethod(typeof(UseMe), "SomeMethod"),
                 RegisterMethod<UseMe>(c => c.SomeMethod()));
@@ -133,9 +133,9 @@ namespace csharp
         [SuppressMessage("Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
             MessageId = "csharp.Main+Empty")]
-        public void TestCastVersusAsVersusIs()
+        public void CastVersusAsVersusIs()
         {
-            Object empty = new Empty();
+            object empty = new Empty();
 
             try
             {
@@ -150,9 +150,11 @@ namespace csharp
             var willBeNull = empty as EmptyToo;
             Assert.IsNull(willBeNull);
 
+#pragma warning disable CS0184
             // Visual Studio may warn you here!
             // "The given expression is never of the provided (<type>) type"
             Assert.IsFalse(new Empty() is EmptyToo);
+#pragma warning restore CS0184
         }
 
         class @class
@@ -167,7 +169,7 @@ namespace csharp
         /// but mind your colleagues if you decide to use it for other reasons!
         /// </summary>
         [TestMethod]
-        public void TestKeywordVariableNames()
+        public void KeywordVariableNames()
         {
             const string @string = "foo bar";
             Assert.AreEqual(@string, "foo bar");
@@ -196,7 +198,7 @@ namespace csharp
         /// the value of debugMe is '"Dave" from "Essex"'!
         /// </summary>
         [TestMethod]
-        public void TestDebuggerDisplay()
+        public void DebuggerDisplay()
         {
             var debugMe = new EasyDebugPerson("Dave", "Essex");
             Assert.AreEqual("Dave", debugMe.Name);

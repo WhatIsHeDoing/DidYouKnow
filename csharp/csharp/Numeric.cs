@@ -15,7 +15,7 @@ namespace csharp
         /// they can overflow if the result is too large.
         /// </summary>
         [TestMethod]
-        public void TestUnchecked()
+        public void Unchecked()
         {
             // Brilliantly, Visual Studio will warn of:
             // "Overflow in constant value computation",
@@ -36,7 +36,7 @@ namespace csharp
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(OverflowException))]
-        public void TestChecked()
+        public void Checked()
         {
             // Brilliantly, Visual Studio will warn of:
             // "Overflow in constant value computation",

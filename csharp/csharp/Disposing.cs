@@ -39,7 +39,7 @@ namespace csharp
         /// automatically disposes of that object once the scope is left.
         /// </summary>
         [TestMethod]
-        public void TestUsingStatement()
+        public void UsingStatement()
         {
             var resouce = new Resource();
 

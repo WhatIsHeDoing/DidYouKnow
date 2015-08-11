@@ -27,7 +27,7 @@ namespace csharp
         /// constructed with "new", as it is a value type.
         /// </summary>
         [TestMethod]
-        public void TestStruct()
+        public void StructTest()
         {
             const int x = 5;
             const int y = 5;

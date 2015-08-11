@@ -19,7 +19,7 @@ namespace csharp
     {
         static string DefaultParameter(string name, int age=18)
         {
-            return String.Format(CultureInfo.CurrentCulture,
+            return string.Format(CultureInfo.CurrentCulture,
                 "{0} is {1} years old", name, age);
         }
 
@@ -28,7 +28,7 @@ namespace csharp
         /// value set
         /// </summary>
         [TestMethod]
-        public void TestDefaultParameters()
+        public void DefaultParameters()
         {
             Assert.AreEqual(DefaultParameter("Darren"),
                 "Darren is 18 years old");
@@ -49,7 +49,7 @@ namespace csharp
         /// often makes it unclear what that parameter is doing!
         /// </summary>
         [TestMethod]
-        public void TestNamedParameters()
+        public void NamedParameters()
         {
             Assert.AreEqual(BoolArgument(true), "foo");
             Assert.AreEqual(BoolArgument(test: false), "bar");
@@ -65,7 +65,7 @@ namespace csharp
         /// function, which requires it to be initialised first
         /// </summary>
         [TestMethod]
-        public void TestRefKeywordValueType()
+        public void RefKeywordValueType()
         {
             var modifyMe = "Mister E";
             ModifyByRef(ref modifyMe);
@@ -82,7 +82,7 @@ namespace csharp
         /// which does not need to be initialised
         /// </summary>
         [TestMethod]
-        public void TestOutKeywordValueType()
+        public void OutKeywordValueType()
         {
             string modifyMe;
             ModifyByOut(out modifyMe);
@@ -112,7 +112,7 @@ namespace csharp
         /// by reference, they can be modified but not replaced
         /// </summary>
         [TestMethod]
-        public void TestRefTypesCopyReferencePointer()
+        public void RefTypesCopyReferencePointer()
         {
             var test = new Test();
             ModifyObject(test);
@@ -137,7 +137,7 @@ namespace csharp
         /// can be replaced when passed as a parameter to a function
         /// </summary>
         [TestMethod]
-        public void TestRefTypesUseActualPointer()
+        public void RefTypesUseActualPointer()
         {
             var test = new Test();
             ModifyObjectViaActualReference(ref test);
@@ -149,7 +149,7 @@ namespace csharp
 
         static string ArgsToCsv(params object[] args)
         {
-            return String.Join(",", args.Select(a => a.ToString()).ToList());
+            return string.Join(",", args.Select(a => a.ToString()).ToList());
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace csharp
         /// <see>System.Console.WriteLine</see>
         /// </summary>
         [TestMethod]
-        public void TestVariableArgumentList()
+        public void VariableArgumentList()
         {
             Assert.AreEqual(ArgsToCsv(new object[] { "foo", 6 }), "foo,6");
         }

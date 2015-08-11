@@ -63,7 +63,7 @@ namespace csharp
         /// Compare this to the equivalent C++ test!
         /// </remarks>
         [TestMethod]
-        public void TestUnion()
+        public void UnionTest()
         {
             // Byte is a value type, and will default to 0,
             // so the default colour will be black!

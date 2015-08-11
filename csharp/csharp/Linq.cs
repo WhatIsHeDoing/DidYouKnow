@@ -42,7 +42,7 @@ namespace csharp
         /// a lambda, extension method and expression tree; the choice is yours!
         /// </summary>
         [TestMethod]
-        public void TestLinqFiltering()
+        public void LinqFiltering()
         {
             var latestDate = new DateTime(2010, 6, 15);
 
@@ -75,7 +75,7 @@ namespace csharp
         /// enumerated collection when projecting it.
         /// </summary>
         [TestMethod]
-        public void TestProjectionWithIndex()
+        public void ProjectionWithIndex()
         {
             var strings = new List<string> { "foo", "bar" };
 

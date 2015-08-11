@@ -18,7 +18,7 @@ namespace csharp
         /// to potentially simplify the use of complex structures.
         /// </summary>
         [TestMethod]
-        public void TestAliasedGeneric()
+        public void AliasedGeneric()
         {
             var aliasedMap = new StringToString
             {
@@ -43,7 +43,7 @@ namespace csharp
         /// when the compiler can determine it for you?
         /// </summary>
         [TestMethod]
-        public void TestImplicitGenerics()
+        public void ImplicitGenerics()
         {
             // ReSharper disable once RedundantTypeArgumentsOfMethod
             Assert.AreEqual(ReturnValue(23), ReturnValue(23));
@@ -64,7 +64,7 @@ namespace csharp
         /// with value (including nullable) and reference types.
         /// </summary>
         [TestMethod]
-        public void TestDefaultValue()
+        public void DefaultValue()
         {
             Assert.IsFalse(GetDefaultValue<bool>());
             Assert.AreEqual(GetDefaultValue<int>(), 0);
