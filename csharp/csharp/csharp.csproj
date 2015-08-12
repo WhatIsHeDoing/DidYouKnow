@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AutoMapperTest.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="LazyInstantiation.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Numeric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
