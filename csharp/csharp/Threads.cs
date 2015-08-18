@@ -11,7 +11,7 @@ using AsyncDelegate = System.Func<double>;
 namespace csharp
 {
     [TestClass]
-    public class Parallels
+    public class Threads
     {
         public static double CalculationOne()
         {
