@@ -1,0 +1,123 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Did You Know: JavaScript</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.18.0.css">
+</head>
+
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="http://code.jquery.com/qunit/qunit-1.18.0.js"></script>
+
+    <script>
+        "use strict";
+
+        QUnit.test("Automatic semicolon addition", function(assert) {
+            function noProblem() {
+              return {
+                  run: "hello"
+              };
+            }
+
+            function ohDear() {
+              return
+              {
+                  run: "hello"
+              };
+            }
+
+            var myNoProblem = noProblem();
+            var myOhDear = ohDear();
+
+            assert.notStrictEqual(
+                myNoProblem && myNoProblem.run,
+                myOhDear && myOhDear.run);
+        });
+
+        QUnit.test("Scoping", function(assert) {
+            var scopeTest = {
+                foo: "bar",
+                
+                run: function() {
+                    var self = this;
+                    assert.strictEqual(this.foo, "bar");
+                    assert.strictEqual(self.foo, "bar");
+
+                    (function() {
+                        assert.strictEqual(this && this.foo, undefined);
+                        assert.strictEqual(self.foo, "bar");
+                    }());
+                }
+            };
+
+            scopeTest.run()
+        });
+
+        QUnit.test("Funky NaN", function(assert) {
+            assert.strictEqual(typeof NaN, "number");
+            assert.notStrictEqual(NaN, NaN);
+        });
+
+        QUnit.test("Closures", function(assert) {
+            var myScope = {};
+
+            (function(scope) {
+                var _private = "private";
+                scope.canSee = true;
+            })(myScope);
+
+            assert.strictEqual(myScope._private, undefined);
+            assert.ok(myScope.canSee);
+        });
+
+        QUnit.test("Comparing null", function(assert) {
+            var bar = null;
+            assert.strictEqual(typeof bar, "object");
+            assert.notOk((bar !== null) && (typeof bar === "object"));
+        });
+
+        QUnit.test("Floating-point precision", function(assert) {
+            assert.notEqual(0.1 + 0.2, 0.3);
+        });
+
+        QUnit.test("Event ordering", function(assert) {
+            var done = assert.async();
+
+            var result = "";
+            
+            result += "1";
+            setTimeout(function() { result += "2"; }, 100);
+            setTimeout(function() { result += "3"; }, 0);
+            result += "4";
+
+            setTimeout(function() {
+                assert.strictEqual(result, "1432", "3 after 1 and 4");
+                done();
+            }, 500);
+        });
+
+        QUnit.test("Function arguments", function(assert) {
+            function sumNamedArgs(x, y) {
+                return arguments[0] + arguments[1];
+            }
+
+            function sumNoNamedArgs(x, y) {
+                return x + y;
+            }
+
+            assert.strictEqual(sumNamedArgs(1, 2), sumNoNamedArgs(1, 2));
+        });
+
+        QUnit.test("Function apply and call", function(assert) {
+            function sum(x, y) {
+                return x + y;
+            }
+
+            assert.strictEqual(
+                sum.apply(undefined, [1, 2]),
+                sum.call(undefined, 1, 2));
+        });
+    </script>
+</body>
+</html>
