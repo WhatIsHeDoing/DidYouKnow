@@ -118,6 +118,55 @@
                 sum.apply(undefined, [1, 2]),
                 sum.call(undefined, 1, 2));
         });
+
+        QUnit.test("Coercion", function(assert) {
+            assert.strictEqual(1 +  "2" + "2", "122");
+            assert.strictEqual(1 +  +"2" + "2", "32");
+            assert.strictEqual(1 +  -"1" + "2", "02");
+            assert.strictEqual(+"1" +  "1" + "2", "112");
+            assert.strictEqual( "A" - "B" + "2", "NaN2");
+            assert.notOk( "A" - "B" + 2, "NaN");
+        });
+
+        QUnit.test("Avoid stack overflow", function(assert) {
+            // Recursive throwing.
+            var list = [];
+
+            for (var i = 0; i < 100000; ++i) {
+                list[i] = i;
+            }
+
+            function recursiveWillStackOverflow() {
+                list.pop() && recursiveWillStackOverflow();
+            };
+
+            var startDate = new Date();
+            
+            assert.throws(recursiveWillStackOverflow, RangeError);
+            
+            var endThrowingTime = new Date() - startDate;
+
+            // Recursive non-throwing.
+            list = [];
+
+            for (i = 0; i < 10000; ++i) {
+                list[i] = i;
+            }
+
+            var done = assert.async();
+            startDate = new Date();
+
+            function recurseNoProblem() {
+                if (new Date() - startDate < endThrowingTime && list.pop()) {
+                    return setTimeout(recurseNoProblem, 0);
+                }
+
+                assert.ok(1, "Still has not thrown");
+                done();
+            };
+            
+            recurseNoProblem();
+        });
     </script>
 </body>
 </html>
