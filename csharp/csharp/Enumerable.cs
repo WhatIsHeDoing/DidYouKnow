@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,7 +11,7 @@ namespace csharp
     [TestClass]
     public class Enumerable
     {
-        IEnumerable<string> helloWorld()
+        static IEnumerable<string> HelloWorld()
         {
             yield return "Hello";
             yield return "World";
@@ -24,7 +23,7 @@ namespace csharp
         [TestMethod]
         public void Yield()
         {
-            var enumerator = helloWorld().GetEnumerator();
+            var enumerator = HelloWorld().GetEnumerator();
             enumerator.MoveNext();
             Assert.AreEqual(enumerator.Current, "Hello");
             enumerator.MoveNext();

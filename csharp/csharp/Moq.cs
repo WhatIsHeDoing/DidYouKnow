@@ -27,6 +27,7 @@ namespace csharp
         [TestMethod]
         public void StubImplementsType()
         {
+            // ReSharper disable once IsExpressionAlwaysTrue
             Assert.IsTrue
                 (new Mock<IFetchData>().Object is IFetchData);
         }

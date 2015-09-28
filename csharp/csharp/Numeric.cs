@@ -32,7 +32,7 @@ namespace csharp
 
         /// <summary>
         /// Showing how to avoid the issue in
-        /// <see cref="TestUnchecked">TestUnchecked</see> by using checked.
+        /// <see cref="Unchecked">TestUnchecked</see> by using checked.
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(OverflowException))]

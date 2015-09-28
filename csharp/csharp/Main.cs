@@ -153,6 +153,7 @@ namespace csharp
 #pragma warning disable CS0184
             // Visual Studio may warn you here!
             // "The given expression is never of the provided (<type>) type"
+            // ReSharper disable once IsExpressionAlwaysFalse
             Assert.IsFalse(new Empty() is EmptyToo);
 #pragma warning restore CS0184
         }

@@ -20,8 +20,10 @@ namespace csharp
             public string Surname { get; set; }
         }
 
+        // ReSharper disable once ClassNeverInstantiated.Local
         class PersonTypeTwo
         {
+            // ReSharper disable UnusedAutoPropertyAccessor.Local
             public Guid Id { get; set; }
             public DateTime DoB { get; set; }
             public string Name { get; set; }
