@@ -8,10 +8,13 @@ QUnit.test("Automatic semicolon addition", function(assert) {
     }
 
     function ohDear() {
+        // Ignore the plethora of warnings thrown up here!
+        // jshint ignore:start
         return
         {
             run: "hello"
         };
+        // jshint ignore:end
     }
 
     var myNoProblem = noProblem();
@@ -38,7 +41,7 @@ QUnit.test("Scoping", function(assert) {
         }
     };
 
-    scopeTest.run()
+    scopeTest.run();
 });
 
 QUnit.test("Funky NaN", function(assert) {
@@ -50,6 +53,8 @@ QUnit.test("Closures", function(assert) {
     var myScope = {};
 
     (function(scope) {
+        // This member variable *is* used below :)
+        // jshint unused: false
         var _private = "private";
         scope.canSee = true;
     })(myScope);
@@ -85,7 +90,7 @@ QUnit.test("Event ordering", function(assert) {
 });
 
 QUnit.test("Function arguments", function(assert) {
-    function sumNamedArgs(x, y) {
+    function sumNamedArgs() {
         return arguments[0] + arguments[1];
     }
 
@@ -107,6 +112,8 @@ QUnit.test("Function apply and call", function(assert) {
 });
 
 QUnit.test("Coercion", function(assert) {
+    // Ignore confusing plusses warning.
+    // jshint -W007  
     assert.strictEqual(1 +  "2" + "2", "122");
     assert.strictEqual(1 +  +"2" + "2", "32");
     assert.strictEqual(1 +  -"1" + "2", "02");
@@ -124,8 +131,10 @@ QUnit.test("Avoid stack overflow", function(assert) {
     }
 
     function recursiveWillStackOverflow() {
+        // Ignore expected statement warning.
+        // jshint -W030
         list.pop() && recursiveWillStackOverflow();
-    };
+    }
 
     var startDate = new Date();
     
@@ -150,7 +159,7 @@ QUnit.test("Avoid stack overflow", function(assert) {
 
         assert.ok(1, "Still has not thrown");
         done();
-    };
+    }
     
     recurseNoProblem();
 });
