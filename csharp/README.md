@@ -1,6 +1,8 @@
 C#
 ==
 
+[![Build status](https://ci.appveyor.com/api/projects/status/75dqm8d8q6atgtg2?svg=true)](https://ci.appveyor.com/project/DarrenHickling/didyouknow)
+
 Testing
 -------
 
