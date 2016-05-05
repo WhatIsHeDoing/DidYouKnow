@@ -66,11 +66,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AutoMapperTest.cs" />
+    <Compile Include="Classes.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LazyInstantiation.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Numeric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statics.cs" />
+    <Compile Include="Strings.cs" />
     <Compile Include="Struct.cs" />
     <Compile Include="Threads.cs" />
     <Compile Include="Union.cs" />
