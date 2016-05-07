@@ -68,3 +68,9 @@ build:
   parallel: false
   project: csharp.sln
   verbosity: normal
+
+# Scripts to run before build.
+before_build:
+  - echo %CD%
+  - ps: cd csharp
+  - echo %CD%
