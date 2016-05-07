@@ -3,8 +3,14 @@ using System;
 
 namespace csharp
 {
+    /// <summary>
+    /// Simple duration enum.
+    /// </summary>
     public enum Duration { Day, Week, Month };
 
+    /// <summary>
+    /// Extension methods for the enum above.
+    /// </summary>
     static class DurationExtensions
     {
         public static DateTime From(this Duration duration, DateTime dateTime)
@@ -26,9 +32,15 @@ namespace csharp
         }
     }
 
+    /// <summary>
+    /// Fun with enums.
+    /// </summary>
     [TestClass]
     public class Enums
     {
+        /// <summary>
+        /// Demonstrates how extension methods can be applied to enums.
+        /// </summary>
         [TestMethod]
         public void CanUseExtensionMethods()
         {

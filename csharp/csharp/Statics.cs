@@ -13,9 +13,15 @@ namespace csharp
         private TestClass() { }
     }
 
+    /// <summary>
+    /// Beware statics!
+    /// </summary>
     [TestClass]
     public class Statics
     {
+        /// <summary>
+        /// Shows why the declaration order of static variables is important!
+        /// </summary>
         [TestMethod]
         public void BewareDeclarationOrder()
         {

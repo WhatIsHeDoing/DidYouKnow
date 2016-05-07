@@ -2,6 +2,9 @@
 
 namespace csharp
 {
+    /// <summary>
+    /// Fun with strings.
+    /// </summary>
     [TestClass]
     public class Strings
     {
@@ -12,6 +15,9 @@ namespace csharp
             public string InstanceString = "remembered";
         }
 
+        /// <summary>
+        /// Demonstrating that strings from all scopes are interned.
+        /// </summary>
         [TestMethod]
         public void StringInterningByDefault()
         {

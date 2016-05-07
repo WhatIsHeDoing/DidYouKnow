@@ -1,6 +1,7 @@
 # EditorConfig is awesome: http://EditorConfig.org
 
-# Adding this here to ensure it is registered with Visual Studio.
+# Top-most EditorConfig file.
+root = true
 
 # Unix-style newlines with a newline ending every file.
 [*]

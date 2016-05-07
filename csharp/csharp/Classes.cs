@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace csharp
 {
+    /// <summary>
+    /// Demonstrating little-known features of classes.
+    /// </summary>
     [TestClass]
     public class Classes
     {
@@ -32,6 +35,9 @@ namespace csharp
             }
         }
 
+        /// <summary>
+        /// Shows how multiple array indexes can be accessed simultaneously.
+        /// </summary>
         [TestMethod]
         public void MultipleIndexAccessors()
         {
@@ -48,6 +54,9 @@ namespace csharp
             CollectionAssert.AreEqual(new[] { 2, 3 }, actual.ToArray());
         }
 
+        /// <summary>
+        /// Shows that different types can be accessed via the same syntax.
+        /// </summary>
         [TestMethod]
         public void DifferentIndexAccessorTypes()
         {

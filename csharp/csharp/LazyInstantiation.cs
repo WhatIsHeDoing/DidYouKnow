@@ -4,6 +4,9 @@ using System.Threading;
 
 namespace csharp
 {
+    /// <summary>
+    /// Demonstrates how to use lazy instantiation.
+    /// </summary>
     [TestClass]
     public class LazyInstantiation
     {
@@ -18,6 +21,10 @@ namespace csharp
             }
         }
 
+        /// <summary>
+        /// Shows how lazy instantiation delays the
+        /// construction of an object until it is used.
+        /// </summary>
         [TestMethod]
         public void LazyTest()
         {
