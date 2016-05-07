@@ -8,6 +8,20 @@ namespace csharp
     [TestClass]
     public class Strings
     {
+        /// <summary>
+        /// Ignoring escape patterns and respecting formatting
+        /// thanks to verbatim strings.
+        /// </summary>
+        [TestMethod]
+        public void VerbatimString()
+        {
+            const string verbatim = @"Hello\n
+    World";
+
+            const string standard = "Hello\\n\r\n    World";
+            Assert.AreEqual(verbatim, standard);
+        }
+
         class TestClass
         {
             public static string StaticString = "remembered";

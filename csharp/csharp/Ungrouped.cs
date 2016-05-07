@@ -10,24 +10,11 @@ namespace csharp
     // ReSharper disable InconsistentNaming
 
     /// <summary>
-    /// This main test class is used to house unit tests
-    /// that have not yet been grouped under test classes.
+    /// This class houses unit tests that have not yet been grouped.
     /// </summary>
     [TestClass]
-    public class Main
+    public class Ungrouped
     {
-        /// <summary>
-        /// Shows that Unicode characters can be used in variables names.
-        /// Hover over to read the real name!
-        /// This is unreadable, but prevents the file needing Unicode encoding.
-        /// </summary>
-        [TestMethod]
-        public void VariableNamesCanContainUnicodeCharacters()
-        {
-            const string ὧὃḁḣ = "woah";
-            Assert.IsNotNull(\u1f67\u1f43\u1e01\u1e23);
-        }
-
         /// <summary>
         /// Demonstrates chaining the null-coalescing operator.
         /// </summary>
@@ -42,49 +29,6 @@ namespace csharp
             
             // ReSharper disable ConstantNullCoalescingCondition
             Assert.AreEqual(firstNull ?? secondNull ?? 123, 123);
-        }
-
-        class Person
-        {
-            public int Age { get; set; }
-            public string Name { get; set; }
-        }
-
-        /// <summary>
-        /// Shows how an anonymous type is created
-        /// compared to a class instance instantiated with an initializer.
-        /// </summary>
-        [TestMethod]
-        public void AnonymousTypeVersusObjectInitializer()
-        {
-            var anonymousPerson = new
-            {
-                Age = 31,
-                Name = "Darren"
-            };
-
-            var person = new Person
-            {
-                Age = 31,
-                Name = "Darren"
-            };
-
-            Assert.AreEqual(anonymousPerson.Age, person.Age);
-            Assert.AreEqual(anonymousPerson.Name, person.Name);
-        }
-
-        /// <summary>
-        /// Ignoring escape patterns and respecting formatting
-        /// thanks to verbatim strings.
-        /// </summary>
-        [TestMethod]
-        public void VerbatimString()
-        {
-            const string verbatim = @"Hello\n
-    World";
-
-            const string standard = "Hello\\n\r\n    World";
-            Assert.AreEqual(verbatim, standard);
         }
 
         static string RegisterMethod<T>(T method, string name) where T : class
@@ -158,29 +102,6 @@ namespace csharp
 #pragma warning restore CS0184
         }
 
-        class @class
-        {
-            public const string Foo = "bar";
-        }
-
-        /// <summary>
-        /// Avoid keyword name clashes with the "@" symbol.
-        /// You can also use it when using existing definitions.
-        /// Used to enable interoperability between CLI languages,
-        /// but mind your colleagues if you decide to use it for other reasons!
-        /// </summary>
-        [TestMethod]
-        public void KeywordVariableNames()
-        {
-            const string @string = "foo bar";
-            Assert.AreEqual(@string, "foo bar");
-
-            const int nonKeyword = 6;
-            Assert.AreEqual(@nonKeyword, 6);
-
-            Assert.AreEqual(@class.Foo, "bar");
-        }
-
         [DebuggerDisplay("{Name} from {Town}")]
         class EasyDebugPerson
         {
@@ -195,8 +116,8 @@ namespace csharp
         }
 
         /// <summary>
-        /// Nothing to see here, except if you run Test => Debug and notice
-        /// the value of debugMe is '"Dave" from "Essex"'!
+        /// Nothing to see here, except if you run Test => Debug
+        /// and notice the value of debugMe is '"Dave" from "Essex"'.
         /// </summary>
         [TestMethod]
         public void DebuggerDisplay()
