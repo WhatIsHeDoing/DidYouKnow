@@ -37,7 +37,7 @@ install:
   - echo %CD%
   - ps: cd csharp
   - echo %CD%
-  - ps: npm install
+  - ps: nuget restore
 
 # Enable patching of the Assembly Info file.
 assembly_info:
