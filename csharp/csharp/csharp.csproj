@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <Choose>
@@ -67,6 +68,7 @@
   <ItemGroup>
     <Compile Include="AutoMapperTest.cs" />
     <Compile Include="Classes.cs" />
+    <Compile Include="CustomConfiguration.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LazyInstantiation.cs" />
@@ -86,7 +88,9 @@
     <Compile Include="Disposing.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
