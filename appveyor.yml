@@ -71,5 +71,6 @@ build:
 # Scripts to run before build.
 before_build:
   - echo %CD%
+  - ps: cd ..
   - ps: ls
   - echo %CD%
