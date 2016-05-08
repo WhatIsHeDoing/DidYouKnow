@@ -70,13 +70,14 @@ namespace csharp
         /// Differentiates standard casting, "as" casting and the "is" check.
         /// </summary>
         [SuppressMessage("Microsoft.Performance",
-            "CA1800:DoNotCastUnnecessarily"), TestMethod]
+            "CA1800:DoNotCastUnnecessarily")]
         [SuppressMessage("Microsoft.Performance",
             "CA1804:RemoveUnusedLocals",
             MessageId = "willThrow")]
         [SuppressMessage("Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
-            MessageId = "csharp.Main+Empty")]
+            MessageId = "csharp.Ungrouped+Empty")]
+        [TestMethod]
         public void CastVersusAsVersusIs()
         {
             object empty = new Empty();

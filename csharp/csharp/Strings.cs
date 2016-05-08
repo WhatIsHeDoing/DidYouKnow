@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Globalization;
 
 namespace csharp
 {
@@ -15,10 +17,13 @@ namespace csharp
         [TestMethod]
         public void VerbatimString()
         {
-            const string verbatim = @"Hello\n
+            const string verbatim = @"Hello
     World";
 
-            const string standard = "Hello\\n\r\n    World";
+            var standard = string.Format
+                (CultureInfo.CurrentCulture,
+                    "Hello{0}    World", Environment.NewLine);
+
             Assert.AreEqual(verbatim, standard);
         }
 

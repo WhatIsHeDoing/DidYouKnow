@@ -253,6 +253,7 @@ namespace csharp
             return 1;
         }
 
+        [Ignore]
         [TestMethod]
         public void WithTasksAndProgressReport()
         {

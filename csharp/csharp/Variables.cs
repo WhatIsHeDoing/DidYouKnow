@@ -22,6 +22,7 @@ namespace csharp
 
         class @class
         {
+            private @class() { }
             public const string Foo = "bar";
         }
 
