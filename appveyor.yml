@@ -66,11 +66,10 @@ configuration:
 
 build:
   parallel: false
-  project: csharp.csproj
   verbosity: normal
 
 # Scripts to run before build.
 before_build:
   - echo %CD%
-  - ps: cd csharp
+  - ps: ls
   - echo %CD%
