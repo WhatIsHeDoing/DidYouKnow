@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace csharp
 {
@@ -11,8 +10,10 @@ namespace csharp
     public class Strings
     {
         /// <summary>
-        /// Ignoring escape patterns and respecting formatting
-        /// thanks to verbatim strings.
+        /// Ignoring escape patterns and respecting formatting, thanks to
+        /// verbatim strings. Note that a whitespace-replaced version is
+        /// tested, as the line formatting of this file can vary.
+        /// Use <code>System.Environment.NewLine</code> for consistency!
         /// </summary>
         [TestMethod]
         public void VerbatimString()
@@ -20,11 +21,9 @@ namespace csharp
             const string verbatim = @"Hello
     World";
 
-            var standard = string.Format
-                (CultureInfo.CurrentCulture,
-                    "Hello{0}    World", Environment.NewLine);
-
-            Assert.AreEqual(verbatim, standard);
+            var actual = Regex.Replace(verbatim, @"\s", "");
+            const string expected = "HelloWorld";
+            Assert.AreEqual(expected, actual);
         }
 
         class TestClass
