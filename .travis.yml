@@ -3,6 +3,6 @@ compiler:
 - clang
 os:
 - linux
-before_install:
-- cwd
+before_script:
 - cd cpp
+script: make
