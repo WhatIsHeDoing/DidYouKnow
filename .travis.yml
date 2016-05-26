@@ -1,0 +1,8 @@
+language: cpp
+compiler:
+- clang
+os:
+- linux
+before_install:
+- cwd
+- cd cpp
