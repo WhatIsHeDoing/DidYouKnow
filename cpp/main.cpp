@@ -953,7 +953,7 @@ void testDirectInitialisation ()
     const int directInitialisation(7);
     assert(usualAssignment == directInitialisation);
 }
-
+/*
 template <typename T>
 class HasFriend
 {
@@ -978,9 +978,9 @@ public:
     }
 };
 
-/**
+ **
  * Friends: they're better templated?
- */
+ *
 void testTemplateAsFriend ()
 {
     HasFriend<FriendClass> hasFriend;
@@ -989,7 +989,7 @@ void testTemplateAsFriend ()
     FriendClass().setHidden(hasFriend, false);
     assert(!hasFriend.getHidden());
 }
-
+*/
 class ContainsMutant 
 {
     const int _value;  
@@ -1078,7 +1078,7 @@ int main ()
             (& testTemplatedClassWithFriendFunctionAvoidsViolatingODR)
             (& testCompositionViaPrivateInheritance)
             (& testDirectInitialisation)
-            (& testTemplateAsFriend)
+          //(& testTemplateAsFriend)
             (& testMutable)
             (& testChangingDefaultArguments)
         .get();
