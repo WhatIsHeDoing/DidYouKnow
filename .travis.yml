@@ -1,8 +1,7 @@
 language: cpp
-compiler:
-- clang
+compiler: gcc
 os:
 - linux
 before_script:
 - cd cpp
-script: make
+script: g++ main.cpp
