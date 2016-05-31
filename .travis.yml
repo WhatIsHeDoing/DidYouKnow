@@ -15,4 +15,4 @@ addons:
     - clang
 before_script:
 - cd cpp
-script: g++ main.cpp
+script: CXX main.cpp
