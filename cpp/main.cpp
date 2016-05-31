@@ -11,6 +11,61 @@
 #include <typeinfo>
 #include <vector>
 
+namespace Assert
+{
+    template <typename T>
+    static void AreEqual(T expected, T actual)
+    {
+        assert(expected == actual);
+    }
+    
+    static void AreEqual(const char * expected, std::string actual)
+    {
+        assert(expected == actual);
+    }
+    
+    static void AreEqual(std::string expected, const char * actual)
+    {
+        assert(expected == actual);
+    }
+
+    static void AreEqual(unsigned char expected, int actual)
+    {
+        assert(expected == actual);
+    }
+
+    static void AreEqual(int expected, unsigned char actual)
+    {
+        assert(expected == actual);
+    }
+    
+    template <typename T>
+    static void AreNotEqual(T expected, T actual)
+    {
+        assert(expected != actual);
+    }
+
+    static void IsFalse(bool comparison)
+    {
+        assert(comparison ? 0 : 1);
+    }
+    
+    static void IsTrue(bool comparison)
+    {
+        assert(comparison ? 1 : 0);
+    }
+    
+    static void Fail()
+    {
+        assert(0);
+    }
+    
+    static void Success()
+    {
+        return assert(1);
+    }
+};
+
 #ifdef TEST_PLACEHOLDER_EXAMPLE
 /**
  * Macros are generally ill-advised, but among their uses, are great
@@ -20,7 +75,7 @@
  */
 void testPlaceholder ()
 {
-    assert(0);
+    Assert::Fail();
 }
 #endif
 
@@ -35,11 +90,10 @@ void testBranchOnVariableDeclaration ()
 
     if (std::string * value = &data["key"])
     {
-        assert(* value == "value");
-        return;
+        return Assert::AreEqual("value", * value);
     }
 
-    assert(0);
+    Assert::Fail();
 }
 
 /**
@@ -53,10 +107,10 @@ void testArrayIndexAccess ()
     array[1] = 1;
     array[2] = 64;
 
-    assert(array[2] == 64);
-    assert(*(array + 2) == 64);
-    assert(*(2 + array) == 64);
-    assert(2[array] == 64);
+    Assert::AreEqual(64, array[2]);
+    Assert::AreEqual(64, * (array + 2));
+    Assert::AreEqual(64, * (2 + array));
+    Assert::AreEqual(64, 2[array]);
 }
 
 /**
@@ -65,20 +119,19 @@ void testArrayIndexAccess ()
  */
 void testKeywordOperatorTokens ()
 {
-    assert(1 and 1);
-    assert(0 or 1);
+    Assert::IsTrue(1 and 1);
+    Assert::IsTrue(0 or 1);
 
     int array[1];
     array[0] = 5;
-    assert(array<:0:> == 5);
+    Assert::AreEqual(5, array<:0:>);
 
     if (1)
     <%
-        assert(1);
-        return;
+        return Assert::Success();
     %>
 
-    assert(0);
+    Assert::Fail();
 }
 
 class ContainsHidden
@@ -102,7 +155,7 @@ public:
  */
 void testChangingScope ()
 {
-    assert(PromotesHidden(5)._member == 5);
+    Assert::AreEqual(5, PromotesHidden(5)._member);
 }
 
 #define private public
@@ -122,7 +175,7 @@ private:
  */
 void testRedefiningKeywords ()
 {
-    assert(NotPrivateHere().success());
+    Assert::IsTrue(NotPrivateHere().success());
 }
 
 struct PointToUs {
@@ -146,14 +199,14 @@ void testPointerToMemberOperators ()
     PointToUs stack;
     PointToUs * heap = new PointToUs;
 
-    assert((stack.*methodPointer)());
-    assert((heap->*methodPointer)());
+    Assert::IsTrue((stack.*methodPointer)());
+    Assert::IsTrue((heap->*methodPointer)());
 
     stack.*valuePointer = 1;
-    assert(stack.*valuePointer == 1);
+    Assert::AreEqual(1, stack.*valuePointer);
 
     heap->*valuePointer = 2;
-    assert(heap->*valuePointer == 2);
+    Assert::AreEqual(2, heap->*valuePointer);
 
     delete heap;
 }
@@ -180,7 +233,7 @@ struct DerivedExposesHiddenData : BaseWithHiddenData
 void testMemberPointersCircumventScope ()
 {
     BaseWithHiddenData baseWithHiddenData(31313);
-    assert(DerivedExposesHiddenData::get(baseWithHiddenData) == 31313);
+    Assert::AreEqual(31313, DerivedExposesHiddenData::get(baseWithHiddenData));
 }
 
 std::string letMeKeepMyReturnValue ()
@@ -202,7 +255,7 @@ void testScopeGuardTrick ()
     const std::string & keptReturnValue = letMeKeepMyReturnValue();
     std::string fromRef;
     passByRefAlternative(fromRef);
-    assert(keptReturnValue == fromRef);
+    Assert::AreEqual(keptReturnValue, fromRef);
 }
 
 class PrePostInDecrementOverloading {
@@ -261,10 +314,10 @@ public:
 void testPrePostInDecrementOverloading ()
 {
     PrePostInDecrementOverloading test;
-    assert(test++.getValue() == 1);
-    assert(test--.getValue() == 0);
-    assert((++test).getValue() == 1);
-    assert((--test).getValue() == 0);
+    Assert::AreEqual(1, test++.getValue());
+    Assert::AreEqual(0, test--.getValue());
+    Assert::AreEqual(1, (++test).getValue());
+    Assert::AreEqual(0, (--test).getValue());
 }
 
 template<template<class, class> class V, class T>
@@ -319,14 +372,14 @@ void testFluentCommaAndBracketOverloads ()
     const std::vector<int> & constIntegers
         = (CreateContainer<std::vector, int>(0), 1, 2).get();
 
-    assert(constIntegers == integers);
+    Assert::AreEqual(integers, constIntegers);
 
     std::list<std::string> strings;
     strings.push_back("hello");
     strings.push_back("world");
 
-    assert((CreateContainer<std::list, std::string>
-        ("hello")("world").get()) == strings);
+    Assert::AreEqual(strings, CreateContainer<std::list, std::string>
+        ("hello")("world").get());
 }
 
 struct ReturnOverload
@@ -354,11 +407,11 @@ void testReturnOverload ()
 {
     ReturnOverload returnOverload;
     const int & i = returnOverload.get();
-    assert(i == 5);
+    Assert::AreEqual(5, i);
 
     const ReturnOverload constReturnOverload;
     const std::string & s = constReturnOverload.get();
-    assert(s == "hello");
+    Assert::AreEqual(s, "hello");
 }
 
 namespace ThisNamespace
@@ -393,14 +446,15 @@ struct ThisClass
  */
 void testNamespaces ()
 {
-    assert(ThisNamespace::HasThisFunction());
-    assert(ThisClass().HasThisFunction() == ThisClass::HasThisFunction());
-    assert(ThisClass::HasThisTypedef(true));
+    Assert::IsTrue(ThisNamespace::HasThisFunction());
+    Assert::AreEqual(ThisClass().HasThisFunction(), ThisClass::HasThisFunction());
+    Assert::IsTrue(ThisClass::HasThisTypedef(true));
 
     namespace alias = ThisNamespace::SubNamespace;
 
-    assert(ThisNamespace::SubNamespace::HasThisFunction()
-        == alias::HasThisFunction());
+    Assert::AreEqual(
+        ThisNamespace::SubNamespace::HasThisFunction(),
+        alias::HasThisFunction());
 }
 
 bool ternaryTrue ()
@@ -422,22 +476,21 @@ void testTernaryAsValue ()
     int postiveCount(0);
     int negativeCount(0);
     (5 < 0 ? negativeCount : postiveCount)++;
-    assert(postiveCount == 1);
-    assert(negativeCount == 0);
+    Assert::IsTrue(postiveCount);
+    Assert::IsFalse(negativeCount);
 
-    assert((1 ? ternaryTrue : ternaryFalse)());
-    assert(!(0 ? ternaryTrue : ternaryFalse)());
+    Assert::IsTrue((1 ? ternaryTrue : ternaryFalse)());
+    Assert::IsFalse((0 ? ternaryTrue : ternaryFalse)());
 
     try {
         const int i = (false) ? 5 : throw std::string("oops");
     }
     catch (const std::string & e)
     {
-        assert(e == "oops");
-        return;
+        return Assert::AreEqual(e, "oops");
     }
 
-    assert(false);
+    Assert::Fail();
 }
 
 /**
@@ -446,11 +499,10 @@ void testTernaryAsValue ()
 void testBareURIViaGoto ()
 {
     goto http;
-    assert(0);
-    return;
+    return Assert::Fail();
 
     http://test.com
-    assert(1);
+    Assert::Success();
 }
 
 /**
@@ -465,11 +517,10 @@ void testCatchAnyException ()
     }
     catch (...)
     {
-       assert(1);
-       return;
+       return Assert::Success();
     }
 
-    assert(0);
+    Assert::Fail();
 }
 
 struct ClassWithFunction
@@ -507,8 +558,8 @@ public:
  */
 void testTemplateChecksFunctionExists ()
 {
-    assert(HasFunction<ClassWithFunction>::exists);
-    assert(!HasFunction<ClassWithoutFunction>::exists);
+    Assert::IsTrue(HasFunction<ClassWithFunction>::exists);
+    Assert::IsFalse(HasFunction<ClassWithoutFunction>::exists);
 }
 
 template<typename T> 
@@ -530,7 +581,7 @@ bool calledViaIdentityDefinition ()
 void testIdentityMetaFunction ()
 {
     ID<bool()>::type * IDFunc = & calledViaIdentityDefinition;
-    assert(IDFunc());
+    Assert::IsTrue(IDFunc());
 }
 
 template<typename T>
@@ -548,7 +599,7 @@ void testDecayArrayToPointerViaUnaryOperator ()
 {
     int smallerArray[2];
     int largerArray[3];
-    assert(needUnaryOperatorForArraysHere(+smallerArray, +largerArray));
+    Assert::IsTrue(needUnaryOperatorForArraysHere(+smallerArray, +largerArray));
 }
 
 template<typename FunctionOne, typename FunctionTwo>
@@ -591,8 +642,8 @@ void testCallSurrogateFunctions ()
     CallsSurrogates<std::string(int), std::string(long)>
         callsSurrogates(integerFunction, longFunction);
 
-    assert(callsSurrogates(5) == "integer passed");
-    assert(callsSurrogates(5L) == "long passed");
+    Assert::AreEqual(callsSurrogates(5), "integer passed");
+    Assert::AreEqual(callsSurrogates(5L), "long passed");
 }
 
 void voidReturn () { }
@@ -626,10 +677,10 @@ struct FindMyType { };
  */
 void testFindingTypeName ()
 {
-    assert(COMPILE_TIME_TYPE(FindMyType<int>()) == "FindMyType<int>()");
+    Assert::AreEqual(COMPILE_TIME_TYPE(FindMyType<int>()), "FindMyType<int>()");
 
-    assert(COMPILE_TIME_TYPE(FindMyType<int>())
-        != typeid(FindMyType<int>()).name());
+    Assert::AreNotEqual(COMPILE_TIME_TYPE(FindMyType<int>()),
+        typeid(FindMyType<int>()).name());
 }
 
 bool functionTryBlockEntered = false;
@@ -661,11 +712,10 @@ void testFunctionTryBlocks ()
     }
     catch (...)
     {
-        assert(functionTryBlockEntered);
-        return;
+        return Assert::IsTrue(functionTryBlockEntered);
     }
 
-    assert(0);
+    Assert::Fail();
 }
 
 // Recursive template for general case
@@ -711,7 +761,7 @@ void testMostVexingParse ()
 {
     const int i = 5;
     const int variableInitialisedByAnother = i;
-    assert(mostVexingParse(5) == variableInitialisedByAnother);
+    Assert::AreEqual(mostVexingParse(5), variableInitialisedByAnother);
 }
 
 namespace ADL
@@ -731,7 +781,7 @@ namespace ADL
 void testArgumentDependentLookup ()
 {
     ADL::UniqueClassName asThisTypeIsUnique;
-    assert(noNeedToNamespaceMe(asThisTypeIsUnique));
+    Assert::IsTrue(noNeedToNamespaceMe(asThisTypeIsUnique));
 }
 
 /**
@@ -781,17 +831,17 @@ void testBitfieldUnion ()
     bitFieldUnion.bitInteger = 76;
     const int bitFieldUnionValue = bitFieldUnion.bitInteger;
 
-    assert(bitFieldValue == bitFieldUnionValue);
+    Assert::AreEqual(bitFieldValue, bitFieldUnionValue);
 
-    assert(bitField.p1 == bitFieldUnion.bitField.p1);
-    assert(bitField.p2 == bitFieldUnion.bitField.p2);
-    assert(bitField.p3 == bitFieldUnion.bitField.p3);
-    assert(bitField.p4 == bitFieldUnion.bitField.p4);
+    Assert::AreEqual(bitField.p1, bitFieldUnion.bitField.p1);
+    Assert::AreEqual(bitField.p2, bitFieldUnion.bitField.p2);
+    Assert::AreEqual(bitField.p3, bitFieldUnion.bitField.p3);
+    Assert::AreEqual(bitField.p4, bitFieldUnion.bitField.p4);
 
-    assert(bitField.p1 == 0);
-    assert(bitField.p2 == 3);
-    assert(bitField.p3 == 2);
-    assert(bitField.p4 == 0);
+    Assert::AreEqual(bitField.p1,  0);
+    Assert::AreEqual(bitField.p2,  3);
+    Assert::AreEqual(bitField.p3,  2);
+    Assert::AreEqual(bitField.p4,  0);
 
     struct TemplatedBitfield<2, 3, 5, 5> templatedBitfield;
 
@@ -803,7 +853,7 @@ void testBitfieldUnion ()
     const int templatedBitFieldValue =
         * reinterpret_cast<unsigned *>(& templatedBitfield);
 
-    assert(bitFieldValue == templatedBitFieldValue);
+    Assert::AreEqual(bitFieldValue, templatedBitFieldValue);
 }
 
 /**
@@ -826,8 +876,12 @@ void testStreamIterators ()
      const vector<string> strings((istream_iterator<string>(mockFileInput)),
          istream_iterator<string>());
 
-     assert(strings.size() == 3);
-     assert(strings[0] == "From" && strings[1] == "a" && strings[2] == "file!");
+     Assert::AreEqual(strings.size(), 3);
+
+     Assert::IsTrue(
+        strings[0] == "From" &&
+        strings[1] == "a" &&
+        strings[2] == "file!");
 }
 
 /**
@@ -842,7 +896,7 @@ void testUnexpectedDeclarationsInForLoop ()
         count = loop.count;
     }
 
-    assert(count == 5);
+    Assert::AreEqual(5, count);
 }
 
 /**
@@ -852,10 +906,10 @@ void testUnexpectedDeclarationsInForLoop ()
 void testBewareMapBracketsOperator ()
 {
     std::map<std::string, std::string> stringsToStrings;
-    assert(stringsToStrings.find("didNotExist") == stringsToStrings.end());
+    Assert::AreEqual(stringsToStrings.find("didNotExist"), stringsToStrings.end());
     std::string& whyHasThisBeenFound = stringsToStrings["didNotExist"];
-    assert(whyHasThisBeenFound.empty());
-    assert(stringsToStrings.find("didNotExist") != stringsToStrings.end());
+    Assert::IsTrue(whyHasThisBeenFound.empty());
+    Assert::AreNotEqual(stringsToStrings.find("didNotExist"), stringsToStrings.end());
 }
 
 template <typename T> 
@@ -886,8 +940,9 @@ void testTemplatedClassWithFriendFunctionAvoidsViolatingODR ()
     TemplatedClassWithFriendFunction<int> integerVersion(123);
     TemplatedClassWithFriendFunction<long> longVersion(123);
     
-    assert(generatesDifferentTemplatedVersion(integerVersion)
-        == generatesDifferentTemplatedVersion(longVersion));
+    Assert::AreEqual(
+        generatesDifferentTemplatedVersion(integerVersion),
+        generatesDifferentTemplatedVersion(longVersion));
 }
 
 
@@ -937,9 +992,9 @@ struct HasAComposition : private Member
  */
 void testCompositionViaPrivateInheritance ()
 {
-    assert(NormalComposition().getHiddenFromMember());
-    assert(HasAComposition().getHidden());
-    assert(HasAComposition().accessMemberPrivates());
+    Assert::IsTrue(NormalComposition().getHiddenFromMember());
+    Assert::IsTrue(HasAComposition().getHidden());
+    Assert::IsTrue(HasAComposition().accessMemberPrivates());
 }
 
 /**
@@ -951,7 +1006,7 @@ void testDirectInitialisation ()
 {
     const int usualAssignment = 7;
     const int directInitialisation(7);
-    assert(usualAssignment == directInitialisation);
+    Assert::AreEqual(usualAssignment, directInitialisation);
 }
 /*
 template <typename T>
@@ -1019,9 +1074,9 @@ public:
 void testMutable ()
 {
     const ContainsMutant containsMutant(28);
-    assert(!containsMutant.valueWasAccessed());
-    assert(containsMutant.getValue() == 28);
-    assert(containsMutant.valueWasAccessed());
+    Assert::IsFalse(containsMutant.valueWasAccessed());
+    Assert::AreEqual(28, containsMutant.getValue());
+    Assert::IsTrue(containsMutant.valueWasAccessed());
 }
 
 int changeMyArgumentDefault (const int i=10)
@@ -1037,8 +1092,22 @@ int changeMyArgumentDefault (const int i=10)
 void testChangingDefaultArguments ()
 {
     int changeMyArgumentDefault (const int i=5);
-    assert(changeMyArgumentDefault() == 5);
-    assert(::changeMyArgumentDefault() == 10);
+    
+    Assert::AreEqual(5, changeMyArgumentDefault());
+    Assert::AreEqual(10, ::changeMyArgumentDefault());
+}
+
+void testRangedForLoop()
+{
+    auto array = { 1, 2, 3, 4, 5 };
+    auto total = 0;
+    
+    for (const auto & x : array)
+    {
+        total += x;
+    }
+    
+    Assert::AreEqual(15, total);
 }
 
 int main ()
@@ -1081,6 +1150,7 @@ int main ()
           //(& testTemplateAsFriend)
             (& testMutable)
             (& testChangingDefaultArguments)
+            (& testRangedForLoop)
         .get();
 
     const size_t & numberOfTests = tests.size();
