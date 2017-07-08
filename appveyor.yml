@@ -17,8 +17,8 @@ skip_tags: true
 #    Environment Configuration    #
 #---------------------------------#
 
-# Operating system (build VM template).
-os: Windows Server 2016
+# Standard build worker image.
+image: Visual Studio 2017
 
 # Scripts that are called at very beginning, before repo cloning.
 init:
