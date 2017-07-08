@@ -13,25 +13,19 @@ namespace csharp
         {
             public bool IsDisposed { get; set; }
 
-            public Resource()
-            {
+            public Resource() =>
                 IsDisposed = false;
-            }
         }
 
         class DisposingClass : IDisposable
         {
             private readonly Resource _resource;
 
-            public DisposingClass(Resource resource)
-            {
+            public DisposingClass(Resource resource) =>
                 _resource = resource;
-            }
 
-            void IDisposable.Dispose()
-            {
+            void IDisposable.Dispose() =>
                 _resource.IsDisposed = true;
-            }
         }
 
         /// <summary>

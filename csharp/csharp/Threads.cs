@@ -103,15 +103,11 @@ namespace csharp
             Assert.AreEqual(parallelResult, syncResult);
         }
 
-        public static double CalculationTwo(double previousResult)
-        {
-            return CalculationTwo() + previousResult;
-        }
+        public static double CalculationTwo(double previousResult) =>
+            CalculationTwo() + previousResult;
 
-        public static double CalculationThree(double previousResult)
-        {
-            return CalculationThree() + previousResult;
-        }
+        public static double CalculationThree(double previousResult) =>
+            CalculationThree() + previousResult;
 
         [TestMethod]
         public void WithChainedTasks()

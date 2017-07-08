@@ -17,10 +17,8 @@ namespace csharp
     public static class PostFilters
     {
         public static IEnumerable<Post> PostedAfter
-            (this IEnumerable<Post> posts, DateTime dateTime)
-        {
-            return posts.Where(post => post.PostedOn > dateTime);
-        }
+            (this IEnumerable<Post> posts, DateTime dateTime) =>
+                posts.Where(post => post.PostedOn > dateTime);
     }
 
     /// <summary>
@@ -32,10 +30,8 @@ namespace csharp
         [SuppressMessage("Microsoft.Design",
             "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Expression<Func<Post, bool>> PostedAfter
-            (DateTime cutoffDate)
-        {
-            return post => post.PostedOn > cutoffDate;
-        }
+            (DateTime cutoffDate) =>
+                post => post.PostedOn > cutoffDate;
 
         /// <summary>
         /// Demonstrating how collections can be queried with LINQ via an

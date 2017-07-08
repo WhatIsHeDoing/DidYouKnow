@@ -36,10 +36,8 @@ namespace csharp
                 "Darren is 31 years old");
         }
 
-        static string BoolArgument(bool test)
-        {
-            return (test) ? "foo" : "bar";
-        }
+        static string BoolArgument(bool test) =>
+            test ? "foo" : "bar";
 
         /// <summary>
         /// Comparison of calling a function with and without the parameter
@@ -54,10 +52,8 @@ namespace csharp
             Assert.AreEqual(BoolArgument(test: false), "bar");
         }
 
-        static void ModifyByRef(ref string name)
-        {
+        static void ModifyByRef(ref string name) =>
             name = "Foo Bar";
-        }
 
         /// <summary>
         /// Shows a value type being passed as a reference parameter to a 
@@ -71,10 +67,8 @@ namespace csharp
             Assert.AreEqual(modifyMe, "Foo Bar");
         }
 
-        static void ModifyByOut(out string name)
-        {
+        static void ModifyByOut(out string name) =>
             name = "Foo Bar";
-        }
 
         /// <summary>
         /// Shows a value type being passed as an out parameter to a function,
@@ -93,18 +87,14 @@ namespace csharp
             public bool Modified;
         }
 
-        static void ModifyObject(Test test)
-        {
+        static void ModifyObject(Test test) =>
             test.Modified = true;
-        }
 
         // ReSharper disable once UnusedParameter.Local
         [SuppressMessage("Microsoft.Usage",
             "CA1801:ReviewUnusedParameters", MessageId = "test")]
-        static void ReplaceObject(Test test)
-        {
+        static void ReplaceObject(Test test) =>
             test = new Test();
-        }
 
         /// <summary>
         /// Demonstration of how, although reference types are always passed
@@ -121,15 +111,11 @@ namespace csharp
             Assert.IsTrue(test.Modified);
         }
 
-        static void ModifyObjectViaActualReference(ref Test test)
-        {
+        static void ModifyObjectViaActualReference(ref Test test) =>
             test.Modified = true;
-        }
 
-        static void ReallyReplaceObject(ref Test test)
-        {
+        static void ReallyReplaceObject(ref Test test) =>
             test = new Test();
-        }
 
         /// <summary>
         /// SHowing how, when the ref keyword is used, references types
@@ -146,19 +132,15 @@ namespace csharp
             Assert.IsFalse(test.Modified);
         }
 
-        static string ArgsToCsv(params object[] args)
-        {
-            return string.Join(",", args.Select(a => a.ToString()).ToList());
-        }
+        static string ArgsToCsv(params object[] args) =>
+            string.Join(",", args.Select(a => a.ToString()).ToList());
 
         /// <summary>
         /// Supply a variable number of arguments to a method using "params"
         /// <see>System.Console.WriteLine</see>
         /// </summary>
         [TestMethod]
-        public void VariableArgumentList()
-        {
+        public void VariableArgumentList() =>
             Assert.AreEqual(ArgsToCsv(new object[] { "foo", 6 }), "foo,6");
-        }
     }
 }

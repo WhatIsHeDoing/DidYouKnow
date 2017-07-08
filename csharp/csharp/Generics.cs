@@ -43,16 +43,12 @@ namespace csharp
         /// when the compiler can determine it for you?
         /// </summary>
         [TestMethod]
-        public void ImplicitGenerics()
-        {
+        public void ImplicitGenerics() =>
             // ReSharper disable once RedundantTypeArgumentsOfMethod
             Assert.AreEqual(ReturnValue(23), ReturnValue(23));
-        }
 
-        static T GetDefaultValue<T>()
-        {
-            return default(T);
-        }
+        static T GetDefaultValue<T>() =>
+            default(T);
 
         // ReSharper disable once ClassNeverInstantiated.Local
         [SuppressMessage("Microsoft.Performance",

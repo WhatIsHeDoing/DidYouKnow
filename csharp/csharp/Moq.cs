@@ -25,12 +25,9 @@ namespace csharp
         /// A simple test to show that stubs are of the type that they mock
         /// </summary>
         [TestMethod]
-        public void StubImplementsType()
-        {
+        public void StubImplementsType() =>
             // ReSharper disable once IsExpressionAlwaysTrue
-            Assert.IsTrue
-                (new Mock<IFetchData>().Object is IFetchData);
-        }
+            Assert.IsTrue(new Mock<IFetchData>().Object is IFetchData);
 
         /// <summary>
         /// Mocking a readonly attribute
@@ -69,6 +66,7 @@ namespace csharp
         public void StubFunction()
         {
             var fetchData = new Mock<IFetchData>();
+
             fetchData
                 .Setup(f => f.Fetch())
                 .Returns("Hi!");

@@ -39,10 +39,8 @@ namespace csharp
                 B = b;
             }
 
-            public string AsHex()
-            {
-                return _Int32.ToString("X6", CultureInfo.CurrentCulture);
-            }
+            public string AsHex() =>
+                _Int32.ToString("X6", CultureInfo.CurrentCulture);
 
             public RGB FromHex(string hex)
             {

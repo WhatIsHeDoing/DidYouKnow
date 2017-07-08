@@ -31,10 +31,8 @@ namespace csharp
             Assert.AreEqual(firstNull ?? secondNull ?? 123, 123);
         }
 
-        static string RegisterMethod<T>(T method, string name) where T : class
-        {
-            return (method != null) ? name : "";
-        }
+        static string RegisterMethod<T>(T method, string name) where T : class =>
+            method != null ? name : "";
 
         static string RegisterMethod<T>(Expression<Action<T>> action) where T : class
         {
