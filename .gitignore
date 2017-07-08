@@ -173,3 +173,10 @@ pip-log.txt
 *.*~
 *.exe
 *.exe.stackdump
+
+#
+# Custom.
+#
+
+# SonarQube analysis.
+**/.sonarqube/
