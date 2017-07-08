@@ -2,7 +2,7 @@ C#
 ==
 
 [![Build status](https://ci.appveyor.com/api/projects/status/75dqm8d8q6atgtg2?svg=true)](https://ci.appveyor.com/project/DarrenHickling/didyouknow)
-![](https://sonarcloud.io/api/badges/measure?key=DidYouKnow&metric=bugs)
+[![Bugs](https://sonarcloud.io/api/badges/measure?key=DidYouKnow&metric=bugs)](https://sonarcloud.io/dashboard?id=DidYouKnow)
 
 ## Testing
 
