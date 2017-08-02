@@ -34,20 +34,13 @@ namespace csharp
         {
             private readonly List<List<T>> _collection = new List<List<T>>();
 
-            public void Add(T one, T two, T three)
-            {
+            public void Add(T one, T two, T three) =>
                 _collection.Add(new List<T> { one, two, three });
-            }
 
-            public IEnumerator<IEnumerable<T>> GetEnumerator()
-            {
-                return _collection.GetEnumerator();
-            }
+            public IEnumerator<IEnumerable<T>> GetEnumerator() =>
+                _collection.GetEnumerator();
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
         /// <summary>
@@ -66,6 +59,30 @@ namespace csharp
             CollectionAssert.AreEqual
                 (new List<int> { 1, 2, 3 },
                     triplets.FirstOrDefault().ToList());
+        }
+
+        /// <summary>
+        /// Simply showing how jagged arrays - arrays of arrays
+        /// of unequal length - can be flattened using SelectMany.
+        /// </summary>
+        [TestMethod]
+        public void JaggedArrays()
+        {
+            // Assemble.
+            var jagged = new[]
+            {
+                new [] { 1, 2 },
+                new [] { 3, 4, 5 },
+                new [] { 6 }
+            };
+
+            var expected = new[] { 1, 2, 3, 4, 5, 6 };
+
+            // Act.
+            var flattened = jagged.SelectMany(a => a.Select(e => e)).ToArray();
+
+            // Assert.
+            CollectionAssert.AreEqual(expected, flattened);
         }
     }
 }
