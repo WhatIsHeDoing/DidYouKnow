@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
@@ -6,7 +6,6 @@ namespace csharp
     /// A demonstration of how structs are great for simple objects,
     /// and can be more lightweight than class alternatives.
     /// </summary>
-    [TestClass]
     public class Struct
     {
         struct CoordinatesValueType
@@ -26,7 +25,7 @@ namespace csharp
         /// identical fields.  Note that the struct does not need to be
         /// constructed with "new", as it is a value type.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void StructTest()
         {
             const int x = 5;
@@ -42,8 +41,8 @@ namespace csharp
                 Y = y
             };
 
-            Assert.AreEqual(coordinatesStack.X, coordinatesHeap.X);
-            Assert.AreEqual(coordinatesStack.Y, coordinatesHeap.Y);
+            Assert.Equal(coordinatesStack.X, coordinatesHeap.X);
+            Assert.Equal(coordinatesStack.Y, coordinatesHeap.Y);
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
     /// <summary>
     /// Emulate C++ unions, i.e. shared memory space.
     /// </summary>
-    [TestClass]
     public class Union
     {
         // ReSharper disable once InconsistentNaming
@@ -60,21 +59,21 @@ namespace csharp
         /// <remarks>
         /// Compare this to the equivalent C++ test!
         /// </remarks>
-        [TestMethod]
+        [Fact]
         public void UnionTest()
         {
             // Byte is a value type, and will default to 0,
             // so the default colour will be black!
             var black = new RGB();
-            Assert.AreEqual(black.AsHex(), "000000");
+            Assert.Equal("000000", black.AsHex());
 
             var coral = new RGB(255, 125, 125);
-            Assert.AreEqual(coral.AsHex(), "FF7D7D");
+            Assert.Equal("FF7D7D", coral.AsHex());
 
             var coralConverted = new RGB().FromHex("FF7D7D");
-            Assert.AreEqual(coralConverted.R, 255);
-            Assert.AreEqual(coralConverted.G, 125);
-            Assert.AreEqual(coralConverted.B, 125);
+            Assert.Equal(255, coralConverted.R);
+            Assert.Equal(125, coralConverted.G);
+            Assert.Equal(125, coralConverted.B);
         }
     }
 }

@@ -1,16 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks;
-
-using AsyncDelegate = System.Func<double>;
+using Xunit;
 
 namespace csharp
 {
-    [TestClass]
     public class Threads
     {
         public static double CalculationOne()
@@ -31,43 +28,7 @@ namespace csharp
             return 3;
         }
 
-        [TestMethod]
-        public void BeginInvokeTest()
-        {
-            // Synchronous.
-            var start = DateTime.Now;
-
-            var syncResult =
-                CalculationOne() +
-                CalculationTwo() +
-                CalculationThree();
-
-            var syncTime = DateTime.Now - start;
-
-            // Begin invoke.
-            AsyncDelegate calcOne = CalculationOne;
-            AsyncDelegate calcTwo = CalculationTwo;
-            AsyncDelegate calcThree = CalculationThree;
-
-            start = DateTime.Now;
-
-            var oneAsyncResult = calcOne.BeginInvoke(null, null);
-            var twoAsyncResult = calcTwo.BeginInvoke(null, null);
-            var threeAsyncResult = calcThree.BeginInvoke(null, null);
-
-            var beginInvokeResult =
-                calcOne.EndInvoke(oneAsyncResult) +
-                calcTwo.EndInvoke(twoAsyncResult) +
-                calcThree.EndInvoke(threeAsyncResult);
-
-            var beginInvokeTime = DateTime.Now - start;
-
-            // Assert.
-            Assert.AreEqual(syncResult, beginInvokeResult);
-            Assert.IsTrue(beginInvokeTime < syncTime);
-        }
-
-        [TestMethod]
+        [Fact]
         public void ParallelTest()
         {
             const int iterations = 20;
@@ -82,25 +43,25 @@ namespace csharp
                 parallelResult += i;
             };
 
-            var start = DateTime.Now;
+            var parallelStopwatch = Stopwatch.StartNew();
             Parallel.For(0, iterations, func);
-            var parallelTime = DateTime.Now - start;
+            parallelStopwatch.Stop();
 
             // Synchonous.
             var syncResult = 0;
-            start = DateTime.Now;
+            var syncStopwatch = Stopwatch.StartNew();
 
-            for (var i = 0; i < iterations; i++)
+            for (var i = 0; i < iterations; ++i)
             {
                 Thread.Sleep(sleep);
                 syncResult += i;
             }
 
-            var syncTime = DateTime.Now - start;
+            syncStopwatch.Stop();
 
             // Assert.
-            Assert.IsTrue(parallelTime < syncTime);
-            Assert.AreEqual(parallelResult, syncResult);
+            Assert.True(parallelStopwatch.ElapsedMilliseconds < syncStopwatch.ElapsedMilliseconds);
+            Assert.Equal(parallelResult, syncResult);
         }
 
         public static double CalculationTwo(double previousResult) =>
@@ -109,7 +70,7 @@ namespace csharp
         public static double CalculationThree(double previousResult) =>
             CalculationThree() + previousResult;
 
-        [TestMethod]
+        [Fact]
         public void WithChainedTasks()
         {
             // Chained.
@@ -133,12 +94,12 @@ namespace csharp
             var syncTime = DateTime.Now - start;
 
             // Assert.
-            Assert.IsTrue(chainedTime < syncTime);
-            Assert.AreEqual(chainedResult.Result, syncResult);
-            Assert.IsTrue(chainedResult.IsCompleted);
+            Assert.True(chainedTime < syncTime);
+            Assert.Equal(chainedResult.Result, syncResult);
+            Assert.True(chainedResult.IsCompleted);
         }
 
-        [TestMethod]
+        [Fact]
         public void WithTasks()
         {
             // Synchronous.
@@ -166,8 +127,8 @@ namespace csharp
             var tasksTime = DateTime.Now - start;
 
             // Assert.
-            Assert.IsTrue(tasksTime < syncTime);
-            Assert.AreEqual(tasksResult, syncResult);
+            Assert.True(tasksTime < syncTime);
+            Assert.Equal(tasksResult, syncResult);
         }
 
         public static double CalculationOneWithProgress
@@ -189,7 +150,7 @@ namespace csharp
 
         [SuppressMessage("Microsoft.Reliability",
             "CA2000:Dispose objects before losing scope")]
-        [TestMethod]
+        [Fact]
         public void WithBackgroundWorker()
         {
             using (var worker = new BackgroundWorker
@@ -211,25 +172,12 @@ namespace csharp
                 worker.RunWorkerCompleted += (sender, e) =>
                 {
                     var result = (double)e.Result;
-                    Assert.AreEqual(1, result);
-                    Assert.AreEqual(100, progress);
+                    Assert.Equal(1, result);
+                    Assert.Equal(100, progress);
                 };
 
                 worker.RunWorkerAsync();
             }
-        }
-
-        [TestMethod]
-        public void WithBeginInvokeCallbacks()
-        {
-            AsyncDelegate calcOne = CalculationOne;
-
-            calcOne.BeginInvoke(asyncResult =>
-            {
-                var result = (AsyncResult)asyncResult;
-                var caller = (AsyncDelegate)result.AsyncDelegate;
-                Assert.AreEqual(1, caller.EndInvoke(result));
-            }, null);
         }
 
         public static double CalculationOneWithProgress
@@ -240,7 +188,7 @@ namespace csharp
                 throw new ArgumentNullException("progressReporter");
             }
 
-            for (var i = 1; i <= 10; ++i)
+            for (var i = 1; i < 11; ++i)
             {
                 Thread.Sleep(50);
                 progressReporter.Report(i * 10);
@@ -249,8 +197,11 @@ namespace csharp
             return 1;
         }
 
-        [Ignore]
-        [TestMethod]
+        /// <summary>
+        /// Note that the progress may not reach 100%,
+        /// as the thead may have completed by the time the progress has updated.
+        /// </summary>
+        [Fact]
         public void WithTasksAndProgressReport()
         {
             var progress = 0;
@@ -265,8 +216,8 @@ namespace csharp
                     CalculationOneWithProgress(progressReporter))
                 .Result;
 
-            Assert.AreEqual(100, progress);
-            Assert.AreEqual(1, result);
+            Assert.True(progress >= 90);
+            Assert.Equal(1, result);
         }
     }
 }

@@ -1,16 +1,15 @@
-﻿namespace csharp
+namespace csharp
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using Xunit;
 
     /// <summary>
     /// Fun with strings.
     /// </summary>
-    [TestClass]
     public class Strings
     {
         /// <summary>
@@ -19,7 +18,7 @@
         /// tested, as the line formatting of this file can vary.
         /// Use <code>System.Environment.NewLine</code> for consistency!
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void VerbatimString()
         {
             const string verbatim = @"Hello
@@ -27,7 +26,7 @@
 
             var actual = Regex.Replace(verbatim, @"\s", "");
             const string expected = "HelloWorld";
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         class TestClass
@@ -40,7 +39,7 @@
         /// <summary>
         /// Demonstrating that strings from all scopes are interned.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void StringInterningByDefault()
         {
             var test = new TestClass();
@@ -48,12 +47,12 @@
             var internedConstString = string.IsInterned(TestClass.ConstString);
             var internedInstanceString = string.IsInterned(test.InstanceString);
 
-            Assert.IsTrue(ReferenceEquals(internedStaticString, "remembered"));
-            Assert.IsTrue(ReferenceEquals(internedStaticString, internedConstString));
-            Assert.IsTrue(ReferenceEquals(internedStaticString, internedInstanceString));
-            Assert.IsTrue(ReferenceEquals(internedConstString, internedInstanceString));
+            Assert.True(ReferenceEquals(internedStaticString, "remembered"));
+            Assert.True(ReferenceEquals(internedStaticString, internedConstString));
+            Assert.True(ReferenceEquals(internedStaticString, internedInstanceString));
+            Assert.True(ReferenceEquals(internedConstString, internedInstanceString));
 
-            Assert.IsFalse(ReferenceEquals(internedStaticString, "different!"));
+            Assert.False(ReferenceEquals(internedStaticString, "different!"));
         }
 
         /// <summary>
@@ -61,7 +60,7 @@
         /// String concatentation is less performant than other techniques,
         /// but it does not fair as badly as you think.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void StringCompositionComparison()
         {
             // First, declare our little sentence structure.
@@ -130,21 +129,21 @@
             var internTime = RepeatAndTime(repeatTimes, intern);
 
             // Ensure all generated strings are correct!
-            Assert.AreEqual(expected, concatenation());
-            Assert.AreEqual(expected, stringBuilder());
-            Assert.AreEqual(expected, format());
-            Assert.AreEqual(expected, intern());
+            Assert.Equal(expected, concatenation());
+            Assert.Equal(expected, stringBuilder());
+            Assert.Equal(expected, format());
+            Assert.Equal(expected, intern());
 
             // Finally: ensure string formatting interning
             // are faster than conatentation and string builder.
-            Assert.IsTrue(formatTime < concatenationTime);
-            Assert.IsTrue(formatTime < stringBuilderTime);
-            Assert.IsTrue(internTime < concatenationTime);
-            Assert.IsTrue(internTime < stringBuilderTime);
+            Assert.True(formatTime < concatenationTime);
+            Assert.True(formatTime < stringBuilderTime);
+            Assert.True(internTime < concatenationTime);
+            Assert.True(internTime < stringBuilderTime);
 
             // Is string interning _that_ much faster?
             // Well, actually, no...
-            Assert.IsTrue((internTime.Ticks * 5) > concatenationTime.Ticks);
+            Assert.True((internTime.Ticks * 5) > concatenationTime.Ticks);
 
             // Bonus: check the output section of the
             // passed unit test to see the difference in the timings.

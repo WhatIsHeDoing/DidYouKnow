@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Xunit;
 
 namespace csharp
 {
@@ -35,19 +35,18 @@ namespace csharp
     /// <summary>
     /// Fun with enums.
     /// </summary>
-    [TestClass]
     public class Enums
     {
         /// <summary>
         /// Demonstrates how extension methods can be applied to enums.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CanUseExtensionMethods()
         {
             var startDate = new DateTime(2000, 1, 1);
             var actual = Duration.Day.From(startDate);
             var expected = new DateTime(2000, 1, 2);
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
     }
 }

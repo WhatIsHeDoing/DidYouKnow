@@ -1,12 +1,13 @@
 # EditorConfig is awesome: http://EditorConfig.org
 
-# Adding this here to ensure it is registered with Visual Studio.
+# This is the top-most EditorConfig file.
+root = true
 
-# Unix-style newlines with a newline ending every file.
+# All files.
 [*]
-end_of_line = lf
-insert_final_newline = true
-
-# Four-space indentation everywhere.
-indent_style = space
+charset = utf-8
+end_of_line = crlf
 indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true

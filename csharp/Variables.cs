@@ -1,11 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
     /// <summary>
     /// Variables can vary in more ways than you may assume.
     /// </summary>
-    [TestClass]
     public class Variables
     {
         /// <summary>
@@ -13,18 +12,20 @@ namespace csharp
         /// Hover over to see the variable used in the assertion!
         /// This is unreadable, but prevents the need for Unicode encoding.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void VariableNamesCanContainUnicodeCharacters()
         {
             const string ὧὃḁḣ = "woah";
-            Assert.IsNotNull(\u1f67\u1f43\u1e01\u1e23);
+            Assert.NotNull(\u1f67\u1f43\u1e01\u1e23);
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         class @class
         {
             private @class() { }
             public const string Foo = "bar";
         }
+#pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Avoid keyword name clashes with the "@" symbol.
@@ -32,16 +33,16 @@ namespace csharp
         /// Used to enable interoperability between CLI languages,
         /// but mind your colleagues if you decide to use it for other reasons!
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void KeywordVariableNames()
         {
             const string @string = "foo bar";
-            Assert.AreEqual(@string, "foo bar");
+            Assert.Equal("foo bar", @string);
 
             const int nonKeyword = 6;
-            Assert.AreEqual(@nonKeyword, 6);
+            Assert.Equal(6, @nonKeyword);
 
-            Assert.AreEqual(@class.Foo, "bar");
+            Assert.Equal("bar", @class.Foo);
         }
 
         class Person
@@ -54,7 +55,7 @@ namespace csharp
         /// Shows how an anonymous type is created
         /// compared to a class instance instantiated with an initializer.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void AnonymousTypeVersusObjectInitializer()
         {
             var anonymousPerson = new
@@ -69,8 +70,8 @@ namespace csharp
                 Name = "Darren"
             };
 
-            Assert.AreEqual(anonymousPerson.Age, person.Age);
-            Assert.AreEqual(anonymousPerson.Name, person.Name);
+            Assert.Equal(anonymousPerson.Age, person.Age);
+            Assert.Equal(anonymousPerson.Name, person.Name);
         }
     }
 }

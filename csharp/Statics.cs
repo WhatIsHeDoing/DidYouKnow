@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
@@ -16,19 +16,16 @@ namespace csharp
     /// <summary>
     /// Beware statics!
     /// </summary>
-    [TestClass]
     public class Statics
     {
         /// <summary>
         /// Shows why the declaration order of static variables is important!
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void BewareDeclarationOrder()
         {
-            Assert.AreEqual(TestClass.A, TestClass.B);
-
-            Assert.AreNotEqual(TestClass.C, TestClass.D,
-                "D was not assigned when C used it!");
+            Assert.Equal(TestClass.A, TestClass.B);
+            Assert.NotEqual(TestClass.C, TestClass.D);
         }
     }
 }

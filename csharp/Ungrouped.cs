@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
@@ -12,7 +12,6 @@ namespace csharp
     /// <summary>
     /// This class houses unit tests that have not yet been grouped.
     /// </summary>
-    [TestClass]
     public class Ungrouped
     {
         /// <summary>
@@ -21,14 +20,14 @@ namespace csharp
         /// <remarks>
         /// http://msdn.microsoft.com/en-us/library/ms173224.aspx
         /// </remarks>
-        [TestMethod]
+        [Fact]
         public void ChainingNullCoalescingOperator()
         {
             int? firstNull = null;
             int? secondNull = null;
             
             // ReSharper disable ConstantNullCoalescingCondition
-            Assert.AreEqual(firstNull ?? secondNull ?? 123, 123);
+            Assert.Equal(firstNull ?? secondNull ?? 123, 123);
         }
 
         static string RegisterMethod<T>(T method, string name) where T : class =>
@@ -51,10 +50,10 @@ namespace csharp
         /// Using strongly-typed method registration,
         /// thanks to expression trees.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void StronglyTypedMethodRegistration()
         {
-            Assert.AreEqual(RegisterMethod(typeof(UseMe), "SomeMethod"),
+            Assert.Equal(RegisterMethod(typeof(UseMe), "SomeMethod"),
                 RegisterMethod<UseMe>(c => c.SomeMethod()));
         }
 
@@ -75,29 +74,22 @@ namespace csharp
         [SuppressMessage("Microsoft.Usage",
             "CA1806:DoNotIgnoreMethodResults",
             MessageId = "csharp.Ungrouped+Empty")]
-        [TestMethod]
+        [Fact]
         public void CastVersusAsVersusIs()
         {
             object empty = new Empty();
 
-            try
-            {
-                // ReSharper disable once UnusedVariable
-                // ReSharper disable once PossibleInvalidCastException
-                var willThrow = (EmptyToo)empty;
-                Assert.Fail("Should throw!");
-            }
-            catch (InvalidCastException) { }
+            Assert.Throws<InvalidCastException>(() => (EmptyToo)empty);
 
             // ReSharper disable once ExpressionIsAlwaysNull
             var willBeNull = empty as EmptyToo;
-            Assert.IsNull(willBeNull);
+            Assert.Null(willBeNull);
 
 #pragma warning disable CS0184
             // Visual Studio may warn you here!
             // "The given expression is never of the provided (<type>) type"
             // ReSharper disable once IsExpressionAlwaysFalse
-            Assert.IsFalse(new Empty() is EmptyToo);
+            Assert.False(new Empty() is EmptyToo);
 #pragma warning restore CS0184
         }
 
@@ -118,12 +110,12 @@ namespace csharp
         /// Nothing to see here, except if you run Test => Debug
         /// and notice the value of debugMe is '"Dave" from "Essex"'.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void DebuggerDisplay()
         {
             var debugMe = new EasyDebugPerson("Dave", "Essex");
-            Assert.AreEqual("Dave", debugMe.Name);
-            Assert.AreEqual("Essex", debugMe.Town);
+            Assert.Equal("Dave", debugMe.Name);
+            Assert.Equal("Essex", debugMe.Town);
             Debugger.Break();
         }
     }

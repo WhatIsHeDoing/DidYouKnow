@@ -1,16 +1,16 @@
-﻿using System;
-using AutoMapper;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mapster;
+using System;
+using Xunit;
 
 namespace csharp
 {
     /// <summary>
-    /// Tests mapping fields from one class to another using AutoMapper,
+    /// Tests mapping fields from one class to another using Mapster,
     /// rather than doing it yourself everytime.  Great for mapping
     /// view models to service contract models, etc.
     /// </summary>
-    [TestClass]
-    public class AutoMapperTest
+    /// <remarks>https://github.com/MapsterMapper/Mapster</remarks>
+    public class MapperTest
     {
         class PersonTypeOne
         {
@@ -33,26 +33,15 @@ namespace csharp
         /// Shows how mapping can be customised to map fields with different
         /// names, and also perform extra work before and after that mapping.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CustomMapping()
         {
             // Set up the mapping between the person types.
-            Mapper.CreateMap<PersonTypeOne, PersonTypeTwo>()
-                .ForMember(dest => dest.DoB, opt =>
-                    opt.MapFrom(src => src.DateOfBirth))
-                .ForMember(dest => dest.Name, opt => opt.Ignore())
-                .AfterMap((src, dest) =>
-                    dest.Name = src.FirstName + " " + src.Surname);
-
-            // Ensure that the mapping is valid.
-            try
-            {
-                Mapper.AssertConfigurationIsValid();
-            }
-            catch (AutoMapperConfigurationException e)
-            {
-                Assert.Fail("Configuration invalid: " + e.Message);
-            }
+            TypeAdapterConfig<PersonTypeOne, PersonTypeTwo>
+                .NewConfig()
+                .Map(dest => dest.DoB, opt => opt.DateOfBirth)
+                //.Map(dest => dest.Name, opt => opt.Ignore())
+                .Map(dest => dest.Name, src => src.FirstName + " " + src.Surname);
 
             // Instantiate a person of the first type.
             var personTypeOne = new PersonTypeOne
@@ -64,18 +53,12 @@ namespace csharp
             };
 
             // Map that to the second type.
-            var personTypeTwo = Mapper.Map
-                <PersonTypeOne, PersonTypeTwo>(personTypeOne);
+            var personTypeTwo = personTypeOne.Adapt<PersonTypeTwo>();
 
             // Assert the data has been copied as expected.
-            Assert.AreEqual(personTypeOne.Id, personTypeTwo.Id,
-                "Exact name match");
-
-            Assert.AreEqual(personTypeOne.DateOfBirth, personTypeTwo.DoB,
-                "Custom match on names");
-
-            Assert.AreEqual("Bob Hope", personTypeTwo.Name,
-                "Set after mapping");
+            Assert.Equal(personTypeOne.Id, personTypeTwo.Id);
+            Assert.Equal(personTypeOne.DateOfBirth, personTypeTwo.DoB);
+            Assert.Equal("Bob Hope", personTypeTwo.Name);
         }
     }
 }

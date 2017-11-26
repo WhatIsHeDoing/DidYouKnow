@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
@@ -24,7 +24,6 @@ namespace csharp
     /// <summary>
     /// LINQ is utterly amazing, so let these examples inspire you!
     /// </summary>
-    [TestClass]
     public class Linq
     {
         [SuppressMessage("Microsoft.Design",
@@ -37,7 +36,7 @@ namespace csharp
         /// Demonstrating how collections can be queried with LINQ via an
         /// a lambda, extension method and expression tree; the choice is yours!
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void LinqFiltering()
         {
             var latestDate = new DateTime(2010, 6, 15);
@@ -54,23 +53,22 @@ namespace csharp
             var standardQuery = posts.Where(p => p.PostedOn > cutoff).ToList();
             var extensionMethod = posts.PostedAfter(cutoff).ToList();
 
-            var expressionTree =
-                posts.AsQueryable().Where(PostedAfter(cutoff));
+            var expressionTree = posts.AsQueryable().Where(PostedAfter(cutoff));
 
-            Assert.AreEqual(standardQuery.Count(), 1);
-            Assert.AreEqual(extensionMethod.Count(), 1);
-            Assert.AreEqual(expressionTree.Count(), 1);
+            Assert.Single(standardQuery);
+            Assert.Single(extensionMethod);
+            Assert.Equal(1, expressionTree.Count());
 
-            Assert.AreEqual(standardQuery.First().PostedOn, latestDate);
-            Assert.AreEqual(extensionMethod.First().PostedOn, latestDate);
-            Assert.AreEqual(expressionTree.First().PostedOn, latestDate);
+            Assert.Equal(standardQuery.First().PostedOn, latestDate);
+            Assert.Equal(extensionMethod.First().PostedOn, latestDate);
+            Assert.Equal(expressionTree.First().PostedOn, latestDate);
         }
 
         /// <summary>
         /// Simple but useful ability to use the current index of the
         /// enumerated collection when projecting it.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ProjectionWithIndex()
         {
             var strings = new List<string> { "foo", "bar" };
@@ -79,9 +77,9 @@ namespace csharp
                 ((s, i) => String.Format(CultureInfo.CurrentCulture,
                     "{0}: {1}", s, i)).ToArray();
 
-            Assert.AreEqual(numberedStrings.Length, 2);
-            Assert.AreEqual(numberedStrings[0], "foo: 0");
-            Assert.AreEqual(numberedStrings[1], "bar: 1");
+            Assert.Equal(2, numberedStrings.Length);
+            Assert.Equal("foo: 0", numberedStrings[0]);
+            Assert.Equal("bar: 1", numberedStrings[1]);
         }
     }
 }

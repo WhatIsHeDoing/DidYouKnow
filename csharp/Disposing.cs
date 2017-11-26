@@ -1,12 +1,11 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
     /// <summary>
     /// Shows how using ensures the correct use of IDisposable objects.
     /// </summary>
-    [TestClass]
     public class Disposing
     {
         class Resource
@@ -32,17 +31,17 @@ namespace csharp
         /// Demonstrates how the using statement defines a scope for an object
         /// automatically disposes of that object once the scope is left.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void UsingStatement()
         {
             var resouce = new Resource();
 
             using (new DisposingClass(resouce))
             {
-                Assert.IsFalse(resouce.IsDisposed);
+                Assert.False(resouce.IsDisposed);
             }
 
-            Assert.IsTrue(resouce.IsDisposed);
+            Assert.True(resouce.IsDisposed);
         }
     }
 }

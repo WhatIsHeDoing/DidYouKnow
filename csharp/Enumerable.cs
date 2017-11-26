@@ -1,14 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
     /// <summary>
     /// Demonstrating features of enumerable collections.
     /// </summary>
-    [TestClass]
     public class Enumerable
     {
         static IEnumerable<string> HelloWorld()
@@ -20,14 +19,16 @@ namespace csharp
         /// <summary>
         /// Testing generator methods via the yield keyword.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void Yield()
         {
             var enumerator = HelloWorld().GetEnumerator();
+
             enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, "Hello");
+            Assert.Equal("Hello", enumerator.Current);
+
             enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, "World");
+            Assert.Equal("World", enumerator.Current);
         }
 
         class Triplets<T> : IEnumerable<IEnumerable<T>>
@@ -47,7 +48,7 @@ namespace csharp
         /// Demonstrating that the Add method of a custom collection
         /// that implements IEnumerable is used in the object initialiser.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ObjectInitializer()
         {
             var triplets = new Triplets<int>
@@ -56,16 +57,16 @@ namespace csharp
             };
 
             // ReSharper disable once AssignNullToNotNullAttribute
-            CollectionAssert.AreEqual
-                (new List<int> { 1, 2, 3 },
-                    triplets.FirstOrDefault().ToList());
+            Assert.Equal(
+                new List<int> { 1, 2, 3 },
+                triplets.FirstOrDefault().ToList());
         }
 
         /// <summary>
         /// Simply showing how jagged arrays - arrays of arrays
         /// of unequal length - can be flattened using SelectMany.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void JaggedArrays()
         {
             // Assemble.
@@ -82,7 +83,7 @@ namespace csharp
             var flattened = jagged.SelectMany(a => a.Select(e => e)).ToArray();
 
             // Assert.
-            CollectionAssert.AreEqual(expected, flattened);
+            Assert.Equal(expected, flattened);
         }
     }
 }

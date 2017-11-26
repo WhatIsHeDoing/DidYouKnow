@@ -1,13 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace csharp
 {
     /// <summary>
     /// Demonstrating little-known features of classes.
     /// </summary>
-    [TestClass]
     public class Classes
     {
         class TestClass
@@ -15,30 +14,21 @@ namespace csharp
             private readonly IDictionary<string, int> _dictionary;
 
             public TestClass(IDictionary<string, int> dictionary)
-            {
-                _dictionary = dictionary;
-            }
+                => _dictionary = dictionary;
 
-            public int this[string key]
-            {
-                get { return _dictionary[key]; }
-            }
+            public int this[string key] => _dictionary[key];
 
             public IEnumerable<int> this[params string[] keys]
-            {
-                get { return keys.Select(key => _dictionary[key]); }
-            }
+                => keys.Select(key => _dictionary[key]);
 
             public string this[int key]
-            {
-                get { return _dictionary.First(kv => kv.Value == key).Key; }
-            }
+                => _dictionary.First(kv => kv.Value == key).Key;
         }
 
         /// <summary>
         /// Shows how multiple array indexes can be accessed simultaneously.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void MultipleIndexAccessors()
         {
             var testClass = new TestClass(new Dictionary<string, int>
@@ -48,16 +38,16 @@ namespace csharp
                 { "c", 3 }
             });
 
-            Assert.AreEqual(2, testClass["b"]);
+            Assert.Equal(2, testClass["b"]);
 
             var actual = testClass["b", "c"];
-            CollectionAssert.AreEqual(new[] { 2, 3 }, actual.ToArray());
+            Assert.Equal(new[] { 2, 3 }, actual.ToArray());
         }
 
         /// <summary>
         /// Shows that different types can be accessed via the same syntax.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void DifferentIndexAccessorTypes()
         {
             var testClass = new TestClass(new Dictionary<string, int>
@@ -67,8 +57,8 @@ namespace csharp
                 { "c", 3 }
             });
 
-            Assert.AreEqual(2, testClass["b"]);
-            Assert.AreEqual("b", testClass[2]);
+            Assert.Equal(2, testClass["b"]);
+            Assert.Equal("b", testClass[2]);
         }
     }
 }

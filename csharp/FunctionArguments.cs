@@ -1,7 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace csharp
 {
@@ -13,27 +13,21 @@ namespace csharp
     /// also make the distinction explicit by requiring
     /// the caller to use the keywords!
     /// </summary>
-    [TestClass]
     public class FunctionArguments
     {
-        static string DefaultParameter(string name, int age=18)
-        {
-            return string.Format(CultureInfo.CurrentCulture,
+        static string DefaultParameter(string name, int age = 18)
+            => string.Format(CultureInfo.CurrentCulture,
                 "{0} is {1} years old", name, age);
-        }
 
         /// <summary>
         /// Showing how a function with a default parameter can be called
         /// value set
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void DefaultParameters()
         {
-            Assert.AreEqual(DefaultParameter("Darren"),
-                "Darren is 18 years old");
-
-            Assert.AreEqual(DefaultParameter("Darren", 31),
-                "Darren is 31 years old");
+            Assert.Equal("Darren is 18 years old", DefaultParameter("Darren"));
+            Assert.Equal("Darren is 31 years old", DefaultParameter("Darren", 31));
         }
 
         static string BoolArgument(bool test) =>
@@ -45,26 +39,25 @@ namespace csharp
         /// take multiple parameters, one being a boolean, which
         /// often makes it unclear what that parameter is doing!
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void NamedParameters()
         {
-            Assert.AreEqual(BoolArgument(true), "foo");
-            Assert.AreEqual(BoolArgument(test: false), "bar");
+            Assert.Equal("foo", BoolArgument(true));
+            Assert.Equal("bar", BoolArgument(test: false));
         }
 
-        static void ModifyByRef(ref string name) =>
-            name = "Foo Bar";
+        static void ModifyByRef(ref string name) => name = "Foo Bar";
 
         /// <summary>
         /// Shows a value type being passed as a reference parameter to a 
         /// function, which requires it to be initialised first
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void RefKeywordValueType()
         {
             var modifyMe = "Mister E";
             ModifyByRef(ref modifyMe);
-            Assert.AreEqual(modifyMe, "Foo Bar");
+            Assert.Equal("Foo Bar", modifyMe);
         }
 
         static void ModifyByOut(out string name) =>
@@ -74,12 +67,11 @@ namespace csharp
         /// Shows a value type being passed as an out parameter to a function,
         /// which does not need to be initialised
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void OutKeywordValueType()
         {
-            string modifyMe;
-            ModifyByOut(out modifyMe);
-            Assert.AreEqual(modifyMe, "Foo Bar");
+            ModifyByOut(out string modifyMe);
+            Assert.Equal("Foo Bar", modifyMe);
         }
 
         class Test
@@ -87,8 +79,7 @@ namespace csharp
             public bool Modified;
         }
 
-        static void ModifyObject(Test test) =>
-            test.Modified = true;
+        static void ModifyObject(Test test) => test.Modified = true;
 
         // ReSharper disable once UnusedParameter.Local
         [SuppressMessage("Microsoft.Usage",
@@ -100,15 +91,15 @@ namespace csharp
         /// Demonstration of how, although reference types are always passed
         /// by reference, they can be modified but not replaced
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void RefTypesCopyReferencePointer()
         {
             var test = new Test();
             ModifyObject(test);
-            Assert.IsTrue(test.Modified);
+            Assert.True(test.Modified);
 
             ReplaceObject(test);
-            Assert.IsTrue(test.Modified);
+            Assert.True(test.Modified);
         }
 
         static void ModifyObjectViaActualReference(ref Test test) =>
@@ -121,15 +112,15 @@ namespace csharp
         /// SHowing how, when the ref keyword is used, references types
         /// can be replaced when passed as a parameter to a function
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void RefTypesUseActualPointer()
         {
             var test = new Test();
             ModifyObjectViaActualReference(ref test);
-            Assert.IsTrue(test.Modified);
+            Assert.True(test.Modified);
 
             ReallyReplaceObject(ref test);
-            Assert.IsFalse(test.Modified);
+            Assert.False(test.Modified);
         }
 
         static string ArgsToCsv(params object[] args) =>
@@ -139,8 +130,8 @@ namespace csharp
         /// Supply a variable number of arguments to a method using "params"
         /// <see>System.Console.WriteLine</see>
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void VariableArgumentList() =>
-            Assert.AreEqual(ArgsToCsv(new object[] { "foo", 6 }), "foo,6");
+            Assert.Equal("foo,6", ArgsToCsv(new object[] { "foo", 6 }));
     }
 }

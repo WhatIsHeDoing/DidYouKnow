@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
-// Alias used in a test
+// Alias used in a test.
 using StringToString = System.Collections.Generic.Dictionary<string, string>;
 
 namespace csharp
@@ -10,14 +11,13 @@ namespace csharp
     /// <summary>
     /// Some interesting uses and features of generics.
     /// </summary>
-    [TestClass]
     public class Generics
     {
         /// <summary>
         /// Shows how an alias to a generic can be used
         /// to potentially simplify the use of complex structures.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void AliasedGeneric()
         {
             var aliasedMap = new StringToString
@@ -30,25 +30,21 @@ namespace csharp
                 { "Darren", "Hickling" }
             };
 
-            Assert.AreEqual(aliasedMap["Darren"], map["Darren"]);
+            Assert.Equal(aliasedMap["Darren"], map["Darren"]);
         }
 
-        static T ReturnValue<T>(T value)
-        {
-            return value;
-        }
+        static T ReturnValue<T>(T value) => value;
 
         /// <summary>
         /// Why explicitly state the type,
         /// when the compiler can determine it for you?
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ImplicitGenerics() =>
             // ReSharper disable once RedundantTypeArgumentsOfMethod
-            Assert.AreEqual(ReturnValue(23), ReturnValue(23));
+            Assert.Equal(ReturnValue(23), ReturnValue(23));
 
-        static T GetDefaultValue<T>() =>
-            default(T);
+        static T GetDefaultValue<T>() => default(T);
 
         // ReSharper disable once ClassNeverInstantiated.Local
         [SuppressMessage("Microsoft.Performance",
@@ -59,14 +55,28 @@ namespace csharp
         /// Shows how the default value of generic works as expected
         /// with value (including nullable) and reference types.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void DefaultValue()
         {
-            Assert.IsFalse(GetDefaultValue<bool>());
-            Assert.AreEqual(GetDefaultValue<int>(), 0);
-            Assert.IsNull(GetDefaultValue<double?>());
-            Assert.IsNull(GetDefaultValue<List<string>>());
-            Assert.IsNull(GetDefaultValue<Blank>());
+            Assert.False(GetDefaultValue<bool>());
+            Assert.Equal(0, GetDefaultValue<int>());
+            Assert.Null(GetDefaultValue<double?>());
+            Assert.Null(GetDefaultValue<List<string>>());
+            Assert.Null(GetDefaultValue<Blank>());
+        }
+
+        T[] SliceFromStart<T>(Span<T> source, int length)
+            => source.Slice(0, length).ToArray();
+
+        /// <summary>
+        /// Use a data collection without copying or assignment thanks to Span.
+        /// </summary>
+        [Fact]
+        public void Span()
+        {
+            var test = new[] { 1, 2, 3, 4 };
+            var actual = SliceFromStart(test.AsSpan(), 3);
+            Assert.Equal(new[] { 1, 2, 3 }, actual);
         }
     }
 }
