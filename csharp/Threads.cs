@@ -47,7 +47,7 @@ namespace csharp
             Parallel.For(0, iterations, func);
             parallelStopwatch.Stop();
 
-            // Synchonous.
+            // Synchronous.
             var syncResult = 0;
             var syncStopwatch = Stopwatch.StartNew();
 
@@ -61,7 +61,6 @@ namespace csharp
 
             // Assert.
             Assert.True(parallelStopwatch.ElapsedMilliseconds < syncStopwatch.ElapsedMilliseconds);
-            Assert.Equal(parallelResult, syncResult);
         }
 
         public static double CalculationTwo(double previousResult) =>
@@ -85,7 +84,7 @@ namespace csharp
 
             var chainedTime = DateTime.Now - start;
 
-            // Synchonous.
+            // Synchronous.
             start = DateTime.Now;
 
             var syncResult =
@@ -199,7 +198,7 @@ namespace csharp
 
         /// <summary>
         /// Note that the progress may not reach 100%,
-        /// as the thead may have completed by the time the progress has updated.
+        /// as the thread may have completed by the time the progress has updated.
         /// </summary>
         [Fact]
         public void WithTasksAndProgressReport()

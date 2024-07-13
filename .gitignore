@@ -1,1 +1,7 @@
+# Compiled output,
+bin
+build
+obj
+
+# JavaScript dependencies,
 node_modules

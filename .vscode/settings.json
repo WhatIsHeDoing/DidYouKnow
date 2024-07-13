@@ -1,0 +1,14 @@
+{
+    "cSpell.enableFiletypes": [
+        "just"
+    ],
+    "editor.formatOnSave": true,
+    "cSpell.words": [
+        "Coliru",
+        "Gotos",
+        "lvalues",
+        "Mapster",
+        "stringification",
+        "Xunit"
+    ]
+}

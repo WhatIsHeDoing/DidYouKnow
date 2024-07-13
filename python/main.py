@@ -8,7 +8,7 @@ import unittest
 class testRandomFeatures(unittest.TestCase):
     """ testing random language features """
 
-    def testMultipleAssignent(self):
+    def testMultipleAssignment(self):
         """ tests the shorthand syntax of assigning values to multiple variables """
         x, y = 1, 2
         self.assertEqual(1, x)
@@ -110,8 +110,8 @@ class testRandomFeatures(unittest.TestCase):
 
     def testInterestingOperatorUsage(self):
         """ why restrict yourself to the usual use of operators? """
-        self.assertEqual("nom" * 2, "nomnom")
-        self.assertEqual(2 * "nom", "nomnom")
+        self.assertEqual("to" * 2, "toto")
+        self.assertEqual(2 * "to", "toto")
         self.assertEqual([1, 2] * 2, [1, 2, 1, 2])
         self.assertEqual("Keep me!" * True, "Keep me!")
         self.assertEqual("Keep me!" * False, "")
@@ -125,7 +125,7 @@ class testRandomFeatures(unittest.TestCase):
         self.assertFalse(2 in [4, 5, 6])
 
     def testZip(self):
-        """ showing how lists can be iterated together, and how to tranpose them """
+        """ showing how lists can be iterated together, and how to transpose them """
         for zipped in zip(["one"], [2]):
             self.assertEqual(zipped, ("one", 2))
 
@@ -181,7 +181,7 @@ class testExceptions(unittest.TestCase):
         self.fail()
 
     def testReRaiseException(self):
-        """ shows how an exception can be reraised to preserve its original traceback """
+        """ shows how an exception can be re-raised to preserve its original traceback """
         try:
             try:
                 1 / 0
@@ -202,7 +202,7 @@ class testIterating(unittest.TestCase):
                 self.id = value
 
         customs = [Custom(5), Custom(3)]
-        customs.sort(key=operator.attrgetter('id')) 
+        customs.sort(key=operator.attrgetter('id'))
         self.assertEqual(3, customs[0].id)
 
     def testGenerators(self):
@@ -237,7 +237,7 @@ class testIterating(unittest.TestCase):
 
         self.assertEqual(values[-1], [5],
             "using a negative index to access indices from end of the array")
-        
+
         self.assertEqual(values[:2], [1, 2], "up to an index")
         self.assertEqual(values[2:4], [3, 4], "between indices")
         self.assertEqual(values[::2], [2, 4], "using a custom interval")
@@ -245,7 +245,7 @@ class testIterating(unittest.TestCase):
 
 class testSets(unittest.TestCase):
     """ shows the support for sets and comparisons of them """
-    
+
     def setUp(self):
         """ initialise the sets used throughout the tests """
         self.one = set(' abcde ')

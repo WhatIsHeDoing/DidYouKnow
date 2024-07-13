@@ -34,14 +34,14 @@ namespace csharp
         [Fact]
         public void UsingStatement()
         {
-            var resouce = new Resource();
+            var resource = new Resource();
 
-            using (new DisposingClass(resouce))
+            using (new DisposingClass(resource))
             {
-                Assert.False(resouce.IsDisposed);
+                Assert.False(resource.IsDisposed);
             }
 
-            Assert.True(resouce.IsDisposed);
+            Assert.True(resource.IsDisposed);
         }
     }
 }

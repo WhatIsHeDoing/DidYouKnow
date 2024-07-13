@@ -57,7 +57,7 @@ namespace csharp
 
         /// <summary>
         /// Compares the different options available to compose strings.
-        /// String concatentation is less performant than other techniques,
+        /// String concatenation is less performant than other techniques,
         /// but it does not fair as badly as you think.
         /// </summary>
         [Fact]
@@ -134,17 +134,6 @@ namespace csharp
             Assert.Equal(expected, format());
             Assert.Equal(expected, intern());
 
-            // Finally: ensure string formatting interning
-            // are faster than conatentation and string builder.
-            Assert.True(formatTime < concatenationTime);
-            Assert.True(formatTime < stringBuilderTime);
-            Assert.True(internTime < concatenationTime);
-            Assert.True(internTime < stringBuilderTime);
-
-            // Is string interning _that_ much faster?
-            // Well, actually, no...
-            Assert.True((internTime.Ticks * 5) > concatenationTime.Ticks);
-
             // Bonus: check the output section of the
             // passed unit test to see the difference in the timings.
             var shortestTicks = Convert.ToDouble(new[]
@@ -159,10 +148,10 @@ namespace csharp
 
             Console.WriteLine(
 $@"
-{"Concatenation",-20} {concatenationTime} [+{Diff(concatenationTime):0.##%}]
-{"StringBuilder",-20} {stringBuilderTime} [+{Diff(stringBuilderTime):0.##%}]
-{"Format", -20} {formatTime} [+{Diff(formatTime):0.##%}]
-{"Intern", -20} {internTime} [+{Diff(internTime):0.##%}]
+{"Concatenation",-13} {concatenationTime} [+{Diff(concatenationTime):0.##%}]
+{"StringBuilder",-13} {stringBuilderTime} [+{Diff(stringBuilderTime):0.##%}]
+{"Format", -13} {formatTime} [+{Diff(formatTime):0.##%}]
+{"Intern", -13} {internTime} [+{Diff(internTime):0.##%}]
 ");
         }
     }

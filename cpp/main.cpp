@@ -18,13 +18,13 @@ namespace Assert
     {
         assert(expected == actual);
     }
-    
-    static void AreEqual(const char * expected, std::string actual)
+
+    static void AreEqual(const char *expected, std::string actual)
     {
         assert(expected == actual);
     }
-    
-    static void AreEqual(std::string expected, const char * actual)
+
+    static void AreEqual(std::string expected, const char *actual)
     {
         assert(expected == actual);
     }
@@ -38,7 +38,7 @@ namespace Assert
     {
         assert(expected == actual);
     }
-    
+
     template <typename T>
     static void AreNotEqual(T expected, T actual)
     {
@@ -49,17 +49,17 @@ namespace Assert
     {
         assert(comparison ? 0 : 1);
     }
-    
+
     static void IsTrue(bool comparison)
     {
         assert(comparison ? 1 : 0);
     }
-    
+
     static void Fail()
     {
         assert(0);
     }
-    
+
     static void Success()
     {
         return assert(1);
@@ -73,7 +73,7 @@ namespace Assert
  * for demonstration purposes, particularly if a huge comment
  * block would likely be deleted by a well-meaning engineer
  */
-void testPlaceholder ()
+void testPlaceholder()
 {
     Assert::Fail();
 }
@@ -83,14 +83,14 @@ void testPlaceholder ()
  * Demonstrates that the body of an if statement will run
  * if the variable declared in the check is not falsy
  */
-void testBranchOnVariableDeclaration ()
+void testBranchOnVariableDeclaration()
 {
     std::map<std::string, std::string> data;
     data["key"] = "value";
 
-    if (std::string * value = &data["key"])
+    if (std::string *value = &data["key"])
     {
-        return Assert::AreEqual("value", * value);
+        return Assert::AreEqual("value", *value);
     }
 
     Assert::Fail();
@@ -100,7 +100,7 @@ void testBranchOnVariableDeclaration ()
  * Shows the many methods that can be used to access an index of an array.
  * Yes, array[index] is syntactic sugar!
  */
-void testArrayIndexAccess ()
+void testArrayIndexAccess()
 {
     int array[3];
     array[0] = 0;
@@ -108,16 +108,16 @@ void testArrayIndexAccess ()
     array[2] = 64;
 
     Assert::AreEqual(64, array[2]);
-    Assert::AreEqual(64, * (array + 2));
-    Assert::AreEqual(64, * (2 + array));
-    Assert::AreEqual(64, 2[array]);
+    Assert::AreEqual(64, *(array + 2));
+    Assert::AreEqual(64, *(2 + array));
+    Assert::AreEqual(64, 2 [array]);
 }
 
 /**
  * Originally implemented for limited keyboards and terminals, why not
  * clarify or obfuscate your codebase with these plain-text alternatives?
  */
-void testKeywordOperatorTokens ()
+void testKeywordOperatorTokens()
 {
     Assert::IsTrue(1 and 1);
     Assert::IsTrue(0 or 1);
@@ -137,7 +137,7 @@ void testKeywordOperatorTokens ()
 class ContainsHidden
 {
 public:
-    ContainsHidden (const int member) : _member(member) { }
+    ContainsHidden(const int member) : _member(member) {}
 
 protected:
     const int _member;
@@ -146,14 +146,14 @@ protected:
 class PromotesHidden : public ContainsHidden
 {
 public:
-    PromotesHidden (int member) : ContainsHidden(member) { }
+    PromotesHidden(int member) : ContainsHidden(member) {}
     using ContainsHidden::_member;
 };
 
 /**
  * Demonstrates how to alter the scope of class members in their derived classes
  */
-void testChangingScope ()
+void testChangingScope()
 {
     Assert::AreEqual(5, PromotesHidden(5)._member);
 }
@@ -162,7 +162,7 @@ void testChangingScope ()
 class NotPrivateHere
 {
 private:
-    bool success () const
+    bool success() const
     {
         return true;
     }
@@ -173,15 +173,16 @@ private:
  * Shows the highly-questionable practice of redeclaring language keywords
  * with macros, which can - very occasionally - be useful when testing
  */
-void testRedefiningKeywords ()
+void testRedefiningKeywords()
 {
     Assert::IsTrue(NotPrivateHere().success());
 }
 
-struct PointToUs {
+struct PointToUs
+{
     int value;
 
-    bool method () const
+    bool method() const
     {
         return true;
     }
@@ -191,13 +192,13 @@ struct PointToUs {
  * Demonstrates the syntax required for pointers to function members,
  * which - when required - may be a pain to remember quickly
  */
-void testPointerToMemberOperators ()
+void testPointerToMemberOperators()
 {
     int PointToUs::*valuePointer = &PointToUs::value;
     bool (PointToUs::*methodPointer)() const = &PointToUs::method;
 
     PointToUs stack;
-    PointToUs * heap = new PointToUs;
+    PointToUs *heap = new PointToUs;
 
     Assert::IsTrue((stack.*methodPointer)());
     Assert::IsTrue((heap->*methodPointer)());
@@ -211,8 +212,9 @@ void testPointerToMemberOperators ()
     delete heap;
 }
 
-struct BaseWithHiddenData {
-    BaseWithHiddenData (const int data) : _data(data) { }
+struct BaseWithHiddenData
+{
+    BaseWithHiddenData(const int data) : _data(data) {}
 
 protected:
     const int _data;
@@ -220,9 +222,9 @@ protected:
 
 struct DerivedExposesHiddenData : BaseWithHiddenData
 {
-    static int get (BaseWithHiddenData & baseWithHiddenMember)
+    static int get(BaseWithHiddenData &baseWithHiddenMember)
     {
-        return baseWithHiddenMember.*(& DerivedExposesHiddenData::_data);
+        return baseWithHiddenMember.*(&DerivedExposesHiddenData::_data);
     }
 };
 
@@ -230,18 +232,18 @@ struct DerivedExposesHiddenData : BaseWithHiddenData
  * Shows how those member pointers can be used for the more questionable
  * practice of exposing hidden class members
  */
-void testMemberPointersCircumventScope ()
+void testMemberPointersCircumventScope()
 {
     BaseWithHiddenData baseWithHiddenData(31313);
     Assert::AreEqual(31313, DerivedExposesHiddenData::get(baseWithHiddenData));
 }
 
-std::string letMeKeepMyReturnValue ()
+std::string letMeKeepMyReturnValue()
 {
     return "value";
 }
 
-void passByRefAlternative (std::string & data)
+void passByRefAlternative(std::string &data)
 {
     data = "value";
 }
@@ -250,60 +252,61 @@ void passByRefAlternative (std::string & data)
  * Why use pass-by-reference to return huge data, when consumers can store
  * constant references to the returned values instead?
  */
-void testScopeGuardTrick ()
+void testScopeGuardTrick()
 {
-    const std::string & keptReturnValue = letMeKeepMyReturnValue();
+    const std::string &keptReturnValue = letMeKeepMyReturnValue();
     std::string fromRef;
     passByRefAlternative(fromRef);
     Assert::AreEqual(keptReturnValue, fromRef);
 }
 
-class PrePostInDecrementOverloading {
+class PrePostInDecrementOverloading
+{
 private:
     int _value;
 
-    void incrementValue ()
+    void incrementValue()
     {
         _value = _value + 1;
     }
 
-    void decrementValue ()
+    void decrementValue()
     {
         _value = _value - 1;
     }
 
 public:
-    PrePostInDecrementOverloading () : _value(0) { }
+    PrePostInDecrementOverloading() : _value(0) {}
 
-    int getValue () const
+    int getValue() const
     {
         return _value;
     }
 
     // pre
-    PrePostInDecrementOverloading & operator++ (int value)
+    PrePostInDecrementOverloading &operator++(int value)
     {
         incrementValue();
-        return * this;
+        return *this;
     }
 
-    PrePostInDecrementOverloading & operator-- (int value)
+    PrePostInDecrementOverloading &operator--(int value)
     {
         decrementValue();
-        return * this;
+        return *this;
     }
 
     // post
-    PrePostInDecrementOverloading & operator++ ()
+    PrePostInDecrementOverloading &operator++()
     {
         incrementValue();
-        return * this;
+        return *this;
     }
 
-    PrePostInDecrementOverloading & operator-- ()
+    PrePostInDecrementOverloading &operator--()
     {
         decrementValue();
-        return * this;
+        return *this;
     }
 };
 
@@ -311,7 +314,7 @@ public:
  * Highlights the subtle differences required for defining
  * pre and post-in/decrement operator overloading
  */
-void testPrePostInDecrementOverloading ()
+void testPrePostInDecrementOverloading()
 {
     PrePostInDecrementOverloading test;
     Assert::AreEqual(1, test++.getValue());
@@ -320,37 +323,37 @@ void testPrePostInDecrementOverloading ()
     Assert::AreEqual(0, (--test).getValue());
 }
 
-template<template<class, class> class V, class T>
+template <template <class, class> class V, class T>
 class CreateContainer
 {
 protected:
-    V< T, std::allocator<T> > _container;
+    V<T, std::allocator<T>> _container;
 
 public:
-    CreateContainer & addValue (const T & value)
+    CreateContainer &addValue(const T &value)
     {
         _container.push_back(value);
-        return * this;
+        return *this;
     }
 
-    CreateContainer () { }
+    CreateContainer() {}
 
-    CreateContainer (const T & value)
+    CreateContainer(const T &value)
     {
         addValue(value);
     }
 
-    CreateContainer & operator, (const T & value)
+    CreateContainer &operator,(const T &value)
     {
         return addValue(value);
     }
 
-    CreateContainer & operator() (const T & value)
+    CreateContainer &operator()(const T &value)
     {
         return addValue(value);
     }
 
-    V< T, std::allocator<T> > get () const
+    V<T, std::allocator<T>> get() const
     {
         return _container;
     }
@@ -362,15 +365,14 @@ public:
  * These operate as fluent methods, returning a reference to the object
  * so that calls to it may be chained.
  */
-void testFluentCommaAndBracketOverloads ()
+void testFluentCommaAndBracketOverloads()
 {
     std::vector<int> integers;
     integers.push_back(0);
     integers.push_back(1);
     integers.push_back(2);
 
-    const std::vector<int> & constIntegers
-        = (CreateContainer<std::vector, int>(0), 1, 2).get();
+    const std::vector<int> &constIntegers = (CreateContainer<std::vector, int>(0), 1, 2).get();
 
     Assert::AreEqual(integers, constIntegers);
 
@@ -378,20 +380,19 @@ void testFluentCommaAndBracketOverloads ()
     strings.push_back("hello");
     strings.push_back("world");
 
-    Assert::AreEqual(strings, CreateContainer<std::list, std::string>
-        ("hello")("world").get());
+    Assert::AreEqual(strings, CreateContainer<std::list, std::string>("hello")("world").get());
 }
 
 struct ReturnOverload
 {
-    ReturnOverload () { }
+    ReturnOverload() {}
 
-    int get ()
+    int get()
     {
         return 5;
     }
 
-    std::string get () const
+    std::string get() const
     {
         return "hello";
     }
@@ -403,27 +404,27 @@ struct ReturnOverload
  * Probably most commonly used to return a const_iterator instead of a
  * mutable iterator on constants.
  */
-void testReturnOverload ()
+void testReturnOverload()
 {
     ReturnOverload returnOverload;
-    const int & i = returnOverload.get();
+    const int &i = returnOverload.get();
     Assert::AreEqual(5, i);
 
     const ReturnOverload constReturnOverload;
-    const std::string & s = constReturnOverload.get();
+    const std::string &s = constReturnOverload.get();
     Assert::AreEqual(s, "hello");
 }
 
 namespace ThisNamespace
 {
-    bool HasThisFunction ()
+    bool HasThisFunction()
     {
         return true;
     }
 
     namespace SubNamespace
     {
-        std::string HasThisFunction ()
+        std::string HasThisFunction()
         {
             return "Yes, it does!";
         }
@@ -432,7 +433,7 @@ namespace ThisNamespace
 
 struct ThisClass
 {
-    static int HasThisFunction ()
+    static int HasThisFunction()
     {
         return 4;
     }
@@ -444,7 +445,7 @@ struct ThisClass
  * Shows how namespacing is effectively used to access static class methods
  * and typedefs, and when aliasing a namespace can help simplify access
  */
-void testNamespaces ()
+void testNamespaces()
 {
     Assert::IsTrue(ThisNamespace::HasThisFunction());
     Assert::AreEqual(ThisClass().HasThisFunction(), ThisClass::HasThisFunction());
@@ -457,35 +458,36 @@ void testNamespaces ()
         alias::HasThisFunction());
 }
 
-bool ternaryTrue ()
+bool ternaryTrue()
 {
     return true;
 }
 
-bool ternaryFalse ()
+bool ternaryFalse()
 {
-  return false;
+    return false;
 }
 
 /**
  * Ternary statements are mainly used for initialising constants
  * based on conditions, but they can also be used as lvalues!
  */
-void testTernaryAsValue ()
+void testTernaryAsValue()
 {
-    int postiveCount(0);
+    int positiveCount(0);
     int negativeCount(0);
-    (5 < 0 ? negativeCount : postiveCount)++;
-    Assert::IsTrue(postiveCount);
+    (5 < 0 ? negativeCount : positiveCount)++;
+    Assert::IsTrue(positiveCount);
     Assert::IsFalse(negativeCount);
 
     Assert::IsTrue((1 ? ternaryTrue : ternaryFalse)());
     Assert::IsFalse((0 ? ternaryTrue : ternaryFalse)());
 
-    try {
+    try
+    {
         const int i = (false) ? 5 : throw std::string("oops");
     }
-    catch (const std::string & e)
+    catch (const std::string &e)
     {
         return Assert::AreEqual(e, "oops");
     }
@@ -496,12 +498,12 @@ void testTernaryAsValue ()
 /**
  * Gotos are dead, but long live URI labels?
  */
-void testBareURIViaGoto ()
+void testBareURIViaGoto()
 {
     goto http;
     return Assert::Fail();
 
-    http://test.com
+http: // test.com
     Assert::Success();
 }
 
@@ -509,7 +511,7 @@ void testBareURIViaGoto ()
  * A hack that uses an ellipsis - which represents a variable
  * number of parameters to a function - to catch any exception
  */
-void testCatchAnyException ()
+void testCatchAnyException()
 {
     try
     {
@@ -517,7 +519,7 @@ void testCatchAnyException ()
     }
     catch (...)
     {
-       return Assert::Success();
+        return Assert::Success();
     }
 
     Assert::Fail();
@@ -525,13 +527,15 @@ void testCatchAnyException ()
 
 struct ClassWithFunction
 {
-    int function ()
+    int function()
     {
         return 0;
     }
 };
 
-struct ClassWithoutFunction { };
+struct ClassWithoutFunction
+{
+};
 
 template <typename T>
 class HasFunction
@@ -540,10 +544,10 @@ class HasFunction
     typedef long no;
 
     template <typename C>
-    static yes test (typeof(&C::function));
+    static yes test(typeof(&C::function));
 
     template <typename C>
-    static no test (...);
+    static no test(...);
 
 public:
     enum
@@ -556,19 +560,19 @@ public:
  * An interesting templated approach to determining
  * whether a function exists within a class
  */
-void testTemplateChecksFunctionExists ()
+void testTemplateChecksFunctionExists()
 {
     Assert::IsTrue(HasFunction<ClassWithFunction>::exists);
     Assert::IsFalse(HasFunction<ClassWithoutFunction>::exists);
 }
 
-template<typename T> 
+template <typename T>
 struct ID
 {
     typedef T type;
 };
 
-bool calledViaIdentityDefinition ()
+bool calledViaIdentityDefinition()
 {
     return true;
 }
@@ -578,14 +582,14 @@ bool calledViaIdentityDefinition ()
  * or parameter in a way that may be easier to read than the standard syntax.
  * See also boost::identity.
  */
-void testIdentityMetaFunction ()
+void testIdentityMetaFunction()
 {
-    ID<bool()>::type * IDFunc = & calledViaIdentityDefinition;
+    ID<bool()>::type *IDFunc = &calledViaIdentityDefinition;
     Assert::IsTrue(IDFunc());
 }
 
-template<typename T>
-bool needUnaryOperatorForArraysHere (T const & a, T const & b)
+template <typename T>
+bool needUnaryOperatorForArraysHere(T const &a, T const &b)
 {
     return true;
 }
@@ -595,39 +599,40 @@ bool needUnaryOperatorForArraysHere (T const & a, T const & b)
  * type reference would be different for two arrays of differing lengths passed
  * to a function, so it decays them to their data type, which will work instead!
  */
-void testDecayArrayToPointerViaUnaryOperator ()
+void testDecayArrayToPointerViaUnaryOperator()
 {
     int smallerArray[2];
     int largerArray[3];
     Assert::IsTrue(needUnaryOperatorForArraysHere(+smallerArray, +largerArray));
 }
 
-template<typename FunctionOne, typename FunctionTwo>
-class CallsSurrogates {
-    FunctionOne * _functionOne;
-    FunctionTwo * _functionTwo;
+template <typename FunctionOne, typename FunctionTwo>
+class CallsSurrogates
+{
+    FunctionOne *_functionOne;
+    FunctionTwo *_functionTwo;
 
 public:
-    CallsSurrogates(FunctionOne * functionOne, FunctionTwo * functionTwo)
-        : _functionOne(functionOne), _functionTwo(functionTwo) { }
+    CallsSurrogates(FunctionOne *functionOne, FunctionTwo *functionTwo)
+        : _functionOne(functionOne), _functionTwo(functionTwo) {}
 
-    operator FunctionOne * ()
+    operator FunctionOne *()
     {
         return _functionOne;
     }
 
-    operator FunctionTwo * ()
+    operator FunctionTwo *()
     {
         return _functionTwo;
     }
 };
 
-std::string integerFunction (int i)
+std::string integerFunction(int i)
 {
     return "integer passed";
 }
 
-std::string longFunction (long l)
+std::string longFunction(long l)
 {
     return "long passed";
 }
@@ -637,7 +642,7 @@ std::string longFunction (long l)
  * are called as surrogates to effectively operate as overloads.
  * This is achieved thanks to SFINAE (Substitution Failure is Not an Error).
  */
-void testCallSurrogateFunctions ()
+void testCallSurrogateFunctions()
 {
     CallsSurrogates<std::string(int), std::string(long)>
         callsSurrogates(integerFunction, longFunction);
@@ -646,13 +651,13 @@ void testCallSurrogateFunctions ()
     Assert::AreEqual(callsSurrogates(5L), "long passed");
 }
 
-void voidReturn () { }
+void voidReturn() {}
 
 /**
  * A demonstration of how a function that returns void
  * can be called and returned in one statement
  */
-void testVoidReturn ()
+void testVoidReturn()
 {
 #ifdef ALTERNATIVE
     if (1)
@@ -668,33 +673,38 @@ void testVoidReturn ()
 #define COMPILE_TIME_TYPE(type) #type
 
 template <typename T>
-struct FindMyType { };
+struct FindMyType
+{
+};
 
 /**
  * Shows the difference between finding the type name of a variable
  * via a compile-time macro that uses the stringification operator,
  * versus the runtime version, which may return platform-dependent results
  */
-void testFindingTypeName ()
+void testFindingTypeName()
 {
     Assert::AreEqual(COMPILE_TIME_TYPE(FindMyType<int>()), "FindMyType<int>()");
 
     Assert::AreNotEqual(COMPILE_TIME_TYPE(FindMyType<int>()),
-        typeid(FindMyType<int>()).name());
+                        typeid(FindMyType<int>()).name());
 }
 
 bool functionTryBlockEntered = false;
 
-int throwingFunction ()
+int throwingFunction()
 {
     throw true;
 }
 
-struct ClassWithFunctionTryBlock {
+struct ClassWithFunctionTryBlock
+{
     int value;
 
-    ClassWithFunctionTryBlock ()
-    try : value(throwingFunction()) { }
+    ClassWithFunctionTryBlock()
+    try : value(throwingFunction())
+    {
+    }
     catch (bool thrown)
     {
         functionTryBlockEntered = true;
@@ -704,7 +714,7 @@ struct ClassWithFunctionTryBlock {
 /**
  * Uses a function try block to catch errors thrown in an initialiser list
  */
-void testFunctionTryBlocks ()
+void testFunctionTryBlocks()
 {
     try
     {
@@ -741,14 +751,14 @@ struct factorial<0>
 /**
  * Provides computation from compile-time template specialisation
  */
-void testTuringCompleteTemplateMetaProgramming ()
+void testTuringCompleteTemplateMetaProgramming()
 {
     assert(factorial<5>::value == 120);
 }
 
 int mostVexingParse(int(i));
 
-int mostVexingParse (int i)
+int mostVexingParse(int i)
 {
     return 5;
 }
@@ -757,7 +767,7 @@ int mostVexingParse (int i)
  * Demonstrates that most vexing parse interprets the declaration above
  * as a function, rather than a variable initialised by another
  */
-void testMostVexingParse ()
+void testMostVexingParse()
 {
     const int i = 5;
     const int variableInitialisedByAnother = i;
@@ -766,9 +776,11 @@ void testMostVexingParse ()
 
 namespace ADL
 {
-    struct UniqueClassName { };
+    struct UniqueClassName
+    {
+    };
 
-    bool noNeedToNamespaceMe (const UniqueClassName & uniqueClassName)
+    bool noNeedToNamespaceMe(const UniqueClassName &uniqueClassName)
     {
         return true;
     }
@@ -778,7 +790,7 @@ namespace ADL
  * Shows how argument-dependent lookup (ADL) can determine which function to
  * lookup based on the types of the arguments provided to it
  */
-void testArgumentDependentLookup ()
+void testArgumentDependentLookup()
 {
     ADL::UniqueClassName asThisTypeIsUnique;
     Assert::IsTrue(noNeedToNamespaceMe(asThisTypeIsUnique));
@@ -820,12 +832,12 @@ struct TemplatedBitfield
  * than an integral type.  These are syntactically much easier to use as part
  * of a union.  You can even template them, too!
  */
-void testBitfieldUnion ()
+void testBitfieldUnion()
 {
     struct BitField bitField;
-    unsigned * bitFieldPointer = reinterpret_cast<unsigned *>(& bitField);
-    * bitFieldPointer = 0x4c;
-    const int bitFieldValue = * reinterpret_cast<unsigned *>(& bitField);
+    unsigned *bitFieldPointer = reinterpret_cast<unsigned *>(&bitField);
+    *bitFieldPointer = 0x4c;
+    const int bitFieldValue = *reinterpret_cast<unsigned *>(&bitField);
 
     BitFieldUnion bitFieldUnion;
     bitFieldUnion.bitInteger = 76;
@@ -838,32 +850,32 @@ void testBitfieldUnion ()
     Assert::AreEqual(bitField.p3, bitFieldUnion.bitField.p3);
     Assert::AreEqual(bitField.p4, bitFieldUnion.bitField.p4);
 
-    Assert::AreEqual(bitField.p1,  0);
-    Assert::AreEqual(bitField.p2,  3);
-    Assert::AreEqual(bitField.p3,  2);
-    Assert::AreEqual(bitField.p4,  0);
+    Assert::AreEqual(bitField.p1, 0);
+    Assert::AreEqual(bitField.p2, 3);
+    Assert::AreEqual(bitField.p3, 2);
+    Assert::AreEqual(bitField.p4, 0);
 
     struct TemplatedBitfield<2, 3, 5, 5> templatedBitfield;
 
-    unsigned * templatedBitFieldPointer =
-        reinterpret_cast<unsigned *>(& templatedBitfield);
+    unsigned *templatedBitFieldPointer =
+        reinterpret_cast<unsigned *>(&templatedBitfield);
 
-    * templatedBitFieldPointer = 0x4c;
+    *templatedBitFieldPointer = 0x4c;
 
     const int templatedBitFieldValue =
-        * reinterpret_cast<unsigned *>(& templatedBitfield);
+        *reinterpret_cast<unsigned *>(&templatedBitfield);
 
     Assert::AreEqual(bitFieldValue, templatedBitFieldValue);
 }
 
 /**
- * Not so much a language feature, but an example of how the standard library 
+ * Not so much a language feature, but an example of how the standard library
  * provides some handy libraries that simplify mundane tasks.
- * Here, a stream representing an input file is read into a collection of 
+ * Here, a stream representing an input file is read into a collection of
  * strings in a single line, so that collection can be initialised as constant.
  * Note the use of the std namespace, as there is so much of it used!
  */
-void testStreamIterators ()
+void testStreamIterators()
 {
     using namespace std;
     stringstream mockFileInput;
@@ -873,12 +885,12 @@ void testStreamIterators ()
         << "a" << endl
         << "file!" << endl;
 
-     const vector<string> strings((istream_iterator<string>(mockFileInput)),
-         istream_iterator<string>());
+    const vector<string> strings((istream_iterator<string>(mockFileInput)),
+                                 istream_iterator<string>());
 
-     Assert::AreEqual(strings.size(), 3);
+    Assert::AreEqual(strings.size(), 3);
 
-     Assert::IsTrue(
+    Assert::IsTrue(
         strings[0] == "From" &&
         strings[1] == "a" &&
         strings[2] == "file!");
@@ -887,11 +899,11 @@ void testStreamIterators ()
 /**
  * Proving that classes can be declared in a for loop, err, declaration
  */
-void testUnexpectedDeclarationsInForLoop ()
+void testUnexpectedDeclarationsInForLoop()
 {
     int count = 0;
 
-    for (struct { int count; } loop = { 0 }; loop.count <= 5; ++loop.count)
+    for (struct { int count; } loop = {0}; loop.count <= 5; ++loop.count)
     {
         count = loop.count;
     }
@@ -903,48 +915,46 @@ void testUnexpectedDeclarationsInForLoop ()
  * Not a feature, more of an annoying design of map that creates a key and value
  * if that non-existent key is accessed via the brackets operator
  */
-void testBewareMapBracketsOperator ()
+void testBewareMapBracketsOperator()
 {
     std::map<std::string, std::string> stringsToStrings;
     Assert::AreEqual(stringsToStrings.find("didNotExist"), stringsToStrings.end());
-    std::string& whyHasThisBeenFound = stringsToStrings["didNotExist"];
+    std::string &whyHasThisBeenFound = stringsToStrings["didNotExist"];
     Assert::IsTrue(whyHasThisBeenFound.empty());
     Assert::AreNotEqual(stringsToStrings.find("didNotExist"), stringsToStrings.end());
 }
 
-template <typename T> 
+template <typename T>
 class TemplatedClassWithFriendFunction
 {
     T _value;
 
 public:
-    TemplatedClassWithFriendFunction (const T value) : _value(value) { }
+    TemplatedClassWithFriendFunction(const T value) : _value(value) {}
 
 #ifdef THIS_WILL_FAIL
-    friend void wouldCreateIdenticalDefinitions () { }
+    friend void wouldCreateIdenticalDefinitions() {}
 #endif
-    friend T generatesDifferentTemplatedVersion
-        (TemplatedClassWithFriendFunction<T> & templatedClassWithFriendFunction)
+    friend T generatesDifferentTemplatedVersion(TemplatedClassWithFriendFunction<T> &templatedClassWithFriendFunction)
     {
         return templatedClassWithFriendFunction._value;
-    } 
+    }
 };
 
 /**
- * Demonstrates how a friend function of a templated class must be defined 
+ * Demonstrates how a friend function of a templated class must be defined
  * to ensure it is generated differently for each template type used,
  * thus not violating the One Definition Rule (ODR)
  */
-void testTemplatedClassWithFriendFunctionAvoidsViolatingODR ()
+void testTemplatedClassWithFriendFunctionAvoidsViolatingODR()
 {
     TemplatedClassWithFriendFunction<int> integerVersion(123);
     TemplatedClassWithFriendFunction<long> longVersion(123);
-    
+
     Assert::AreEqual(
         generatesDifferentTemplatedVersion(integerVersion),
         generatesDifferentTemplatedVersion(longVersion));
 }
-
 
 class Member
 {
@@ -952,9 +962,9 @@ protected:
     bool _hidden;
 
 public:
-    Member () : _hidden(true) { }
+    Member() : _hidden(true) {}
 
-    bool getHidden () const
+    bool getHidden() const
     {
         return _hidden;
     }
@@ -962,12 +972,12 @@ public:
 
 class NormalComposition
 {
-    Member * _member;
+    Member *_member;
 
 public:
-    NormalComposition () : _member(new Member) { }
+    NormalComposition() : _member(new Member) {}
 
-    bool getHiddenFromMember () const
+    bool getHiddenFromMember() const
     {
         return _member->getHidden();
     }
@@ -975,10 +985,10 @@ public:
 
 struct HasAComposition : private Member
 {
-    HasAComposition () : Member() { }
+    HasAComposition() : Member() {}
     using Member::getHidden;
 
-    bool accessMemberPrivates ()
+    bool accessMemberPrivates()
     {
         return Member::getHidden();
     }
@@ -990,7 +1000,7 @@ struct HasAComposition : private Member
  * from another can access anything within it, only one instance can be used,
  * and it can't be forward-declared.
  */
-void testCompositionViaPrivateInheritance ()
+void testCompositionViaPrivateInheritance()
 {
     Assert::IsTrue(NormalComposition().getHiddenFromMember());
     Assert::IsTrue(HasAComposition().getHidden());
@@ -1002,7 +1012,7 @@ void testCompositionViaPrivateInheritance ()
  * primitive types, mainly that direct initialisation isn't quite construction,
  * as it appears
  */
-void testDirectInitialisation ()
+void testDirectInitialisation()
 {
     const int usualAssignment = 7;
     const int directInitialisation(7);
@@ -1045,22 +1055,22 @@ void testTemplateAsFriend ()
     assert(!hasFriend.getHidden());
 }
 */
-class ContainsMutant 
+class ContainsMutant
 {
-    const int _value;  
+    const int _value;
     mutable bool _valueWasAccessed;
 
 public:
-    ContainsMutant (const int value)
-        : _value(value), _valueWasAccessed(false) { }
+    ContainsMutant(const int value)
+        : _value(value), _valueWasAccessed(false) {}
 
-    int getValue () const
+    int getValue() const
     {
         _valueWasAccessed = true;
         return _value;
     }
 
-    bool valueWasAccessed () const
+    bool valueWasAccessed() const
     {
         return _valueWasAccessed;
     }
@@ -1071,7 +1081,7 @@ public:
  * as const, which could be useful for caching an expensive operation yet
  * not affecting the external, visible state of the object
  */
-void testMutable ()
+void testMutable()
 {
     const ContainsMutant containsMutant(28);
     Assert::IsFalse(containsMutant.valueWasAccessed());
@@ -1079,7 +1089,7 @@ void testMutable ()
     Assert::IsTrue(containsMutant.valueWasAccessed());
 }
 
-int changeMyArgumentDefault (const int i=10)
+int changeMyArgumentDefault(const int i = 10)
 {
     return i;
 }
@@ -1089,71 +1099,38 @@ int changeMyArgumentDefault (const int i=10)
  * in a different scope, but only changing a default argument value, then
  * comparing the calls to it and the original in global scope.  I'd hide...
  */
-void testChangingDefaultArguments ()
+void testChangingDefaultArguments()
 {
-    int changeMyArgumentDefault (const int i=5);
-    
+    int changeMyArgumentDefault(const int i = 5);
+
     Assert::AreEqual(5, changeMyArgumentDefault());
     Assert::AreEqual(10, ::changeMyArgumentDefault());
 }
 
 void testRangedForLoop()
 {
-    auto array = { 1, 2, 3, 4, 5 };
+    auto array = {1, 2, 3, 4, 5};
     auto total = 0;
-    
-    for (const auto & x : array)
+
+    for (const auto &x : array)
     {
         total += x;
     }
-    
+
     Assert::AreEqual(15, total);
 }
 
-int main ()
+int main()
 {
-    typedef void (* testFunction)();
+    typedef void (*testFunction)();
 
-    const std::vector<testFunction> & tests =
-        CreateContainer<std::vector, testFunction>
-            (& testBranchOnVariableDeclaration)
-            (& testArrayIndexAccess)
-            (& testKeywordOperatorTokens)
-            (& testChangingScope)
-            (& testPointerToMemberOperators)
-            (& testMemberPointersCircumventScope)
-            (& testScopeGuardTrick)
-            (& testPrePostInDecrementOverloading)
-            (& testFluentCommaAndBracketOverloads)
-            (& testReturnOverload)
-            (& testNamespaces)
-            (& testTernaryAsValue)
-            (& testBareURIViaGoto)
-            (& testCatchAnyException)
-            (& testTemplateChecksFunctionExists)
-            (& testIdentityMetaFunction)
-            (& testDecayArrayToPointerViaUnaryOperator)
-            (& testCallSurrogateFunctions)
-            (& testVoidReturn)
-            (& testFindingTypeName)
-            (& testFunctionTryBlocks)
-            (& testTuringCompleteTemplateMetaProgramming)
-            (& testMostVexingParse)
-            (& testArgumentDependentLookup)
-            (& testBitfieldUnion)
-            (& testStreamIterators)
-            (& testUnexpectedDeclarationsInForLoop)
-            (& testBewareMapBracketsOperator)
-            (& testTemplatedClassWithFriendFunctionAvoidsViolatingODR)
-            (& testCompositionViaPrivateInheritance)
-            (& testDirectInitialisation)
-          //(& testTemplateAsFriend)
-            (& testMutable)
-            (& testChangingDefaultArguments)
-            (& testRangedForLoop)
-        .get();
+    const std::vector<testFunction> &tests =
+        CreateContainer<std::vector, testFunction>(&testBranchOnVariableDeclaration)(&testArrayIndexAccess)(&testKeywordOperatorTokens)(&testChangingScope)(&testPointerToMemberOperators)(&testMemberPointersCircumventScope)(&testScopeGuardTrick)(&testPrePostInDecrementOverloading)(&testFluentCommaAndBracketOverloads)(&testReturnOverload)(&testNamespaces)(&testTernaryAsValue)(&testBareURIViaGoto)(&testCatchAnyException)(&testTemplateChecksFunctionExists)(&testIdentityMetaFunction)(&testDecayArrayToPointerViaUnaryOperator)(&testCallSurrogateFunctions)(&testVoidReturn)(&testFindingTypeName)(&testFunctionTryBlocks)(&testTuringCompleteTemplateMetaProgramming)(&testMostVexingParse)(&testArgumentDependentLookup)(&testBitfieldUnion)(&testStreamIterators)(&testUnexpectedDeclarationsInForLoop)(&testBewareMapBracketsOperator)(&testTemplatedClassWithFriendFunctionAvoidsViolatingODR)(&testCompositionViaPrivateInheritance)(&testDirectInitialisation)
+        //(& testTemplateAsFriend)
+        (&testMutable)(&testChangingDefaultArguments)(&testRangedForLoop)
+            .get();
 
-    const size_t & numberOfTests = tests.size();
+    const size_t &numberOfTests = tests.size();
 
     for (size_t i = 0; i < numberOfTests; ++i)
     {

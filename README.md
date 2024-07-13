@@ -7,5 +7,10 @@ Some are created from experience, most have been found from research, but all ar
 
 ## 👟 Running
 
-The languages are divided into folders, and each language provides instructions on how to run its tests.
-These include both from a PC _and_ online resources, like an interpreter or compiler.
+Install and run with [Just]:
+
+```properties
+just go
+```
+
+[Just]: https://just.systems/

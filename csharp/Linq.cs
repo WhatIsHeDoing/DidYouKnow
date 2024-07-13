@@ -29,8 +29,8 @@ namespace csharp
         [SuppressMessage("Microsoft.Design",
             "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static Expression<Func<Post, bool>> PostedAfter
-            (DateTime cutoffDate) =>
-                post => post.PostedOn > cutoffDate;
+            (DateTime cutOffDate) =>
+                post => post.PostedOn > cutOffDate;
 
         /// <summary>
         /// Demonstrating how collections can be queried with LINQ via an
@@ -48,12 +48,12 @@ namespace csharp
                 new Post { PostedOn = latestDate }
             };
 
-            var cutoff = new DateTime(2000, 1, 1);
+            var cutOff = new DateTime(2000, 1, 1);
 
-            var standardQuery = posts.Where(p => p.PostedOn > cutoff).ToList();
-            var extensionMethod = posts.PostedAfter(cutoff).ToList();
+            var standardQuery = posts.Where(p => p.PostedOn > cutOff).ToList();
+            var extensionMethod = posts.PostedAfter(cutOff).ToList();
 
-            var expressionTree = posts.AsQueryable().Where(PostedAfter(cutoff));
+            var expressionTree = posts.AsQueryable().Where(PostedAfter(cutOff));
 
             Assert.Single(standardQuery);
             Assert.Single(extensionMethod);

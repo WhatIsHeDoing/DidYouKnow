@@ -6,7 +6,7 @@ namespace csharp
 {
     /// <summary>
     /// Tests mapping fields from one class to another using Mapster,
-    /// rather than doing it yourself everytime.  Great for mapping
+    /// rather than doing it yourself every time.  Great for mapping
     /// view models to service contract models, etc.
     /// </summary>
     /// <remarks>https://github.com/MapsterMapper/Mapster</remarks>
