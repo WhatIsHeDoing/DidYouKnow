@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "main": "javascript.test.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "vitest"
   },
   "devDependencies": {
+    "@eslint/js": "9.7.0",
+    "@types/eslint__js": "8.42.3",
+    "eslint": "9.7.0",
+    "typescript": "5.5.4",
+    "typescript-eslint": "7.17.0",
     "vitest": "2.0.2"
   }
 }

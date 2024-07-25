@@ -8,9 +8,10 @@ test("Automatic semicolon addition", () => {
     }
 
     function ohDear() {
-        // Ignore the plethora of warnings thrown up here!
         return;
+        // eslint-disable-next-line no-unreachable
         {
+            // eslint-disable-next-line no-unused-labels
             run: "hello";
         }
     }
@@ -26,6 +27,7 @@ test("Scoping", () => {
         foo: "bar",
 
         run: function () {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
             var self = this;
             expect(this.foo).toEqual("bar");
             expect(self.foo).toEqual("bar");
@@ -42,7 +44,9 @@ test("Scoping", () => {
 
 test("Funky NaN", () => {
     expect(typeof NaN).toBe("number");
+    // eslint-disable-next-line use-isnan
     expect(NaN === NaN).toBeFalsy();
+    expect(isNaN(NaN)).toBeTruthy();
 });
 
 test("Closures", () => {
@@ -50,6 +54,7 @@ test("Closures", () => {
 
     (function (scope) {
         // This member variable *is* used below 😀
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         var _private = "private";
         scope.canSee = true;
     })(myScope);
