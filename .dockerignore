@@ -1,0 +1,14 @@
+# Files.
+*.exe
+*.md
+*.yml
+.editorconfig
+.git*
+Dockerfile
+justfile
+
+# Directories.
+.vscode
+bin
+obj
+node_modules

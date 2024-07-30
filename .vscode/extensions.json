@@ -6,6 +6,7 @@
         "dbaeumer.vscode-eslint",
         "DavidAnson.vscode-markdownlint",
         "EditorConfig.EditorConfig",
+        "github.vscode-github-actions",
         "nefrob.vscode-just-syntax",
         "redhat.vscode-xml",
         "streetsidesoftware.code-spell-checker"

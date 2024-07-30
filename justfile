@@ -1,3 +1,5 @@
+container := "did_you_know"
+
 # Run all test runners in CI mode.
 export CI := "1"
 
@@ -37,3 +39,14 @@ perl:
 # Runs Python tests.
 python:
     cd python && python3 main.py
+
+# Builds and runs a Docker container for portable testing.
+docker: docker_build docker_run
+
+# Builds a Docker container.
+docker_build:
+    docker build --progress=plain -f Dockerfile -t {{container}} .
+
+# Runs the test Docker container.
+docker_run:
+    docker run -it {{container}}
