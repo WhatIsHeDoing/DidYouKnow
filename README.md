@@ -1,5 +1,7 @@
 # DidYouKnow
 
+[![build](https://github.com/WhatIsHeDoing/DidYouKnow/actions/workflows/build.yml/badge.svg)](https://github.com/WhatIsHeDoing/DidYouKnow/actions/workflows/build.yml)
+
 ## 👋🏻 Introduction
 
 A reference guide to some of the weird and wonderful features of programming languages, demonstrated via unit tests.
