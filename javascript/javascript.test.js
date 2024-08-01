@@ -9,26 +9,22 @@ test("Automatic semicolon addition", () => {
 
     function ohDear() {
         return;
-        // eslint-disable-next-line no-unreachable
-        {
-            // eslint-disable-next-line no-unused-labels
-            run: "hello";
-        }
+        // biome-ignore lint: deliberate for testing
+        run: "hello";
     }
 
-    var myNoProblem = noProblem();
-    var myOhDear = ohDear();
+    const myNoProblem = noProblem();
+    const myOhDear = ohDear();
 
-    expect(myNoProblem && myNoProblem.run).not.equal(myOhDear && myOhDear.run);
+    expect(myNoProblem?.run).not.equal(myOhDear?.run);
 });
 
 test("Scoping", () => {
-    var scopeTest = {
+    const scopeTest = {
         foo: "bar",
 
         run: function () {
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
-            var self = this;
+            const self = this;
             expect(this.foo).toEqual("bar");
             expect(self.foo).toEqual("bar");
 
@@ -43,19 +39,18 @@ test("Scoping", () => {
 });
 
 test("Funky NaN", () => {
-    expect(typeof NaN).toBe("number");
-    // eslint-disable-next-line use-isnan
-    expect(NaN === NaN).toBeFalsy();
-    expect(isNaN(NaN)).toBeTruthy();
+    expect(typeof Number.NaN).toBe("number");
+    // biome-ignore lint: deliberate for testing
+    expect(Number.NaN === Number.NaN).toBeFalsy();
+    expect(Number.isNaN(Number.NaN)).toBeTruthy();
 });
 
 test("Closures", () => {
-    var myScope = {};
+    const myScope = {};
 
-    (function (scope) {
-        // This member variable *is* used below 😀
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        var _private = "private";
+    ((scope) => {
+        // We attempt to reference this variable below 😀
+        const _private = "private";
         scope.canSee = true;
     })(myScope);
 
@@ -64,7 +59,7 @@ test("Closures", () => {
 });
 
 test("Comparing null", () => {
-    var bar = null;
+    const bar = null;
     expect(typeof bar).toBe("object");
     expect(bar !== null && typeof bar === "object").toBeFalsy();
 });
@@ -75,12 +70,11 @@ test("Floating-point precision", () => {
 
 test("Function arguments", () => {
     function sumNamedArgs() {
+        // biome-ignore lint: deliberate for testing
         return arguments[0] + arguments[1];
     }
 
-    function sumNoNamedArgs(x, y) {
-        return x + y;
-    }
+    const sumNoNamedArgs = (x, y) => x + y;
 
     expect(sumNamedArgs(1, 2)).toBe(sumNoNamedArgs(1, 2));
 });
@@ -91,15 +85,20 @@ test("Function apply and call", () => {
     }
 
     const apply = sum.apply(undefined, [1, 2]);
-    const call = sum.call(undefined, 1, 2)
+    const call = sum.call(undefined, 1, 2);
     expect(apply).toEqual(call);
 });
 
 test("Coercion", () => {
+    // biome-ignore lint: deliberate for testing
     expect(1 + "2" + "2").toBe("122");
+    // biome-ignore lint: deliberate for testing
     expect(1 + +"2" + "2").toBe("32");
+    // biome-ignore lint: deliberate for testing
     expect(1 + -"1" + "2").toBe("02");
+    // biome-ignore lint: deliberate for testing
     expect(+"1" + "1" + "2").toBe("112");
+    // biome-ignore lint: deliberate for testing
     expect("A" - "B" + "2").toBe("NaN2");
     expect("A" - "B" + 2).not.toBe("NaN");
 });

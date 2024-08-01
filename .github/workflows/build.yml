@@ -27,6 +27,7 @@ jobs:
               working-directory: javascript
               run: >-
                 pnpm i
+                && pnpm lint
                 && pnpm test
 
             - name: Python tests
