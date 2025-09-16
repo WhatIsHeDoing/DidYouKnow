@@ -18,7 +18,7 @@ js-install:
     cd javascript && pnpm i
 
 # Runs all tests.
-run: csharp cpp javascript-run python
+run: csharp cpp javascript python
 
 # Runs C# tests.
 csharp:
@@ -29,8 +29,8 @@ cpp:
     cd cpp && g++ -o build/main.exe main.cpp && ./build/main.exe
 
 # Runs JavaScript tests.
-javascript-run:
-    cd javascript && pnpm test
+javascript:
+    cd javascript && pnpm lint && pnpm test
 
 # Runs Perl tests.
 perl:

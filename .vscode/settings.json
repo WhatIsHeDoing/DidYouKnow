@@ -1,5 +1,4 @@
 {
-    "editor.formatOnSave": true,
     "cSpell.language": "en-GB",
     "cSpell.words": [
         "Coliru",
@@ -8,5 +7,11 @@
         "Mapster",
         "stringification",
         "Xunit"
-    ]
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.biome": "explicit",
+        "source.organizeImports.biome": "explicit",
+        "source.sort.json": "always"
+    },
+    "editor.formatOnSave": true
 }
