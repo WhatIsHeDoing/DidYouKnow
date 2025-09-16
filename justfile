@@ -11,7 +11,7 @@ default:
 go: install run
 
 # Installs all dependencies.
-install: js-install
+install: js-install python-install
 
 # Installs JavaScript dependencies.
 js-install:
@@ -38,7 +38,11 @@ perl:
 
 # Runs Python tests.
 python:
-    cd python && python3 main.py
+    cd python && ruff check && python3 main.py
+
+# Installs Python dependencies.
+python-install:
+    pip install -r python/requirements.txt
 
 # Builds and runs a Docker container for portable testing.
 docker: docker_build docker_run

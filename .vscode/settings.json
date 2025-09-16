@@ -1,5 +1,5 @@
 {
-    "cSpell.language": "en-GB",
+    "cSpell.language": "en-GB,en",
     "cSpell.words": [
         "Coliru",
         "Gotos",
@@ -10,7 +10,9 @@
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.biome": "explicit",
+        "source.fixAll.ruff": "always",
         "source.organizeImports.biome": "explicit",
+        "source.organizeImports.ruff": "always",
         "source.sort.json": "always"
     },
     "editor.formatOnSave": true
