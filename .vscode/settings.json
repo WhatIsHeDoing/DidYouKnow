@@ -1,8 +1,6 @@
 {
-    "cSpell.enableFiletypes": [
-        "just"
-    ],
     "editor.formatOnSave": true,
+    "cSpell.language": "en-GB",
     "cSpell.words": [
         "Coliru",
         "Gotos",
