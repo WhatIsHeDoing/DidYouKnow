@@ -1,4 +1,3 @@
-using System;
 using Xunit;
 
 namespace csharp
@@ -27,7 +26,7 @@ namespace csharp
                     return dateTime.AddMonths(1);
 
                 default:
-                    throw new ArgumentOutOfRangeException("duration");
+                    throw new ArgumentOutOfRangeException(nameof(duration));
             }
         }
     }

@@ -1,5 +1,4 @@
-C#
-==
+# C\#
 
 [![Build status](https://ci.appveyor.com/api/projects/status/75dqm8d8q6atgtg2?svg=true)](https://ci.appveyor.com/project/DarrenHickling/didyouknow)
 [![Bugs](https://sonarcloud.io/api/badges/measure?key=DidYouKnow&metric=bugs)](https://sonarcloud.io/dashboard?id=DidYouKnow)
@@ -9,8 +8,6 @@ C#
 These tests are easy to run, by opening the `charp.sln` solution in Visual Studio and navigating to:
 
 `Test => Run => All Tests`
-
-The solution is generally updated using the latest Community edition of [Visual Studio][VisualStudio].
 
 ## Inspiration
 

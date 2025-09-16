@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
@@ -25,19 +24,17 @@ namespace csharp
         {
             int? firstNull = null;
             int? secondNull = null;
-            
+
             // ReSharper disable ConstantNullCoalescingCondition
-            Assert.Equal(firstNull ?? secondNull ?? 123, 123);
+            Assert.Equal(123, firstNull ?? secondNull ?? 123);
         }
 
         static string RegisterMethod<T>(T method, string name) where T : class =>
             method != null ? name : "";
 
-        static string RegisterMethod<T>(Expression<Action<T>> action) where T : class
-        {
-            var expression = (action.Body as MethodCallExpression);
-            return (expression != null) ? expression.Method.Name : "";
-        }
+        static string RegisterMethod<T>(Expression<Action<T>> action) where T : class =>
+            action.Body is MethodCallExpression expression ? expression.Method.Name : "";
+
 
         class UseMe
         {
@@ -58,7 +55,7 @@ namespace csharp
         }
 
         class Empty { }
-        
+
         [SuppressMessage("Microsoft.Performance",
             "CA1812:AvoidUninstantiatedInternalClasses")]
         class EmptyToo { }
@@ -94,16 +91,10 @@ namespace csharp
         }
 
         [DebuggerDisplay("{Name} from {Town}")]
-        class EasyDebugPerson
+        class EasyDebugPerson(string name, string town)
         {
-            public readonly string Name;
-            public readonly string Town;
-
-            public EasyDebugPerson(string name, string town)
-            {
-                Name = name;
-                Town = town;
-            }
+            public readonly string Name = name;
+            public readonly string Town = town;
         }
 
         /// <summary>

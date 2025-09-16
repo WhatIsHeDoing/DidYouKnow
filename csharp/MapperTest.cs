@@ -1,5 +1,4 @@
 using Mapster;
-using System;
 using Xunit;
 
 namespace csharp
@@ -16,8 +15,8 @@ namespace csharp
         {
             public Guid Id { get; set; }
             public DateTime DateOfBirth { get; set; }
-            public string FirstName { get; set; }
-            public string Surname { get; set; }
+            public required string FirstName { get; set; }
+            public required string Surname { get; set; }
         }
 
         // ReSharper disable once ClassNeverInstantiated.Local
@@ -26,7 +25,7 @@ namespace csharp
             // ReSharper disable UnusedAutoPropertyAccessor.Local
             public Guid Id { get; set; }
             public DateTime DoB { get; set; }
-            public string Name { get; set; }
+            public required string Name { get; set; }
         }
 
         /// <summary>

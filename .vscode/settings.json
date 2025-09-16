@@ -1,4 +1,5 @@
 {
+    "csharp.format.enable": true,
     "cSpell.language": "en-GB,en",
     "cSpell.words": [
         "Coliru",

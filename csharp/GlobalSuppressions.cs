@@ -12,3 +12,7 @@ using System.Diagnostics.CodeAnalysis;
     "CA1812:AvoidUninstantiatedInternalClasses",
     Scope = "type",
     Target = "csharp.Main+class")]
+
+[assembly: SuppressMessage("xUnit",
+    "xUnit1031",
+    Justification = "Parallelisation is disabled")]

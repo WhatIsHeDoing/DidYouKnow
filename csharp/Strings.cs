@@ -10,7 +10,7 @@ namespace csharp
     /// <summary>
     /// Fun with strings.
     /// </summary>
-    public class Strings
+    public partial class Strings
     {
         /// <summary>
         /// Ignoring escape patterns and respecting formatting, thanks to
@@ -24,7 +24,7 @@ namespace csharp
             const string verbatim = @"Hello
     World";
 
-            var actual = Regex.Replace(verbatim, @"\s", "");
+            var actual = MyRegex().Replace(verbatim, "");
             const string expected = "HelloWorld";
             Assert.Equal(expected, actual);
         }
@@ -101,7 +101,7 @@ namespace csharp
 
             // Next up: StringBuilder, from which only calling
             // ToString will generate the string we want.
-            Func<string> stringBuilder = () => new StringBuilder()
+            string stringBuilder() => new StringBuilder()
                 .Append(hello)
                 .Append(space)
                 .Append(@this)
@@ -123,7 +123,7 @@ namespace csharp
             var formatTime = RepeatAndTime(repeatTimes, format);
 
             // string interning, which is far more readable.
-            Func<string> intern = () =>
+            string intern() =>
                 $"{hello}{space}{@this}{space}{@is}{space}{a}{space}{sentence}";
 
             var internTime = RepeatAndTime(repeatTimes, intern);
@@ -150,9 +150,12 @@ namespace csharp
 $@"
 {"Concatenation",-13} {concatenationTime} [+{Diff(concatenationTime):0.##%}]
 {"StringBuilder",-13} {stringBuilderTime} [+{Diff(stringBuilderTime):0.##%}]
-{"Format", -13} {formatTime} [+{Diff(formatTime):0.##%}]
-{"Intern", -13} {internTime} [+{Diff(internTime):0.##%}]
+{"Format",-13} {formatTime} [+{Diff(formatTime):0.##%}]
+{"Intern",-13} {internTime} [+{Diff(internTime):0.##%}]
 ");
         }
+
+        [GeneratedRegex(@"\s")]
+        private static partial Regex MyRegex();
     }
 }

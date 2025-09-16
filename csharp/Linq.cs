@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
 
@@ -43,9 +40,9 @@ namespace csharp
 
             var posts = new List<Post>
             {
-                new Post { PostedOn = new DateTime(1990, 12, 31) },
-                new Post { PostedOn = new DateTime(2000, 1, 1) },
-                new Post { PostedOn = latestDate }
+                new() { PostedOn = new DateTime(1990, 12, 31) },
+                new() { PostedOn = new DateTime(2000, 1, 1) },
+                new() { PostedOn = latestDate }
             };
 
             var cutOff = new DateTime(2000, 1, 1);
@@ -74,7 +71,7 @@ namespace csharp
             var strings = new List<string> { "foo", "bar" };
 
             var numberedStrings = strings.Select
-                ((s, i) => String.Format(CultureInfo.CurrentCulture,
+                ((s, i) => string.Format(CultureInfo.CurrentCulture,
                     "{0}: {1}", s, i)).ToArray();
 
             Assert.Equal(2, numberedStrings.Length);

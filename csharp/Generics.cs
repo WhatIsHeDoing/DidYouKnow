@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
@@ -44,7 +42,7 @@ namespace csharp
             // ReSharper disable once RedundantTypeArgumentsOfMethod
             Assert.Equal(ReturnValue(23), ReturnValue(23));
 
-        static T GetDefaultValue<T>() => default(T);
+        static T? GetDefaultValue<T>() => default;
 
         // ReSharper disable once ClassNeverInstantiated.Local
         [SuppressMessage("Microsoft.Performance",
@@ -68,6 +66,8 @@ namespace csharp
         T[] SliceFromStart<T>(Span<T> source, int length)
             => source.Slice(0, length).ToArray();
 
+        private static readonly int[] spanExpected = [1, 2, 3];
+
         /// <summary>
         /// Use a data collection without copying or assignment thanks to Span.
         /// </summary>
@@ -76,7 +76,7 @@ namespace csharp
         {
             var test = new[] { 1, 2, 3, 4 };
             var actual = SliceFromStart(test.AsSpan(), 3);
-            Assert.Equal(new[] { 1, 2, 3 }, actual);
+            Assert.Equal(spanExpected, actual);
         }
     }
 }

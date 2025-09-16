@@ -1,9 +1,6 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace csharp
@@ -157,6 +154,7 @@ namespace csharp
             {
                 worker.DoWork += (sender, e) =>
                 {
+                    Assert.NotNull(sender);
                     var senderWorker = (BackgroundWorker)sender;
                     e.Result = CalculationOneWithProgress(senderWorker);
                 };
@@ -170,8 +168,9 @@ namespace csharp
 
                 worker.RunWorkerCompleted += (sender, e) =>
                 {
-                    var result = (double)e.Result;
-                    Assert.Equal(1, result);
+                    var result = e.Result;
+                    Assert.NotNull(result);
+                    Assert.Equal(1, (double)result);
                     Assert.Equal(100, progress);
                 };
 

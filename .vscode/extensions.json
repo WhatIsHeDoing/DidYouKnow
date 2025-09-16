@@ -8,6 +8,7 @@
         "DavidAnson.vscode-markdownlint",
         "EditorConfig.EditorConfig",
         "github.vscode-github-actions",
+        "ms-dotnettools.csharp",
         "nefrob.vscode-just-syntax",
         "redhat.vscode-xml",
         "streetsidesoftware.code-spell-checker"

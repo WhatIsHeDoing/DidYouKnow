@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace csharp
@@ -57,9 +55,12 @@ namespace csharp
             };
 
             // ReSharper disable once AssignNullToNotNullAttribute
+            var firstTriplet = triplets.FirstOrDefault();
+            Assert.NotNull(firstTriplet);
+
             Assert.Equal(
-                new List<int> { 1, 2, 3 },
-                triplets.FirstOrDefault().ToList());
+                [1, 2, 3],
+                firstTriplet.ToList());
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace csharp
         public void JaggedArrays()
         {
             // Assemble.
-            var jagged = new[]
+            var jagged = new int[][]
             {
                 new [] { 1, 2 },
                 new [] { 3, 4, 5 },

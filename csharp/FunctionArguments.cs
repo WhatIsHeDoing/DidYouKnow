@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using Xunit;
 
 namespace csharp
@@ -49,7 +48,7 @@ namespace csharp
         static void ModifyByRef(ref string name) => name = "Foo Bar";
 
         /// <summary>
-        /// Shows a value type being passed as a reference parameter to a 
+        /// Shows a value type being passed as a reference parameter to a
         /// function, which requires it to be initialised first
         /// </summary>
         [Fact]
@@ -132,6 +131,6 @@ namespace csharp
         /// </summary>
         [Fact]
         public void VariableArgumentList() =>
-            Assert.Equal("foo,6", ArgsToCsv(new object[] { "foo", 6 }));
+            Assert.Equal("foo,6", ArgsToCsv(["foo", 6]));
     }
 }

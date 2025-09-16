@@ -48,7 +48,7 @@ namespace csharp
         class Person
         {
             public int Age { get; set; }
-            public string Name { get; set; }
+            public required string Name { get; set; }
         }
 
         /// <summary>

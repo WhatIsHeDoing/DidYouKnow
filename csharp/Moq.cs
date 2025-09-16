@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Moq;
 using Xunit;
@@ -26,7 +25,7 @@ namespace csharp
         [Fact]
         public void StubImplementsType() =>
             // ReSharper disable once IsExpressionAlwaysTrue
-            Assert.True(new Mock<IFetchData>().Object is IFetchData);
+            Assert.True(new Mock<IFetchData>().Object is not null);
 
         /// <summary>
         /// Mocking a readonly attribute
@@ -41,13 +40,14 @@ namespace csharp
 
         class DataFetcher
         {
-            public IFetchData FetchData { private get; set; }
+            public required IFetchData FetchData { private get; set; }
 
             public string GetData()
             {
                 var data = FetchData.Fetch();
 
-                if (string.IsNullOrEmpty(data)) {
+                if (string.IsNullOrEmpty(data))
+                {
                     throw new InvalidOperationException("No data returned!");
                 }
 
