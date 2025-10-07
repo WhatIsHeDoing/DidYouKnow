@@ -23,25 +23,22 @@ jobs:
               with:
                   version: latest
 
+            - name: Update packages and install Just
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y just
+
+            - name: Install dependencies
+              run: just install
+
             - name: JavaScript tests
-              working-directory: javascript
-              run: >-
-                  pnpm i
-                  && pnpm lint
-                  && pnpm test
+              run: just javascript
 
             - name: Python tests
-              working-directory: python
-              run: >-
-                  pip install -r requirements.txt
-                  && python3 main.py
+              run: just python
 
             - name: C++ tests
-              working-directory: cpp
-              run: >-
-                  g++ -o build/main.exe main.cpp
-                  && ./build/main.exe
+              run: just cpp
 
             - name: C# tests
-              working-directory: csharp
-              run: dotnet test
+              run: just csharp
