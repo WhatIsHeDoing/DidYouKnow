@@ -1,7 +1,6 @@
 {
     "csharp.format.enable": true,
-    "cSpell.language": "en-GB,en",
-    "cSpell.words": [
+    "cSpell.ignoreWords": [
         "Coliru",
         "Gotos",
         "lvalues",
@@ -9,6 +8,7 @@
         "stringification",
         "Xunit"
     ],
+    "cSpell.language": "en-GB,en",
     "editor.codeActionsOnSave": {
         "source.fixAll.biome": "explicit",
         "source.fixAll.ruff": "always",
