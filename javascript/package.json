@@ -1,14 +1,17 @@
 {
-  "name": "javascript",
-  "version": "1.0.0",
+  "devDependencies": {
+    "@biomejs/biome": "2.2.5",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  },
   "main": "javascript.test.js",
+  "name": "javascript",
+  "resolutions": {
+    "esbuild": "0.25.10"
+  },
   "scripts": {
     "lint": "biome check --write javascript.test.js",
     "test": "vitest"
   },
-  "devDependencies": {
-    "@biomejs/biome": "2.2.4",
-    "typescript": "5.9.2",
-    "vitest": "3.2.4"
-  }
+  "version": "1.0.0"
 }
