@@ -11,7 +11,7 @@ env:
 jobs:
     dependabot:
         runs-on: ubuntu-24.04
-        if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'owner/my_repo'
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
 
         steps:
             - name: Fetch the Dependabot metadata
