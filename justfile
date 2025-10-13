@@ -13,11 +13,20 @@ go: install run
 # Installs all dependencies.
 install: js-install python-install
 
+# Updates all dependencies.
+update: csharp-update js-update python-update
+
 # Installs JavaScript dependencies.
 [working-directory: "javascript"]
 [group("install")]
 js-install:
     pnpm i
+
+# Updates JavaScript dependencies.
+[group("update")]
+[working-directory: "javascript"]
+js-update:
+    pnpm update --interactive --latest
 
 # Runs all tests.
 run: csharp cpp javascript python
@@ -26,6 +35,15 @@ run: csharp cpp javascript python
 [working-directory: "csharp"]
 csharp:
     dotnet test
+
+# Updates C# dependencies.
+[group("update")]
+[working-directory: "csharp"]
+csharp-update:
+    dotnet tool install -g upgrade-assistant
+    dotnet tool update -g dotnet-outdated-tool
+    dotnet outdated --upgrade
+    upgrade-assistant upgrade csharp.csproj
 
 # Compiles and runs C++ tests.
 [working-directory: "cpp"]
@@ -54,6 +72,12 @@ python:
 [group("install")]
 python-install:
     pip install -r python/requirements.txt
+
+# Updates Python dependencies.
+[working-directory: "python"]
+[group("update")]
+python-update:
+    pur -r requirements.txt
 
 # Builds and runs a Docker container for portable testing.
 [group("docker")]
