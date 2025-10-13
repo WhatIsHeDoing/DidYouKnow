@@ -16,5 +16,6 @@
         "source.organizeImports.ruff": "always",
         "source.sort.json": "always"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "yaml.keyOrdering": true
 }

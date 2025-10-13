@@ -1,21 +1,14 @@
 # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#automatically-approving-a-pull-request
-name: Dependabot auto-approve
-on: pull_request
-
-permissions:
-    pull-requests: write
-
 env:
     CI: 1
 
 jobs:
     dependabot:
-        runs-on: ubuntu-24.04
         if: github.event.pull_request.user.login == 'dependabot[bot]'
+        runs-on: ubuntu-24.04
 
         steps:
             - name: Fetch the Dependabot metadata
-              id: metadata
               uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
               with:
                   github-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -28,31 +21,33 @@ jobs:
               with:
                   version: latest
 
+            - name: Update packages and install Just
+              run: |
+                  sudo apt-get update
+                  sudo snap install --edge --classic just
+
+            - name: Install dependencies
+              run: just install
+
             - name: JavaScript tests
-              working-directory: javascript
-              run: >-
-                  pnpm i
-                  && pnpm lint
-                  && pnpm test
+              run: just javascript
 
             - name: Python tests
-              working-directory: python
-              run: >-
-                  pip install -r requirements.txt
-                  && python3 main.py
+              run: just python
 
             - name: C++ tests
-              working-directory: cpp
-              run: >-
-                  g++ -o build/main.exe main.cpp
-                  && ./build/main.exe
+              run: just cpp
 
             - name: C# tests
-              working-directory: csharp
-              run: dotnet test
+              run: just csharp
 
-            - name: Approve the Dependabot PR
-              run: gh pr review --approve "$PR_URL"
-              env:
-                  PR_URL: ${{github.event.pull_request.html_url}}
+            - env:
                   GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                  PR_URL: ${{github.event.pull_request.html_url}}
+              name: Approve the Dependabot PR
+              run: gh pr review --approve "$PR_URL"
+
+name: Dependabot auto-approve
+on: pull_request
+permissions:
+    pull-requests: write

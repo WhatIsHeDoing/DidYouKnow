@@ -7,7 +7,8 @@ WORKDIR /build
 
 RUN apt-get update && \
     apt-get install -y apt-utils dialog && \
-    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    snap install --edge --classic just
 
 RUN apt-get install -y nodejs npm \
     # https://pnpm.io/installation#using-npm
@@ -16,18 +17,8 @@ RUN apt-get install -y nodejs npm \
 # Copy now so that the previous installation steps are cached.
 COPY . .
 
-RUN cd javascript \
-    && pnpm i \
-    && pnpm test \
-    && cd ..
-
-RUN cd python \
-    && python3 main.py \
-    && cd ..
-
-RUN cd cpp \
-    && g++ -o build/main.exe main.cpp \
-    && ./build/main.exe \
-    cd ..
+RUN just javascript
+RUN just python
+RUN just cpp
 
 ENTRYPOINT ["/bin/bash"]

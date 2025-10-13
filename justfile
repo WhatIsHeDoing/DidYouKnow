@@ -14,43 +14,57 @@ go: install run
 install: js-install python-install
 
 # Installs JavaScript dependencies.
+[working-directory: "javascript"]
+[group("install")]
 js-install:
-    cd javascript && pnpm i
+    pnpm i
 
 # Runs all tests.
 run: csharp cpp javascript python
 
 # Runs C# tests.
+[working-directory: "csharp"]
 csharp:
-    cd csharp && dotnet test
+    dotnet test
 
 # Compiles and runs C++ tests.
+[working-directory: "cpp"]
 cpp:
-    cd cpp && g++ -o build/main.exe main.cpp && ./build/main.exe
+    g++ -o build/main.exe main.cpp
+    ./build/main.exe
 
 # Runs JavaScript tests.
+[working-directory: "javascript"]
 javascript:
-    cd javascript && pnpm lint && pnpm test
+    pnpm lint
+    pnpm test
 
 # Runs Perl tests.
+[working-directory: "perl"]
 perl:
-    cd perl && perl main.t
+    perl main.t
 
 # Runs Python tests.
+[working-directory: "python"]
 python:
-    cd python && ruff check && python3 main.py
+    ruff check
+    python3 main.py
 
 # Installs Python dependencies.
+[group("install")]
 python-install:
     pip install -r python/requirements.txt
 
 # Builds and runs a Docker container for portable testing.
+[group("docker")]
 docker: docker_build docker_run
 
 # Builds a Docker container.
+[group("docker")]
 docker_build:
     docker build --progress=plain -f Dockerfile -t {{container}} .
 
 # Runs the test Docker container.
+[group("docker")]
 docker_run:
     docker run -it {{container}}
