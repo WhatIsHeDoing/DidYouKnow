@@ -24,7 +24,7 @@ updates:
       schedule:
           day: monday
           interval: weekly
-          time: 20:00
+          time: "20:00"
           timezone: Europe/London
 
     - cooldown:
