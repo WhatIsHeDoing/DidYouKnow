@@ -40,8 +40,8 @@ csharp:
 [group("update")]
 [working-directory: "csharp"]
 csharp-update:
-    dotnet tool install -g upgrade-assistant
     dotnet tool update -g dotnet-outdated-tool
+    dotnet tool update -g upgrade-assistant
     dotnet outdated --upgrade
     upgrade-assistant upgrade csharp.csproj
 
