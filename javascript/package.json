@@ -2,7 +2,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.6",
     "typescript": "5.9.3",
-    "vitest": "3.2.4"
+    "vitest": "4.0.16"
   },
   "main": "javascript.test.js",
   "name": "javascript",
