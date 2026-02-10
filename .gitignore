@@ -6,5 +6,6 @@ obj
 # JavaScript dependencies,
 node_modules
 
-# Python linting cache.
+# Python caches.
 .ruff_cache
+.venv

@@ -2,13 +2,12 @@
 
 ## Testing
 
-To run the tests in the source code, simply invoke the script using following command in your console:
+Using the following Just command to run these Python tests:
 
 ```sh
-python main.py
+just python
 ```
 
-This assumes that *python* has been defined as an environment variable.
 These examples are written for Python version 3 only.  For more information, please visit the [official website].
 If you don't have access to that now, try an online interpreter, such as [Try Python] or [Python Anywhere].
 
