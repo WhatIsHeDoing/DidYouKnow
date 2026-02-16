@@ -1,0 +1,24 @@
+failFast: true
+ignorePaths:
+    - "*.csproj"
+    - cspell.yml
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+ignoreWords:
+    - cpanm
+    - debconf
+    - Gotos
+    - lvalues
+    - noninteractive
+    - runtests
+    - ὧὃḁḣ
+language: en-GB,en
+suggestionsTimeout: 100
+useGitignore: true
+words:
+    - CPAN
+    - LINQ
+    - Mapster
+    - Rossum
+    - stringification
+    - Xunit

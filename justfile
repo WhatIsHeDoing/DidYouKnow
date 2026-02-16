@@ -9,10 +9,15 @@ default:
     @just --choose
 
 # Run all install and run commands.
-go: install run
+go: install run spellcheck
 
 # Installs all dependencies.
-install: js-install python-install
+install: js-install perl-install python-install
+
+# Spellchecks the repository.
+[working-directory("javascript")]
+spellcheck:
+    pnpm cspell "../*" "../**/*"
 
 # Updates all dependencies.
 update: csharp-update js-update
@@ -30,7 +35,7 @@ js-update:
     pnpm update --interactive --latest
 
 # Runs all tests.
-run: csharp cpp javascript python
+run: csharp cpp javascript perl python
 
 # Runs C# tests.
 [working-directory("csharp")]
@@ -58,10 +63,15 @@ javascript:
     pnpm lint
     pnpm test
 
+# Installs Perl dependencies.
+[group("install")]
+perl-install:
+    cpanm --local-lib=~/perl5 Test::Class File::Slurp
+
 # Runs Perl tests.
 [working-directory("perl")]
 perl:
-    perl main.t
+    PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" perl -I. main.t
 
 # Runs Python tests.
 [working-directory("python")]

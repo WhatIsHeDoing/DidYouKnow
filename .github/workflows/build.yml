@@ -34,6 +34,9 @@ jobs:
             - name: C++ tests
               run: just cpp
 
+            - name: Perl tests
+              run: just perl
+
             - name: C# tests
               run: just csharp
 

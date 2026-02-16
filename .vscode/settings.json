@@ -1,14 +1,5 @@
 {
     "csharp.format.enable": true,
-    "cSpell.ignoreWords": [
-        "Coliru",
-        "Gotos",
-        "lvalues",
-        "Mapster",
-        "stringification",
-        "Xunit"
-    ],
-    "cSpell.language": "en-GB,en",
     "editor.codeActionsOnSave": {
         "source.fixAll.biome": "explicit",
         "source.fixAll.ruff": "always",
