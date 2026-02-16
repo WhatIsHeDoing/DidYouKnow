@@ -6,6 +6,7 @@ ignorePaths:
     - pnpm-workspace.yaml
 ignoreWords:
     - cpanm
+    - cpanminus
     - debconf
     - Gotos
     - lvalues
