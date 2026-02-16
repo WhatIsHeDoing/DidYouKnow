@@ -1,3 +1,6 @@
+# This consolidates updates into a maximum of 2 PRs.
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/optimizing-pr-creation-version-updates
+
 updates:
     - cooldown:
           default-days: 14
@@ -5,8 +8,6 @@ updates:
       directories:
           - /
 
-      # This consolidates updates into a maximum of 2 PRs.
-      # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/optimizing-pr-creation-version-updates
       groups:
           major:
               update-types:
@@ -33,8 +34,6 @@ updates:
 
       directory: /javascript/
 
-      # This consolidates updates into a maximum of 2 PRs.
-      # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/optimizing-pr-creation-version-updates
       groups:
           major:
               update-types:
@@ -61,8 +60,6 @@ updates:
 
       directory: /csharp/
 
-      # This consolidates updates into a maximum of 2 PRs.
-      # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/optimizing-pr-creation-version-updates
       groups:
           major:
               update-types:
@@ -89,8 +86,6 @@ updates:
 
       directory: /python/
 
-      # This consolidates updates into a maximum of 2 PRs.
-      # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/optimizing-pr-creation-version-updates
       groups:
           major:
               update-types:
@@ -102,6 +97,32 @@ updates:
                   - patch
 
       package-ecosystem: uv
+
+      schedule:
+          day: monday
+          interval: monthly
+          time: "20:00"
+          timezone: Europe/London
+
+    - cooldown:
+          default-days: 14
+          semver-major-days: 30
+          semver-minor-days: 14
+          semver-patch-days: 7
+
+      directory: /rust/
+
+      groups:
+          major:
+              update-types:
+                  - major
+
+          minor-and-patch:
+              update-types:
+                  - minor
+                  - patch
+
+      package-ecosystem: cargo
 
       schedule:
           day: monday

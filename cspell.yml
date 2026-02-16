@@ -5,6 +5,7 @@ ignorePaths:
     - pnpm-lock.yaml
     - pnpm-workspace.yaml
 ignoreWords:
+    - clippy
     - cpanm
     - cpanminus
     - debconf
@@ -12,12 +13,14 @@ ignoreWords:
     - lvalues
     - noninteractive
     - runtests
+    - turbofish
     - ὧὃḁḣ
 language: en-GB,en
 suggestionsTimeout: 100
 useGitignore: true
 words:
     - CPAN
+    - destructures
     - LINQ
     - Mapster
     - Rossum

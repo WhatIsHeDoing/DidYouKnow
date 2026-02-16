@@ -54,6 +54,12 @@ Most of the examples here are inspired by the those in that tutorial,
 although it has since been updated for every new release,
 and is particularly different for version 3 of the language.
 
+### Rust
+
+- **The Rust Reference**: [The Rust Reference]
+- **Rust by Example**: [Rust by Example]
+- **Stack Overflow**: [What are Rust's exact auto-dereferencing rules?]
+
 [Just]: https://just.systems/
 [Obscure C++ Features]: http://madebyevan.com/obscure-cpp-features/
 [Hidden Features of C++?]: http://stackoverflow.com/questions/75538/hidden-features-of-c
@@ -64,5 +70,8 @@ and is particularly different for version 3 of the language.
 [Toptal]: http://www.toptal.com/javascript/interview-questions
 [CPAN]: http://search.cpan.org/ "The CPAN Search Site - search.cpan.org"
 [Perl]: http://www.perl.org/ "The Perl Programming Language - www.perl.org"
+[The Rust Reference]: https://doc.rust-lang.org/reference/
+[Rust by Example]: https://doc.rust-lang.org/rust-by-example/
+[What are Rust's exact auto-dereferencing rules?]: https://stackoverflow.com/questions/28519997/what-are-rusts-exact-auto-dereferencing-rules
 [Python Tutorial]: https://docs.python.org/3.12/tutorial/index.html
 [Guido van Rossum]: http://www.python.org/~guido/

@@ -17,7 +17,7 @@ install: js-install perl-install python-install
 # Spellchecks the repository.
 [working-directory("javascript")]
 spellcheck:
-    pnpm cspell "../*" "../**/*"
+    pnpm cspell ../**/*
 
 # Updates all dependencies.
 update: csharp-update js-update
@@ -35,7 +35,7 @@ js-update:
     pnpm update --interactive --latest
 
 # Runs all tests.
-run: csharp cpp javascript perl python
+run: csharp cpp javascript perl python rust
 
 # Runs C# tests.
 [working-directory("csharp")]
@@ -73,6 +73,13 @@ perl-install:
 [working-directory("perl")]
 perl:
     PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" perl -I. main.t
+
+# Runs Rust linting and tests.
+[working-directory("rust")]
+rust:
+    cargo fmt -- --check
+    cargo clippy -- -D warnings
+    cargo test
 
 # Runs Python tests.
 [working-directory("python")]

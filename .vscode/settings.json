@@ -1,4 +1,10 @@
 {
+    "[markdown]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll.markdownlint": "always"
+        },
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    },
     "csharp.format.enable": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.biome": "explicit",
@@ -8,5 +14,10 @@
         "source.sort.json": "always"
     },
     "editor.formatOnSave": true,
+    "search.exclude": {
+        "**/Cargo.lock": true,
+        "**/node_modules": true,
+        "**/pnpm-lock.yaml": true
+    },
     "yaml.keyOrdering": true
 }

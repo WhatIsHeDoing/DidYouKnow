@@ -37,6 +37,9 @@ jobs:
             - name: Perl tests
               run: just perl
 
+            - name: Rust tests
+              run: just rust
+
             - name: C# tests
               run: just csharp
 

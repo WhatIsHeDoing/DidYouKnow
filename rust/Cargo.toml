@@ -1,0 +1,4 @@
+[package]
+name = "did_you_know"
+version = "1.0.0"
+edition = "2024"

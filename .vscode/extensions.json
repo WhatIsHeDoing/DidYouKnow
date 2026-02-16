@@ -11,6 +11,7 @@
         "ms-dotnettools.csharp",
         "nefrob.vscode-just-syntax",
         "redhat.vscode-xml",
+        "rust-lang.rust-analyzer",
         "streetsidesoftware.code-spell-checker"
     ],
     // List of extensions recommended by VS Code that should not be recommended for users of this workspace.

@@ -1,11 +1,14 @@
-# Compiled output,
+# Compiled output.
 bin
 build
 obj
 
-# JavaScript dependencies,
+# JavaScript dependencies.
 node_modules
 
 # Python caches.
 .ruff_cache
 .venv
+
+# Rust output.
+target
