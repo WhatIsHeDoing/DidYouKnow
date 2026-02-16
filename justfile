@@ -66,7 +66,7 @@ javascript:
 # Installs Perl dependencies.
 [group("install")]
 perl-install:
-    cpan -T App::cpanminus
+    sudo cpan -T App::cpanminus
     cpanm --local-lib=~/perl5 Test::Class File::Slurp
 
 # Runs Perl tests.
