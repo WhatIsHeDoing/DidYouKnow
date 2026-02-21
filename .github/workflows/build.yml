@@ -17,6 +17,11 @@ jobs:
               with:
                   version: latest
 
+            - name: Setup Node
+              uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
+              with:
+                  node-version-file: .nvmrc
+
             - id: pnpm-store
               name: Get pnpm store path
               run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
