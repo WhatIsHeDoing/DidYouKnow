@@ -3,23 +3,26 @@ env:
 
 jobs:
     build:
-        # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
-        runs-on: ubuntu-24.04
+        runs-on: ${{ matrix.os }}
         steps:
             - name: Checkout
               uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-
-            - name: Cache pnpm store
-              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
-              with:
-                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-                  path: ~/.local/share/pnpm/store
-                  restore-keys: ${{ runner.os }}-pnpm-
 
             - name: Install pnpm
               uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
               with:
                   version: latest
+
+            - id: pnpm-store
+              name: Get pnpm store path
+              run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+            - name: Cache pnpm store
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
+              with:
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  path: ${{ steps.pnpm-store.outputs.path }}
+                  restore-keys: ${{ runner.os }}-pnpm-
 
             # https://docs.astral.sh/uv/guides/integration/github/
             - name: Install uv
@@ -29,10 +32,10 @@ jobs:
 
             # https://just.systems/man/en/github-actions.html
             - name: Install Just
-              uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff # v3
+              uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
 
             - name: Cache Cargo
-              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
               with:
                   key: ${{ runner.os }}-cargo-${{ hashFiles('rust/Cargo.lock') }}
                   path: |
@@ -43,7 +46,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-cargo-
 
             - name: Cache NuGet
-              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
               with:
                   key: ${{ runner.os }}-nuget-${{ hashFiles('csharp/**/*.csproj') }}
                   path: ~/.nuget/packages
@@ -72,6 +75,12 @@ jobs:
 
             - name: C# tests
               run: just csharp
+
+        strategy:
+            matrix:
+                os:
+                    - macos-15
+                    - ubuntu-24.04
 
 name: build
 

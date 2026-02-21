@@ -119,8 +119,15 @@ void testArrayIndexAccess()
  */
 void testKeywordOperatorTokens()
 {
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconstant-logical-operand"
+#endif
     Assert::IsTrue(1 and 1);
     Assert::IsTrue(0 or 1);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
     int array[1];
     array[0] = 5;
@@ -850,10 +857,10 @@ void testBitfieldUnion()
     Assert::AreEqual(bitField.p3, bitFieldUnion.bitField.p3);
     Assert::AreEqual(bitField.p4, bitFieldUnion.bitField.p4);
 
-    Assert::AreEqual(bitField.p1, 0);
-    Assert::AreEqual(bitField.p2, 3);
-    Assert::AreEqual(bitField.p3, 2);
-    Assert::AreEqual(bitField.p4, 0);
+    Assert::AreEqual(static_cast<int>(bitField.p1), 0);
+    Assert::AreEqual(static_cast<int>(bitField.p2), 3);
+    Assert::AreEqual(static_cast<int>(bitField.p3), 2);
+    Assert::AreEqual(static_cast<int>(bitField.p4), 0);
 
     struct TemplatedBitfield<2, 3, 5, 5> templatedBitfield;
 
