@@ -42,8 +42,6 @@ just csharp-lint
 
 just update       # update all dependencies interactively
 just migrate      # run Biome migrations
-
-just docker       # build and run Docker container locally
 ```
 
 ## Adding a new "did you know" fact
@@ -56,14 +54,14 @@ just docker       # build and run Docker container locally
 
 Each language's `just` recipe runs format checking, linting, and tests in that order. All checks must pass.
 
-| Language   | Format          | Lint              | Test          |
-| ---------- | --------------- | ----------------- | ------------- |
-| C#         | dotnet format   | —                 | dotnet test   |
-| C++        | clang-format    | —                 | g++           |
-| JavaScript | Biome           | Biome             | Vitest        |
-| Perl       | —               | Perl::Critic      | Test::Class   |
-| Python     | ruff format     | ruff check        | unittest      |
-| Rust       | cargo fmt       | cargo clippy      | cargo test    |
+| Language   | Format        | Lint         | Test        |
+| ---------- | ------------- | ------------ | ----------- |
+| C#         | dotnet format | —            | dotnet test |
+| C++        | clang-format  | —            | g++         |
+| JavaScript | Biome         | Biome        | Vitest      |
+| Perl       | —             | Perl::Critic | Test::Class |
+| Python     | ruff format   | ruff check   | unittest    |
+| Rust       | cargo fmt     | cargo clippy | cargo test  |
 
 ## GitHub Actions
 
@@ -88,10 +86,9 @@ The CI matrix runs on `ubuntu-24.04` and `macos-15` with `fail-fast: false`.
 
 ## Node version
 
-Pinned in `.nvmrc`. All three environments (local, Docker, CI) read from this file:
+Pinned in `.nvmrc`. All environments (local, CI) read from this file:
 
 - Local: `nvm use`
-- Docker: `nvm install` (reads `.nvmrc` automatically)
 - CI: `actions/setup-node` with `node-version-file: .nvmrc`
 
 To change the Node version, update `.nvmrc` only.

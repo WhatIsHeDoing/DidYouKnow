@@ -144,17 +144,3 @@ rust-update:
 [macos]
 setup:
     brew install clang-format cpanminus dotnet-sdk node uv
-
-# Builds and runs a Docker container for portable testing.
-[group("docker")]
-docker: docker_build docker_run
-
-# Builds a Docker container.
-[group("docker")]
-docker_build:
-    docker build --progress=plain -f Dockerfile -t {{ container }} .
-
-# Runs the test Docker container.
-[group("docker")]
-docker_run:
-    docker run -it {{ container }}
