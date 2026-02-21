@@ -22,6 +22,7 @@ Use `just` for everything — do not invoke language tools directly.
 ```sh
 just install      # install all dependencies
 just run          # run all tests
+just lint         # lint all languages
 just spellcheck   # spellcheck the repo
 just go           # install + run + spellcheck
 
@@ -31,6 +32,13 @@ just cpp
 just perl
 just rust
 just csharp
+
+just javascript-lint  # lint one language only
+just python-lint
+just cpp-lint
+just perl-lint
+just rust-lint
+just csharp-lint
 
 just update       # update all dependencies interactively
 just migrate      # run Biome migrations

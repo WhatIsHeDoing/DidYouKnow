@@ -9,7 +9,7 @@ default:
     @just --choose
 
 # Run all install and run commands.
-go: install run spellcheck
+go: install run spellcheck lint
 
 # Installs all dependencies.
 install: js-install perl-install python-install
@@ -42,10 +42,18 @@ js-update:
 # Runs all tests.
 run: csharp cpp javascript perl python rust
 
+# Lints all languages.
+lint: csharp-lint cpp-lint javascript-lint perl-lint python-lint rust-lint
+
+# Lints C#.
+[group("lint")]
+[working-directory("csharp")]
+csharp-lint:
+    dotnet format --verify-no-changes
+
 # Runs C# tests.
 [working-directory("csharp")]
 csharp:
-    dotnet format --verify-no-changes
     dotnet test
 
 # Updates C# dependencies.
@@ -57,17 +65,27 @@ csharp-update:
     dotnet outdated --upgrade
     upgrade-assistant upgrade csharp.csproj
 
+# Lints C++.
+[group("lint")]
+[working-directory("cpp")]
+cpp-lint:
+    clang-format --dry-run --Werror main.cpp
+
 # Compiles and runs C++ tests.
 [working-directory("cpp")]
 cpp:
-    clang-format --dry-run --Werror main.cpp
     g++ -o build/main.exe main.cpp
     ./build/main.exe
+
+# Lints JavaScript.
+[group("lint")]
+[working-directory("javascript")]
+javascript-lint:
+    pnpm lint
 
 # Runs JavaScript tests.
 [working-directory("javascript")]
 javascript:
-    pnpm lint
     pnpm test
 
 # Installs Perl dependencies.
@@ -75,25 +93,40 @@ javascript:
 perl-install:
     cpanm --local-lib=~/perl5 Test::Class File::Slurp Perl::Critic
 
+# Lints Perl.
+[group("lint")]
+[working-directory("perl")]
+perl-lint:
+    PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" $HOME/perl5/bin/perlcritic .
+
 # Runs Perl tests.
 [working-directory("perl")]
 perl:
-    PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" $HOME/perl5/bin/perlcritic .
     PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" perl -I. main.t
 
-# Runs Rust linting and tests.
+# Lints Rust.
+[group("lint")]
 [working-directory("rust")]
-rust:
+rust-lint:
     cargo fmt -- --check
     cargo clippy -- -D warnings
+
+# Runs Rust tests.
+[working-directory("rust")]
+rust:
     cargo test
+
+# Lints Python.
+[group("lint")]
+[working-directory("python")]
+python-lint:
+    uv run ruff format --check
+    uv run ruff check
 
 # Runs Python tests.
 [working-directory("python")]
 python:
-    uv run ruff format --check
-    uv run ruff check
-    uv run main.py
+    uv run python -W error main.py
 
 # Installs Python dependencies.
 [group("install")]

@@ -183,8 +183,6 @@ class testExceptions(unittest.TestCase):
             pass
         else:
             self.fail()
-        finally:
-            return
 
     def testReRaiseException(self):
         """shows how an exception can be re-raised to preserve its original traceback"""

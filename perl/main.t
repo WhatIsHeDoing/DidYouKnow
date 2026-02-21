@@ -1,4 +1,5 @@
-#! /usr/bin/perl
+#!/usr/bin/env perl
+
 =head1 NAME
 
 main
@@ -6,10 +7,14 @@ main
 =head1 DESCRIPTION
 
 Runs all the test methods in the DidYouKnow package
-http://perldoc.perl.org/Test/More.html
+https://perldoc.perl.org/Test/Class
 
 =cut
 
+use strict;
+use warnings;
+
 use DidYouKnow::OneLiners;
 use DidYouKnow::Regex;
+
 Test::Class->runtests;

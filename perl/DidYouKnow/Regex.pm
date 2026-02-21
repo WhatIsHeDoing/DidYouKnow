@@ -1,23 +1,26 @@
 =head1 NAME
 
-OneLiners
+DidYouKnow::Regex
 
 =head1 DESCRIPTION
 
-Unit testing Perl regular expressions
-http://perldoc.perl.org/perlre.html
+Unit testing Perl regular expressions.
+https://perldoc.perl.org/perlre
 
 =cut
 
-package Regex;
-use base qw(Test::Class);
+package DidYouKnow::Regex;
+
+use strict;
+use warnings;
+
+use parent qw(Test::Class);
 use Test::More;
 
-sub testRegexMultiLineMatch : Test(no_plan)
-{
-	my $string = "beats the usual\nhello\nworld\ntest";
-	my $regex = m/^hello(.*)test/sm;
-	ok $string =~ $regex;
-};
+sub testRegexMultiLineMatch : Test(no_plan) {
+    my $string = "beats the usual\nhello\nworld\ntest";
+    my $regex  = m/^hello(.*)test/sm;
+    ok $string =~ $regex;
+}
 
-return 1;
+1;
