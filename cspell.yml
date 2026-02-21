@@ -15,7 +15,11 @@ ignoreWords:
     - noninteractive
     - perlcritic
     - runtests
+    - rustup
+    - tlsv
     - turbofish
+    - venv
+    - Wconstant
     - Werror
     - ὧὃḁḣ
 language: en-GB,en

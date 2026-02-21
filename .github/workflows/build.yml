@@ -56,6 +56,10 @@ jobs:
                   path: ~/.nuget/packages
                   restore-keys: ${{ runner.os }}-nuget-
 
+            - if: runner.os == 'Linux'
+              name: Install cpanminus
+              run: sudo apt-get install -y cpanminus
+
             - if: runner.os == 'macOS'
               name: Install cpanminus
               run: brew install cpanminus
