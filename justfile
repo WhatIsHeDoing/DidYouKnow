@@ -20,7 +20,7 @@ spellcheck:
     pnpm cspell ../**/*
 
 # Updates all dependencies.
-update: csharp-update js-update
+update: csharp-update js-update rust-update
 
 # Installs JavaScript dependencies.
 [group("install")]
@@ -92,6 +92,17 @@ python:
 [working-directory("python")]
 python-install:
     uv sync
+
+# Updates Rust dependencies.
+[group("update")]
+[working-directory("rust")]
+rust-update:
+    cargo update
+
+# Sets up a Mac to run these tests.
+[macos]
+setup:
+    brew install dotnet-sdk node uv
 
 # Builds and runs a Docker container for portable testing.
 [group("docker")]

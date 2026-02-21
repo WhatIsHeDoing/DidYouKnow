@@ -9,40 +9,76 @@ jobs:
 
         steps:
             - name: Fetch the Dependabot metadata
-              uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
+              uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a
               with:
                   github-token: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+
+            - name: Cache pnpm store
+              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+              with:
+                  key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  path: ~/.local/share/pnpm/store
+                  restore-keys: ${{ runner.os }}-pnpm-
 
             - name: Install pnpm
-              uses: pnpm/action-setup@v4
+              uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
               with:
                   version: latest
 
             # https://docs.astral.sh/uv/guides/integration/github/
             - name: Install uv
-              uses: astral-sh/setup-uv@v7
+              uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
+              with:
+                  enable-cache: true
 
             # https://just.systems/man/en/github-actions.html
             - name: Install Just
-              uses: extractions/setup-just@v3
+              uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
+
+            - name: Cache Cargo
+              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+              with:
+                  key: ${{ runner.os }}-cargo-${{ hashFiles('rust/Cargo.lock') }}
+                  path: |
+                      ~/.cargo/registry/index/
+                      ~/.cargo/registry/cache/
+                      ~/.cargo/git/db/
+                      rust/target/
+                  restore-keys: ${{ runner.os }}-cargo-
+
+            - name: Cache NuGet
+              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+              with:
+                  key: ${{ runner.os }}-nuget-${{ hashFiles('csharp/**/*.csproj') }}
+                  path: ~/.nuget/packages
+                  restore-keys: ${{ runner.os }}-nuget-
 
             - name: Install dependencies
               run: just install
 
-            - name: JavaScript tests
-              run: just javascript
+            - name: Spellcheck
+              run: just spellcheck
 
-            - name: Python tests
-              run: just python
+            - name: C# tests
+              run: just csharp
 
             - name: C++ tests
               run: just cpp
 
-            - name: C# tests
-              run: just csharp
+            - name: JavaScript tests
+              run: just javascript
+
+            - name: Perl tests
+              run: just perl
+
+            - name: Python tests
+              run: just python
+
+            - name: Rust tests
+              run: just rust
 
             - env:
                   GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -58,5 +94,7 @@ jobs:
 
 name: Dependabot auto-approve
 on: pull_request
+
 permissions:
+    contents: write
     pull-requests: write
