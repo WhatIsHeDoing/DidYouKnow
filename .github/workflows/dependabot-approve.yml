@@ -14,10 +14,10 @@ jobs:
                   github-token: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: Checkout
-              uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
             - name: Cache pnpm store
-              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
               with:
                   key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
                   path: ~/.local/share/pnpm/store
@@ -39,7 +39,7 @@ jobs:
               uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
 
             - name: Cache Cargo
-              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
               with:
                   key: ${{ runner.os }}-cargo-${{ hashFiles('rust/Cargo.lock') }}
                   path: |
@@ -50,7 +50,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-cargo-
 
             - name: Cache NuGet
-              uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+              uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
               with:
                   key: ${{ runner.os }}-nuget-${{ hashFiles('csharp/**/*.csproj') }}
                   path: ~/.nuget/packages
