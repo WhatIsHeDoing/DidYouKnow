@@ -13,13 +13,16 @@ ignoreWords:
     - justfile
     - lvalues
     - noninteractive
+    - perlcritic
     - runtests
     - turbofish
+    - Werror
     - ὧὃḁḣ
 language: en-GB,en
 suggestionsTimeout: 100
 useGitignore: true
 words:
+    - Allman
     - CPAN
     - destructures
     - LINQ

@@ -1,3 +1,7 @@
+concurrency:
+    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    group: ${{ github.workflow }}-${{ github.ref }}
+
 env:
     CI: 1
 
@@ -52,6 +56,10 @@ jobs:
                   path: ~/.nuget/packages
                   restore-keys: ${{ runner.os }}-nuget-
 
+            - if: runner.os == 'macOS'
+              name: Install cpanminus
+              run: brew install cpanminus
+
             - name: Install dependencies
               run: just install
 
@@ -77,6 +85,7 @@ jobs:
               run: just csharp
 
         strategy:
+            fail-fast: false
             matrix:
                 os:
                     - macos-15

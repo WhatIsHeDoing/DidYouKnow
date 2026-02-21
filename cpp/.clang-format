@@ -1,0 +1,6 @@
+---
+AllowShortFunctionsOnASingleLine: Inline
+BasedOnStyle: LLVM
+BreakBeforeBraces: Allman
+ColumnLimit: 0
+IndentWidth: 4

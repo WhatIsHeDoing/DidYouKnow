@@ -45,6 +45,7 @@ run: csharp cpp javascript perl python rust
 # Runs C# tests.
 [working-directory("csharp")]
 csharp:
+    dotnet format --verify-no-changes
     dotnet test
 
 # Updates C# dependencies.
@@ -59,6 +60,7 @@ csharp-update:
 # Compiles and runs C++ tests.
 [working-directory("cpp")]
 cpp:
+    clang-format --dry-run --Werror main.cpp
     g++ -o build/main.exe main.cpp
     ./build/main.exe
 
@@ -71,12 +73,12 @@ javascript:
 # Installs Perl dependencies.
 [group("install")]
 perl-install:
-    sudo cpan -T App::cpanminus
-    cpanm --local-lib=~/perl5 Test::Class File::Slurp
+    cpanm --local-lib=~/perl5 Test::Class File::Slurp Perl::Critic
 
 # Runs Perl tests.
 [working-directory("perl")]
 perl:
+    PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" $HOME/perl5/bin/perlcritic .
     PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}" perl -I. main.t
 
 # Runs Rust linting and tests.
@@ -89,6 +91,7 @@ rust:
 # Runs Python tests.
 [working-directory("python")]
 python:
+    uv run ruff format --check
     uv run ruff check
     uv run main.py
 
@@ -107,7 +110,7 @@ rust-update:
 # Sets up a Mac to run these tests.
 [macos]
 setup:
-    brew install dotnet-sdk node uv
+    brew install clang-format cpanminus dotnet-sdk node uv
 
 # Builds and runs a Docker container for portable testing.
 [group("docker")]

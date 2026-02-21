@@ -13,58 +13,58 @@
 
 namespace Assert
 {
-    template <typename T>
-    static void AreEqual(T expected, T actual)
-    {
-        assert(expected == actual);
-    }
+template <typename T>
+static void AreEqual(T expected, T actual)
+{
+    assert(expected == actual);
+}
 
-    static void AreEqual(const char *expected, std::string actual)
-    {
-        assert(expected == actual);
-    }
+static void AreEqual(const char *expected, std::string actual)
+{
+    assert(expected == actual);
+}
 
-    static void AreEqual(std::string expected, const char *actual)
-    {
-        assert(expected == actual);
-    }
+static void AreEqual(std::string expected, const char *actual)
+{
+    assert(expected == actual);
+}
 
-    static void AreEqual(unsigned char expected, int actual)
-    {
-        assert(expected == actual);
-    }
+static void AreEqual(unsigned char expected, int actual)
+{
+    assert(expected == actual);
+}
 
-    static void AreEqual(int expected, unsigned char actual)
-    {
-        assert(expected == actual);
-    }
+static void AreEqual(int expected, unsigned char actual)
+{
+    assert(expected == actual);
+}
 
-    template <typename T>
-    static void AreNotEqual(T expected, T actual)
-    {
-        assert(expected != actual);
-    }
+template <typename T>
+static void AreNotEqual(T expected, T actual)
+{
+    assert(expected != actual);
+}
 
-    static void IsFalse(bool comparison)
-    {
-        assert(comparison ? 0 : 1);
-    }
+static void IsFalse(bool comparison)
+{
+    assert(comparison ? 0 : 1);
+}
 
-    static void IsTrue(bool comparison)
-    {
-        assert(comparison ? 1 : 0);
-    }
+static void IsTrue(bool comparison)
+{
+    assert(comparison ? 1 : 0);
+}
 
-    static void Fail()
-    {
-        assert(0);
-    }
+static void Fail()
+{
+    assert(0);
+}
 
-    static void Success()
-    {
-        return assert(1);
-    }
-};
+static void Success()
+{
+    return assert(1);
+}
+}; // namespace Assert
 
 #ifdef TEST_PLACEHOLDER_EXAMPLE
 /**
@@ -143,16 +143,16 @@ void testKeywordOperatorTokens()
 
 class ContainsHidden
 {
-public:
+  public:
     ContainsHidden(const int member) : _member(member) {}
 
-protected:
+  protected:
     const int _member;
 };
 
 class PromotesHidden : public ContainsHidden
 {
-public:
+  public:
     PromotesHidden(int member) : ContainsHidden(member) {}
     using ContainsHidden::_member;
 };
@@ -168,7 +168,7 @@ void testChangingScope()
 #define private public
 class NotPrivateHere
 {
-private:
+  private:
     bool success() const
     {
         return true;
@@ -223,7 +223,7 @@ struct BaseWithHiddenData
 {
     BaseWithHiddenData(const int data) : _data(data) {}
 
-protected:
+  protected:
     const int _data;
 };
 
@@ -269,7 +269,7 @@ void testScopeGuardTrick()
 
 class PrePostInDecrementOverloading
 {
-private:
+  private:
     int _value;
 
     void incrementValue()
@@ -282,7 +282,7 @@ private:
         _value = _value - 1;
     }
 
-public:
+  public:
     PrePostInDecrementOverloading() : _value(0) {}
 
     int getValue() const
@@ -333,10 +333,10 @@ void testPrePostInDecrementOverloading()
 template <template <class, class> class V, class T>
 class CreateContainer
 {
-protected:
+  protected:
     V<T, std::allocator<T>> _container;
 
-public:
+  public:
     CreateContainer &addValue(const T &value)
     {
         _container.push_back(value);
@@ -424,19 +424,19 @@ void testReturnOverload()
 
 namespace ThisNamespace
 {
-    bool HasThisFunction()
-    {
-        return true;
-    }
-
-    namespace SubNamespace
-    {
-        std::string HasThisFunction()
-        {
-            return "Yes, it does!";
-        }
-    }
+bool HasThisFunction()
+{
+    return true;
 }
+
+namespace SubNamespace
+{
+std::string HasThisFunction()
+{
+    return "Yes, it does!";
+}
+} // namespace SubNamespace
+} // namespace ThisNamespace
 
 struct ThisClass
 {
@@ -556,7 +556,7 @@ class HasFunction
     template <typename C>
     static no test(...);
 
-public:
+  public:
     enum
     {
         exists = (sizeof(test<T>(0)) == sizeof(char))
@@ -619,7 +619,7 @@ class CallsSurrogates
     FunctionOne *_functionOne;
     FunctionTwo *_functionTwo;
 
-public:
+  public:
     CallsSurrogates(FunctionOne *functionOne, FunctionTwo *functionTwo)
         : _functionOne(functionOne), _functionTwo(functionTwo) {}
 
@@ -783,15 +783,15 @@ void testMostVexingParse()
 
 namespace ADL
 {
-    struct UniqueClassName
-    {
-    };
+struct UniqueClassName
+{
+};
 
-    bool noNeedToNamespaceMe(const UniqueClassName &uniqueClassName)
-    {
-        return true;
-    }
+bool noNeedToNamespaceMe(const UniqueClassName &uniqueClassName)
+{
+    return true;
 }
+} // namespace ADL
 
 /**
  * Shows how argument-dependent lookup (ADL) can determine which function to
@@ -936,7 +936,7 @@ class TemplatedClassWithFriendFunction
 {
     T _value;
 
-public:
+  public:
     TemplatedClassWithFriendFunction(const T value) : _value(value) {}
 
 #ifdef THIS_WILL_FAIL
@@ -965,10 +965,10 @@ void testTemplatedClassWithFriendFunctionAvoidsViolatingODR()
 
 class Member
 {
-protected:
+  protected:
     bool _hidden;
 
-public:
+  public:
     Member() : _hidden(true) {}
 
     bool getHidden() const
@@ -981,7 +981,7 @@ class NormalComposition
 {
     Member *_member;
 
-public:
+  public:
     NormalComposition() : _member(new Member) {}
 
     bool getHiddenFromMember() const
@@ -1067,7 +1067,7 @@ class ContainsMutant
     const int _value;
     mutable bool _valueWasAccessed;
 
-public:
+  public:
     ContainsMutant(const int value)
         : _value(value), _valueWasAccessed(false) {}
 
