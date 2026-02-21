@@ -62,12 +62,12 @@ jobs:
                   restore-keys: ${{ runner.os }}-nuget-
 
             - if: runner.os == 'Linux'
-              name: Install cpanminus
+              name: Install Linux libraries
               run: sudo apt-get install -y cpanminus
 
             - if: runner.os == 'macOS'
-              name: Install cpanminus
-              run: brew install cpanminus
+              name: Install MacOS libraries
+              run: brew install clang-format cpanminus
 
             - name: Install dependencies
               run: just install
