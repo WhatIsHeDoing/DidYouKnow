@@ -22,6 +22,11 @@ spellcheck:
 # Updates all dependencies.
 update: csharp-update js-update rust-update
 
+# Migrate any code artifacts to newer versions
+[working-directory("javascript")]
+migrate:
+    pnpm biome migrate --fix
+
 # Installs JavaScript dependencies.
 [group("install")]
 [working-directory("javascript")]

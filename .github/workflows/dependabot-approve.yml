@@ -8,13 +8,16 @@ jobs:
         runs-on: ubuntu-24.04
 
         steps:
-            - name: Fetch the Dependabot metadata
+            - id: metadata
+              name: Fetch the Dependabot metadata
               uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a
               with:
                   github-token: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: Checkout
               uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+              with:
+                  ref: ${{ github.head_ref }}
 
             - name: Cache pnpm store
               uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306
@@ -59,6 +62,17 @@ jobs:
             - name: Install dependencies
               run: just install
 
+            - name: Migrate any code artifacts to newer versions
+              run: just migrate
+
+            - name: Commit migrations
+              run: |
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git config user.name "github-actions[bot]"
+                  git add --all
+                  git diff --staged --quiet || git commit -m "chore: apply automated migrations"
+                  git push
+
             - name: Spellcheck
               run: just spellcheck
 
@@ -90,7 +104,14 @@ jobs:
                   GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
                   PR_URL: ${{github.event.pull_request.html_url}}
               name: Merge and delete the branch
-              run: gh pr merge --squash --delete-branch "$PR_URL"
+              run: |
+                  if [[ "${{ steps.metadata.outputs.dependency-type }}" == "direct:development" ]]; then
+                      scope="deps-dev"
+                  else
+                      scope="deps"
+                  fi
+                  subject="chore(${scope}): bump ${{ steps.metadata.outputs.dependency-names }} from ${{ steps.metadata.outputs.previous-version }} to ${{ steps.metadata.outputs.new-version }}"
+                  gh pr merge --squash --delete-branch --subject "$subject" "$PR_URL"
 
 name: Dependabot auto-approve
 on: pull_request
