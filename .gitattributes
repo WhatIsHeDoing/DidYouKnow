@@ -1,10 +1,44 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Normalise all text files to LF on commit and enforce LF on checkout across
+# all platforms, preventing CRLF from entering the repository.
+* text=auto eol=lf
 
-# Custom for Visual Studio
-*.cs diff=csharp
-*.sln merge=union
-*.csproj merge=union
-*.vbproj merge=union
-*.fsproj merge=union
-*.dbproj merge=union
+# Source files
+*.cpp   text eol=lf
+*.cs    text eol=lf diff=csharp
+*.js    text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.pm    text eol=lf
+*.py    text eol=lf
+*.rs    text eol=lf
+*.t     text eol=lf
+*.toml  text eol=lf
+*.ts    text eol=lf
+*.xml   text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+
+# Config and tooling files
+.dockerignore  text eol=lf
+.editorconfig  text eol=lf
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+Dockerfile     text eol=lf
+justfile       text eol=lf
+
+# C# project and solution files
+*.csproj text eol=lf merge=union
+*.dbproj text eol=lf merge=union
+*.fsproj text eol=lf merge=union
+*.sln    text eol=lf merge=union
+*.vbproj text eol=lf merge=union
+
+# Lock files — text for line-ending normalisation, but excluded from diffs
+Cargo.lock     text eol=lf -diff
+pnpm-lock.yaml text eol=lf -diff
+uv.lock        text eol=lf -diff
+
+# Compiled binary output
+*.dll binary
+*.exe binary
+*.pdb binary
