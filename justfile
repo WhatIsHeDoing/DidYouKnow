@@ -20,7 +20,7 @@ spellcheck:
     pnpm cspell ../**/*
 
 # Updates all dependencies.
-update: csharp-update js-update rust-update
+update: csharp-update js-update python-update rust-update
 
 # Migrate any code artifacts to newer versions
 [working-directory("javascript")]
@@ -133,6 +133,12 @@ python:
 [working-directory("python")]
 python-install:
     uv sync
+
+# Updates Python dependencies.
+[group("update")]
+[working-directory("python")]
+python-update:
+    uv lock --upgrade
 
 # Updates Rust dependencies.
 [group("update")]
