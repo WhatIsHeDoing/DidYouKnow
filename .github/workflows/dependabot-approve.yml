@@ -59,6 +59,9 @@ jobs:
                   path: ~/.nuget/packages
                   restore-keys: ${{ runner.os }}-nuget-
 
+            - name: Install Linux libraries
+              run: sudo apt-get install -y cpanminus
+
             - name: Install dependencies
               run: just install
 
