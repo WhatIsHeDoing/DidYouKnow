@@ -10,7 +10,7 @@ jobs:
         steps:
             - id: metadata
               name: Fetch the Dependabot metadata
-              uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a
+              uses: dependabot/fetch-metadata@ffa630c65fa7e0ecfa0625b5ceda64399aea1b36
               with:
                   github-token: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -33,7 +33,7 @@ jobs:
 
             # https://docs.astral.sh/uv/guides/integration/github/
             - name: Install uv
-              uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
+              uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57
               with:
                   enable-cache: true
 
