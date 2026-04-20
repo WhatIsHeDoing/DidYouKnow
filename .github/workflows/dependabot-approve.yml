@@ -39,7 +39,7 @@ jobs:
 
             # https://just.systems/man/en/github-actions.html
             - name: Install Just
-              uses: extractions/setup-just@f8a3cce218d9f83db3a2ecd90e41ac3de6cdfd9b
+              uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3
 
             - name: Cache Cargo
               uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
