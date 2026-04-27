@@ -28,7 +28,7 @@ jobs:
               run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
 
             - name: Cache pnpm store
-              uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
+              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
               with:
                   key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
                   path: ${{ steps.pnpm-store.outputs.path }}
@@ -45,7 +45,7 @@ jobs:
               uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3
 
             - name: Cache Cargo
-              uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
+              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
               with:
                   key: ${{ runner.os }}-cargo-${{ hashFiles('rust/Cargo.lock') }}
                   path: |
@@ -56,7 +56,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-cargo-
 
             - name: Cache NuGet
-              uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7
+              uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
               with:
                   key: ${{ runner.os }}-nuget-${{ hashFiles('csharp/**/*.csproj') }}
                   path: ~/.nuget/packages
