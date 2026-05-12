@@ -1,6 +1,6 @@
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - esbuild
+allowBuilds:
+  '@biomejs/biome': true
+  esbuild: true
 
 overrides:
   esbuild: 0.25.10
