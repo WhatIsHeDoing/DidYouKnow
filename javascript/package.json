@@ -2,7 +2,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.5.6",
     "cspell": "10.0.1",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "4.1.10"
   },
   "main": "javascript.test.js",
