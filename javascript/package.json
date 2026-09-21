@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "@biomejs/biome": "2.5.12",
-    "cspell": "10.2.0",
+    "@biomejs/biome": "2.5.13",
+    "cspell": "10.2.2",
     "typescript": "7.0.2",
     "vitest": "4.1.11"
   },
