@@ -3,7 +3,7 @@
     "@biomejs/biome": "2.5.15",
     "cspell": "10.3.6",
     "typescript": "7.0.2",
-    "vitest": "5.0.3"
+    "vitest": "5.0.4"
   },
   "main": "javascript.test.js",
   "name": "javascript",
