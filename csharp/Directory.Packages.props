@@ -6,9 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Castle.Core" Version="5.2.1" />
-    <PackageVersion Include="Mapster" Version="7.4.0" />
+    <PackageVersion Include="Mapster" Version="10.0.13" />
     <PackageVersion Include="Moq" Version="4.21.0" />
-    <PackageVersion Include="xunit.analyzers" Version="1.27.0" />
-    <PackageVersion Include="xunit.v3" Version="3.2.2" />
+    <PackageVersion Include="xunit.analyzers" Version="2.2.0" />
+    <PackageVersion Include="xunit.v3" Version="4.0.2" />
   </ItemGroup>
 </Project>
